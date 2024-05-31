@@ -1,0 +1,18 @@
+Ideointia
+- Käyttäjä kun avaa sovelluken hän tuo esim URL paramsien avulla huonekalun nimen/id mukana
+- Tämän ID perusteella RAG LLM malli määritellään viittaamaan Supabase vektoritietokannasa olevaa taulua, jotka on nimetty esim Tuoli, Pöytä, Jakkara yms.
+- Näin chatbotti osaa keskustella tietyistä huonekaluryhmistä ja sen hoito-ohjeista yms paremmin käyttäjän kanssa
+
+Steps:
+User → Application: Records voice.
+Application → WhisperAPI: Sends audio.
+WhisperAPI → Application: Transforms to text.
+Application → GPT4Model (RAG model): Sends text RAG model uses data that Piiroinen has provided.
+GPT4Model → Application: Returns JSON with defects.
+Then application displays defects form. Where user can select and valiadate fields. Then
+Application shows Care Instructions based of selected form checkboxes and user can reviews solution.
+Application Ask did solution problem was solved
+[If solution not satisfactory]:
+Application → Piiroinen: Autocomplete defect notification form.
+
+User → Application: Marks issue as resolved.
