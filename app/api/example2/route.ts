@@ -60,6 +60,8 @@ You are an AI assistant designed to assist a caretaker in maintaining and repair
 As you formulate your responses, consider the principles of precision and clarity. 
 Offer thorough and practical advice that helps in extending the lifespan and functionality of the furniture. Use a tone that is professional yet approachable, ensuring that the instructions are easy to follow and understand.
 
+**Please provide the response in plain text without any Markdown formatting, including asterisks, underscores, or other special characters. Use simple sentences and lists.**
+
 Answer the question based on the following context and chat history (if any). If you don't know the answer, just say that you don't know, don't try to make up an answer:
 <context>
   {context}
@@ -93,7 +95,7 @@ export async function POST(req: NextRequest) {
       process.env.SUPABASE_URL!,
       process.env.SUPABASE_PRIVATE_KEY!
     );
-    
+
     const vectorstore = new SupabaseVectorStore(new OpenAIEmbeddings(), {
       client,
       tableName: "piiroinen_chairs", // Tietokantataulun nimi
@@ -147,7 +149,8 @@ export async function POST(req: NextRequest) {
         chat_history: (input) => input.chat_history, // Saa keskusteluhistorian syötteenä
       },
       answerChain,
-      new BytesOutputParser(),
+      new BytesOutputParser(), // Striimaa vastauksen
+      // new StringOutputParser(), // Ei striimaukseen sendMessage kanssa frontendissa
     ]);
 
     // Lähettää vastauksen streamattuna takaisin klientille.
@@ -155,8 +158,8 @@ export async function POST(req: NextRequest) {
       question: currentMessageContent,
       chat_history: formatVercelMessages(previousMessages), // Muotoilee keskusteluhistorian
     });
-
-    return new Response(stream); // Ei striimaukseen sendMessage kanssa frontendissa
+    
+    // return new StreamingTextResponse(stream); // Ei striimaukseen sendMessage kanssa frontendissa
 
     return new StreamingTextResponse(
       stream.pipeThrough(createStreamDataTransformer()) // Luo ja muuntaa streamin vastaukselle
@@ -183,3 +186,17 @@ export async function POST(req: NextRequest) {
 
 //   return tableMapping[furnitureType] || 'default_table_name';
 // }
+// Funktio Markdown-merkkien poistamiseksi tekstistä
+function stripMarkdown(text: string): string {
+  return text
+    .replace(/(\*\*|__)(.*?)\1/g, "$2") // Bold
+    .replace(/(\*|_)(.*?)\1/g, "$2") // Italics
+    .replace(/(~~)(.*?)\1/g, "$2") // Strikethrough
+    .replace(/(#+)(.*)/g, "$2") // Headers
+    .replace(/!\[.*?\]\(.*?\)/g, "") // Images
+    .replace(/\[(.*?)\]\(.*?\)/g, "$1") // Links
+    .replace(/<\/?[^>]+(>|$)/g, "") // HTML tags
+    .replace(/`(.*?)`/g, "$1") // Inline code
+    .replace(/```[\s\S]*?```/g, "") // Code blocks
+    .replace(/^\s*[\r\n]/gm, ""); // Remove empty lines
+}

@@ -125,7 +125,7 @@ export default function Chat() {
 
           const llmResponse = await sendMessageToAPI(
             messagesWithUserReply,
-            "http://localhost:3000/api/simple"
+            "http://localhost:3000/api/example2"
           );
 
           console.log(llmResponse);
@@ -136,10 +136,16 @@ export default function Chat() {
           );
 
           const audio = new Audio(ttsResponse.audioURL);
+          audio.oncanplaythrough = () => {
+            console.log("Soitetaan ääntä");
+            
+            audio.play();
+          }
+          
           audio.onended = async () => {
+            console.log("poistetaan ääni");
             await deleteTempFile(ttsResponse.tempFilePath);
           };
-          audio.play();
         }
       };
       mediaRecorder.start();
@@ -189,7 +195,7 @@ export default function Chat() {
 
       <section className="p-4">
         <form
-          onSubmit={sendMessage}
+          onSubmit={handleSubmit}
           className="flex w-full max-w-3xl mx-auto items-center"
         >
           <Input

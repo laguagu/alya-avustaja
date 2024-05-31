@@ -11,8 +11,8 @@
   "dependencies": {
     "@ai-sdk/openai": "^0.0.18",
     "@google-cloud/vertexai": "^1.1.0",
-    "@langchain/community": "^0.2.1",
-    "@langchain/core": "^0.2.0",
+    "@langchain/community": "^0.2.4",
+    "@langchain/core": "^0.2.5",
     "@langchain/google-vertexai": "^0.0.14",
     "@langchain/openai": "^0.1.0",
     "@radix-ui/react-checkbox": "^1.0.4",
