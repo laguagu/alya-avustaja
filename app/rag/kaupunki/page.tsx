@@ -12,6 +12,9 @@ import {
   getWhisperTranscription,
 } from "@/app/actions";
 import { TailSpin } from "react-loader-spinner";
+import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
+import piiroinenHuoltoOhjeet from "@/data/piiroinen-huolto-ohjeet";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface TTSResponse {
@@ -248,6 +251,20 @@ export default function Chat() {
           )}
         </ul>
       </section>
+      <Button onClick={testSplitter}>Test</Button>
     </main>
   );
+}
+
+async function testSplitter() {
+  const text = piiroinenHuoltoOhjeet
+  
+  const splitter = new RecursiveCharacterTextSplitter({
+    chunkSize: 1600,
+    chunkOverlap: 0,
+  });
+  
+  const output = await splitter.createDocuments([text]);
+  console.log(output);
+  
 }
