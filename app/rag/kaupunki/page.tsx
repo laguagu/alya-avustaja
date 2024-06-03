@@ -14,6 +14,8 @@ import {
 import { TailSpin } from "react-loader-spinner";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import piiroinenHuoltoOhjeet from "@/data/piiroinen-huolto-ohjeet";
+import Sidenav from "@/app/ui/sidenav";
+
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -183,60 +185,61 @@ export default function Chat() {
   });
 
   return (
-    <main className="flex flex-col w-full h-screen max-h-dvh bg-background">
-      <header className="p-4 border-b w-full max-w-3xl mx-auto">
-        <h1 className="text-2xl font-bold">Hoito-ohje assari</h1>
-      </header>
-
-      <section className="p-4">
-        <form
-          onSubmit={handleSubmit}
-          className="flex w-full max-w-3xl mx-auto items-center"
-        >
-          <Input
-            className="flex-1 min-h-[40px]"
-            placeholder="Kirjoita kysymyksesi tänne..."
-            type="text"
-            value={input}
-            onChange={handleInputChange}
-          />
-          <Button className="ml-2" type="submit" disabled={isLoading}>
-            Submit
-          </Button>
-
-          <Button
-            className="ml-2"
-            onClick={recording ? handleStopRecording : handleStartRecording}
-            disabled={isLoading}
+    <div className="flex h-screen bg-gray-100">
+     <Sidenav/>
+      <main className="flex flex-col w-full h-screen max-h-dvh bg-background">
+        <header className="p-4 border-b w-full max-w-3xl mx-auto">
+          <h1 className="text-2xl font-bold text-center">Hoito-ohje assari</h1>
+        </header>
+        <section className="p-4">
+          <form
+            onSubmit={handleSubmit}
+            className="flex w-full max-w-3xl mx-auto items-center"
           >
-            {recording ? "Stop Recording" : "Start Recording"}
-          </Button>
-        </form>
-      </section>
+            <Input
+              className="flex-1 min-h-[40px]"
+              placeholder="Kirjoita kysymyksesi tänne..."
+              type="text"
+              value={input}
+              onChange={handleInputChange}
+            />
+            <Button className="ml-2" type="submit" disabled={isLoading}>
+              Submit
+            </Button>
 
-      <section className="container px-0 pb-10 flex flex-col flex-grow gap-4 mx-auto max-w-3xl">
-        <ul
-          ref={chatParent}
-          className="h-1 p-4 flex-grow bg-muted/50 rounded-lg overflow-y-auto flex flex-col gap-4"
-        >
-          {primaryMessages.map((m, index) => (
-            <div key={index}>
-              {m.role === "user" ? (
-                <li key={m.id} className="flex flex-row">
-                  <div className="rounded-xl p-4 bg-background shadow-md flex">
-                    <p className="text-primary">{m.content}</p>
-                  </div>
-                </li>
-              ) : (
-                <li key={m.id} className="flex flex-row-reverse">
-                  <div className="rounded-xl p-4 bg-background shadow-md flex w-3/4">
-                    <p className="text-primary">{m.content}</p>
-                  </div>
-                </li>
-              )}
-            </div>
-          ))}
-          {isLoading && (
+            <Button
+              className="ml-2"
+              onClick={recording ? handleStopRecording : handleStartRecording}
+              disabled={isLoading}
+            >
+              {recording ? "Stop Recording" : "Start Recording"}
+            </Button>
+          </form>
+        </section>
+
+        <section className="container px-0 pb-10 flex flex-col flex-grow gap-4 mx-auto max-w-3xl">
+          <ul
+            ref={chatParent}
+            className="h-1 p-4 flex-grow bg-muted/50 rounded-lg overflow-y-auto flex flex-col gap-4"
+          >
+            {primaryMessages.map((m, index) => (
+              <div key={index}>
+                {m.role === "user" ? (
+                  <li key={m.id} className="flex flex-row">
+                    <div className="rounded-xl p-4 bg-background shadow-md flex">
+                      <p className="text-primary">{m.content}</p>
+                    </div>
+                  </li>
+                ) : (
+                  <li key={m.id} className="flex flex-row-reverse">
+                    <div className="rounded-xl p-4 bg-background shadow-md flex w-3/4">
+                      <p className="text-primary">{m.content}</p>
+                    </div>
+                  </li>
+                )}
+              </div>
+            ))}
+            {isLoading && (
               <li className="flex flex-row-reverse">
                 <div className="">
                   <TailSpin
@@ -248,23 +251,23 @@ export default function Chat() {
                   {/* <p className="text-primary">Ladataan vastausta...</p> */}
                 </div>
               </li>
-          )}
-        </ul>
-      </section>
-      <Button onClick={testSplitter}>Test</Button>
-    </main>
+            )}
+          </ul>
+        </section>
+        <Button onClick={testSplitter}>Test</Button>
+      </main>
+    </div>
   );
 }
 
 async function testSplitter() {
-  const text = piiroinenHuoltoOhjeet
-  
+  const text = piiroinenHuoltoOhjeet;
+
   const splitter = new RecursiveCharacterTextSplitter({
     chunkSize: 1600,
     chunkOverlap: 0,
   });
-  
+
   const output = await splitter.createDocuments([text]);
   console.log(output);
-  
 }

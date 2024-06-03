@@ -79,12 +79,12 @@ export default function Chat() {
   });
 
   return (
-    <main className="flex flex-col w-full h-screen max-h-dvh bg-background">
-      <header className="p-4 border-b w-full max-w-3xl mx-auto">
+    <main className="flex flex-col w-full h-screen max-h-dvh bg-background ">
+      <header className="p-4 border-b w-full max-w-3xl mx-auto bg-red-400">
         <h1 className="text-2xl font-bold">LangChain Chat</h1>
       </header>
 
-      <section className="p-4">
+      <section className="p-4 ">
         <form
           onSubmit={sendMessage}
           className="flex w-full max-w-3xl mx-auto items-center"
