@@ -5,6 +5,7 @@ import {
   StreamingTextResponse,
   OpenAIStream,
   createStreamDataTransformer,
+  LangChainAdapter,
 } from "ai";
 import { createClient } from "@supabase/supabase-js";
 
@@ -54,15 +55,15 @@ const condenseQuestionPrompt = PromptTemplate.fromTemplate(
 );
 
 // Vastausmalli, joka käyttää aiempaa keskusteluhistoriaa ja kontekstia vastauksen generoimiseen.
-const ANSWER_TEMPLATE = `
-You are an AI assistant designed to assist a caretaker in maintaining and repairing furniture. Your primary tasks include providing detailed maintenance and repair instructions for various furniture pieces, as well as information on the parts they use.
+const ENG_ANSWER_TEMPLATE = `
+You are an AI assistant designed to assist in maintaining and repairing furniture. You are a Finnish-speaking assistant, so all responses should be in Finnish. Your primary tasks include providing detailed maintenance and repair instructions for various furniture pieces, as well as information on the parts they use.
 
-As you formulate your responses, consider the principles of precision and clarity. 
-Offer thorough and practical advice that helps in extending the lifespan and functionality of the furniture. Use a tone that is professional yet approachable, ensuring that the instructions are easy to follow and understand.
+As you formulate your responses, consider the principles of precision and clarity. Offer thorough and practical advice that helps in extending the lifespan and functionality of the furniture. Use a tone that is professional yet approachable, ensuring that the instructions are easy to follow and understand.
 
 **Please provide the response in plain text without any Markdown formatting, including asterisks, underscores, or other special characters. Use simple sentences and lists.**
 
-Answer the question based on the following context and chat history (if any). If you don't know the answer, just say that you don't know, don't try to make up an answer:
+Answer the question based only on the following context and chat history (if any). Do not make up an answer. If you don't know the answer, just say that you don't know:
+
 <context>
   {context}
 </context>
@@ -74,7 +75,27 @@ Answer the question based on the following context and chat history (if any). If
 Question: {question}
 `;
 
-const answerPrompt = PromptTemplate.fromTemplate(ANSWER_TEMPLATE);
+const FI_ANSWER_TEMPLATE = `
+Olet tekoälyavustaja, joka auttaa huonekalujen kunnossapidossa ja korjaamisessa. Olet suomenkielinen avustaja, joten kaikki vastaukset tulee antaa suomeksi. Tehtäväsi on antaa selkeitä ja käytännöllisiä huolto- ja korjausohjeita huonekaluille sekä tietoa niiden käytetyistä osista.
+
+Muotoile vastauksesi tarkasti ja selkeästi. Tarjoa käytännön neuvoja, jotka auttavat pidentämään huonekalujen käyttöikää ja toimivuutta. Käytä ammattimaista mutta lähestyttävää sävyä, varmistaen, että ohjeet ovat helposti ymmärrettävissä.
+
+Anna vastaus pelkässä tekstimuodossa ilman mitään Markdown-muotoilua, kuten tähtiä, alaviivoja tai muita erikoismerkkejä. Käytä yksinkertaisia lauseita ja listoja.
+
+Vastaa kysymykseen alla olevan kontekstin ja keskusteluhistorian perusteella (jos niitä on). Jos et tiedä vastausta, sano vain, ettet tiedä, älä yritä keksiä vastausta:
+
+<context>
+  {context}
+</context>
+
+<chat_history>
+  {chat_history}
+</chat_history>
+
+Kysymys: {question}
+`;
+
+const answerPrompt = PromptTemplate.fromTemplate(ENG_ANSWER_TEMPLATE);
 
 export async function POST(req: NextRequest) {
   try {
@@ -116,6 +137,7 @@ export async function POST(req: NextRequest) {
 
     // Hakee dokumentit Supabase-tietokannasta.
     const retriever = vectorstore.asRetriever({
+      k: 2,
       callbacks: [
         {
           handleRetrieverEnd(documents: Document<Record<string, any>>[]) {
@@ -149,7 +171,7 @@ export async function POST(req: NextRequest) {
         chat_history: (input) => input.chat_history, // Saa keskusteluhistorian syötteenä
       },
       answerChain,
-      new BytesOutputParser(), // Striimaa vastauksen
+      // new BytesOutputParser(), // Striimaa vastauksen
       // new StringOutputParser(), // Ei striimaukseen sendMessage kanssa frontendissa
     ]);
 
@@ -158,7 +180,9 @@ export async function POST(req: NextRequest) {
       question: currentMessageContent,
       chat_history: formatVercelMessages(previousMessages), // Muotoilee keskusteluhistorian
     });
-    
+
+    const aiStream = LangChainAdapter.toAIStream(stream);
+    return new StreamingTextResponse(aiStream);
     // return new StreamingTextResponse(stream); // Ei striimaukseen sendMessage kanssa frontendissa
 
     return new StreamingTextResponse(
@@ -186,6 +210,7 @@ export async function POST(req: NextRequest) {
 
 //   return tableMapping[furnitureType] || 'default_table_name';
 // }
+
 // Funktio Markdown-merkkien poistamiseksi tekstistä
 function stripMarkdown(text: string): string {
   return text

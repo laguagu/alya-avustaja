@@ -1,8 +1,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 export default `
-KALUSTEIDEN HOITO-OHJEET, HUOLTO JA KIERRÄTYS
-
 Yleiset Hoito-Ohjeet
+
 Säännöllinen hoito antaa kalusteillesi lisää laadukkaita käyttövuosia. Kalusteiden kunnosta huolehtiminen
 kannattaa. Pitkäikäiset kalusteet ovat taloudellisia ja ne säästävät ympäristöä.
 Tehdasmaalattujen ja lakattujen kalustepintojen sekä hoito että puhtaanapito ovat helppoa. Useimmiten vesi
@@ -16,10 +15,12 @@ vesi, niin ettei se pääse tunkeutumaan mistään saumasta kalusteen runkoon. M
 puhdistusaine on aina laimennettava ennen käyttöä. Pintojen puhdistamiseen ei myöskään pidä käyttää
 hankausjauhetta eikä hankausnesteitä.
 
+
 Huolto- ja Korjauspalvelut
 Lähtökohtamme on, että kalusteitamme on mahdollista huoltaa elinkaaren aikana kaikkien komponenttien
 osalta.
 Voit lukea lisää huoltotoiminnastamme: https://www.piiroinen.com/fi/huolto/
+
 
 Kierrätys
 Kalusteemme ovat helposti purettavissa osiin ja siten kaikki materiaalit kierrätettävissä asianmukaisesti.
@@ -30,10 +31,12 @@ uudessa käyttökohteessa tai tuotteen komponenttien käyttämistä uudelleen.
 Käytännössä ennen kalusteiden siirtoa toiseen kohteeseen, niiden kunto tarkistetaan ja ne puhdistetaan.
 Uudelleenkäytöllä vähennetään uusien tuotteiden tarvetta ja näin pienennetään energian kulutusta ja raakaaineiden käyttöä.
 
+
 Kalusteiden Asennus Käyttökuntoon ja Käyttö
 Useimmat Piiroisen designkalusteet toimitetaan asiakkaille käyttövalmiina. Mahdolliset asennustarpeet liittyvät yleisimmin suuriin pöytäkokonaisuuksiin, jolloin rungot ja kannet toimitetaan erikseen ja asennetaan kohteessa käyttövalmiiksi.
 Mikäli toimitukseen liittyy asennustarpeita, tästä on aina sovittu etukäteen asiakkaan ja Piiroisen välillä.
 Tuotekohtaisia asennusohjeita toimitamme tarpeen mukaan projektikohtaisesti suoraan asiakkaalle.
+
 
 Kalusteiden Käyttö
 Julkisten tilojen kalusteet ovat lähtökohtaisesti hyvin kestäviä rakenteidensa ja materiaaliensa osalta. Kalusteiden käyttöä koskien tulee huomioida muun muassa seuraavia asioita:
@@ -43,6 +46,7 @@ Julkisten tilojen kalusteet ovat lähtökohtaisesti hyvin kestäviä rakenteiden
 - Tuoleille, sohville ja pöydille ei pidä nousta seisomaan
 - Varmista lattiamateriaalin sopivuus kalusteille. Useimpiin tuolimalleihimme on saatavilla huopanastoja, jotka kuormittavat vähemmän lattiaa tuolia siirreltäessä.
 - Suora jatkuva auringonvalo haalistaa kalusteiden pintaa
+
 
 Kalusteiden Hoito
 Kalusteita hoidettaessa on tärkeää huomioida seuraavaa:
@@ -54,13 +58,16 @@ Kalusteita hoidettaessa on tärkeää huomioida seuraavaa:
 - Tietyissä vikatapauksissa on suositeltavaa ottaa huonekalu pois käytöstä (siirtää tiettyyn paikkaan) välittömästi. Tämä koskee erityisesti tilanteita, joissa vika saattaa aiheuttaa turvallisuusriskin.
 - Joissain tapauksissa suositellaan korjausta, mutta se ei välttämättä ole pakollista. Näissä tilanteissa huonekalu voi olla edelleen käyttökelpoinen, mutta sen toiminnallisuus tai esteettisyys voi olla heikentynyt.
 
+
 Puupintojen Hoito ja Tahrojen Poisto
 - Kuiva- tai nihkeäpyyhintä, lopuksi pinnan kuivaus
 - Vain laimentamaton neutraali pesuneste (puhdistusaineen pH 6-8)
 
+
 Metallipintojen Hoito ja Tahrojen Poisto (pulverimaalatut ja kromatut pinnat)
 - Nihkeä- tai kosteapyyhintä, lopuksi pinnan kuivaus
 - Vain laimentamaton neutraali pesuneste (puhdistusaineen pH 6-8)
+
 
 Kankaat ja Nahat
 - Kankaiden ja nahkojen hoito- ja huolto pitää tehdä juuri kyseiselle kankaalle annetun ohjeen mukaisesti
@@ -70,16 +77,6 @@ Lisäohjeet
 Näiden ohjeiden ohella, Piiroisen myyntihenkilöstö auttaa ja neuvoo Sinua missä tahansa kalusteiden hoitoon ja huoltoon liittyvässä asiassa. Otathan meihin yhteyttä matalalla kynnyksellä.
 https://www.piiroinen.com/fi/yhteystiedot/
 
-Erityiset Hoito-Ohjeet
-Puupenkki Hoito-Ohjeet
-- Säännöllinen puhdistus pehmeällä, kuivalla liinalla.
-- Vältä suoraa auringonvaloa ja kosteutta.
-- Käytä puuvahaa tai -öljyä kerran vuodessa säilyttääksesi pinnan kauniina.
-
-Koulupenkki Hoito-Ohjeet
-- Pyyhi kostealla liinalla päivittäin, jotta pöly ja lika eivät kerry.
-- Tarkista säännöllisesti ruuvit ja kiristä tarvittaessa.
-- Vältä terävien esineiden käyttöä pinnalla, jotta naarmut eivät pilaa pintaa.
 
 Arena 022 Tuolin Huolto-Ohjeet
 
@@ -93,35 +90,33 @@ Arena 022 Tuolin Huolto-Ohjeet
   7: Pinontanasta (4 kpl)
   8: Tuolin istuin
 
-2. Kunnon tarkistaminen ja huolto-ohjeet
+2. Arena 022 Kunnon tarkistaminen ja huolto-ohjeet
 
-Tuolin metallirunko
-
-Pinnan kunto
-
-- Onko pintakäsittely kauttaaltaan ehjä? Etenkin kirkas kromipinta ja himmeämpi mattakromipinta ovat erittäin kestäviä, eivätkä vaurioidu normaalissa käytössä, pulverimaalatut pinnat voivat naarmuuntua kolhimisen, potkimisen, tms. seurauksena.
-  - Mikäli pintakäsittely on rikkoutunut, tässä tapauksessa huolto- ja korjaustoimet suorittaa Piiroinen tuotteen valmistajana. Tällöin kyseeseen tulee tyypillisesti koko rungon uudelleen pintakäsittely, näin olemassa olevan ja teknisesti yhä moitteettoman rungon elinkaarta voidaan jatkaa.
+Arena 022 Tuolin metallirunko
+Arena 022 Pinnan kunto
+- Onko pintakäsittely kauttaaltaan ehjä? 
+  - Etenkin kirkas kromipinta ja himmeämpi mattakromipinta ovat erittäin kestäviä, eivätkä vaurioidu normaalissa käytössä, pulverimaalatut pinnat voivat naarmuuntua kolhimisen, potkimisen, tms. seurauksena.
+  - Mikäli Arena 022 tuolin pintakäsittely on rikkoutunut, tässä tapauksessa huolto- ja korjaustoimet suorittaa Piiroinen tuotteen valmistajana. Tällöin kyseeseen tulee tyypillisesti koko rungon uudelleen pintakäsittely, näin olemassa olevan ja teknisesti yhä moitteettoman rungon elinkaarta voidaan jatkaa.
 - Onko pintakäsittely puhdas vai likaantunut?
-  - Riippumatta rungon pintakäsittelystä (kromi, mattakromi, pulverimaalaus, erikoispinnat), pyyhintä kuivalla tai hieman vedellä kostutetulla pyyhkeellä riittää tyypillisesti poistamaan pienet pintaliat, ml. sormenjäljet. Tarvittaessa pyyhinnässä voidaan käyttää mietoa pesuainetta. Runko tulee lopuksi kuivata.
+  - Riippumatta Arena 022 rungon pintakäsittelystä (kromi, mattakromi, pulverimaalaus, erikoispinnat), pyyhintä kuivalla tai hieman vedellä kostutetulla pyyhkeellä riittää tyypillisesti poistamaan pienet pintaliat, ml. sormenjäljet. Tarvittaessa pyyhinnässä voidaan käyttää mietoa pesuainetta. Runko tulee lopuksi kuivata.
 
-Rungon tekninen kunto
 
+Arena 022 Rungon tekninen kunto
 - Ovatko kaikki neljä jalkaa oikeassa kulmassaan eivätkä vääntyneitä?
 - Ovatko rungon hitsausliitokset kunnossa istuimen alla?
-  - Mikäli runko on teknisesti vioittunut, tässä tapauksessa huolto- ja korjaustoimet suorittaa Piiroinen tuotteen valmistajana. Mikäli esimerkiksi jalat ovat vääntyneitä, tai hitsausliitokset revenneitä, tuoli tulee ottaa välittömästi pois käytöstä.
+  - Mikäli Arena 022 runko on teknisesti vioittunut, tässä tapauksessa huolto- ja korjaustoimet suorittaa Piiroinen tuotteen valmistajana. Mikäli esimerkiksi jalat ovat vääntyneitä, tai hitsausliitokset revenneitä, tuoli tulee ottaa välittömästi pois käytöstä.
 
-Tuolin istuin ja selkänoja
 
-Pinnan kunto
-
+Arena 022 Tuolin istuin ja selkänoja
+Arena 022 Pinnan kunto
 - Onko istuimen ja selkänojan pinta kauttaaltaan ehjä?
   - Ns. kovien pintojen kohdalla (aidot puuviilut, laminaatit, melamiini) olennaisinta on tarkistaa, onko pinnassa lohkeamia. Kaikki em. pintamateriaalit voivat lohkeilla kovien iskujen seurauksena. Normaalissa käytössä pintoihin voi tulla naarmuja, jotka eivät kuitenkaan lohkaise materiaalia.
   - Mikäli pinnastaan lohjenneita tuoleja ei poisteta käytöstä, on riski pinnan alla olevan puumateriaalin rispaantumiseen ja tällöin esimerkiksi tikkujen sormeen saamiseen.
   - Verhoilluissa istuimissa ja selkänojissa tarkistetaan, onko kangas/nahka ehjä.
-  - Tämän tuolimallin kohdalla verhoilun painuminen on erittäin harvinaista, joten tämä on äärimmäisen harvoin syy verhoilun uudistamiseen toisin kuin joskus esimerkiksi neuvottelutuolien kohdalla.
-  - Mikäli pintakäsittely on rikkoutunut, tässä tapauksessa huolto- ja korjaustoimet suorittaa Piiroinen tuotteen valmistajana. Lohjenneita pintoja on vaikea huoltaa alkuperäisen kaltaiseksi, joten tyypillisin toimenpide on istuimen vaihtaminen uuteen.
-  - Rikkoutuneet kangaspinnat voidaan joissain tapauksissa korjata. Mikäli kyseisen kankaan korjaaminen ei kannata, usein istuin voidaan uudelleenverhoilla hyödyntäen olemassa olevaa istuimen puurunkoa ja mahdollisesti vaahtoja ja vanuja.
-- Onko pintakäsittely puhdas vai likaantunut?
+  - Tämän Arena 022 tuolimallin kohdalla verhoilun painuminen on erittäin harvinaista, joten tämä on äärimmäisen harvoin syy verhoilun uudistamiseen toisin kuin joskus esimerkiksi neuvottelutuolien kohdalla.
+  - Mikäli Arena 022 pintakäsittely on rikkoutunut, tässä tapauksessa huolto- ja korjaustoimet suorittaa Piiroinen tuotteen valmistajana. Lohjenneita pintoja on vaikea huoltaa alkuperäisen kaltaiseksi, joten tyypillisin toimenpide on istuimen vaihtaminen uuteen.
+  - Rikkoutuneet Arena 022 kangaspinnat voidaan joissain tapauksissa korjata. Mikäli kyseisen kankaan korjaaminen ei kannata, usein istuin voidaan uudelleenverhoilla hyödyntäen olemassa olevaa istuimen puurunkoa ja mahdollisesti vaahtoja ja vanuja.
+- Onko Arena 022 tuolin pintakäsittely puhdas vai likaantunut?
   - Ns. kovat pinnat (aidot puuviilut, laminaatit, melamiini) pyyhitään kuivalla tai hieman vedellä kostutetulla pyyhkeellä, tämä riittää tyypillisesti poistamaan pienet pintaliat, ml. sormenjäljet. Tarvittaessa laminaattien pyyhinnässä voidaan käyttää mietoa pesuainetta. Pinta tulee lopuksi kuivata.
-  - Verhoiltu istuin ja selkänoja imuroidaan pölystä ja irtoliasta pehmeää harjasuulaketta käyttäen. Verhoilussa olevat liat voidaan pyyhkiä kostealla kankaalla ja tämän jälkeen pinnan annetaan kuivua. Jokaiselle kankaalle on saatavilla tarkempi hoito-ohje kankaan valmistajalta tai Piiroiselta ja ensi sijaisesti kankaan tarkka hoito-ohje tuleekin olla tiedossa huoltotoimet aloitettaessa.
+  - Verhoiltu Arena 022 istuin ja selkänoja imuroidaan pölystä ja irtoliasta pehmeää harjasuulaketta käyttäen. Verhoilussa olevat liat voidaan pyyhkiä kostealla kankaalla ja tämän jälkeen pinnan annetaan kuivua. Jokaiselle kankaalle on saatavilla tarkempi hoito-ohje kankaan valmistajalta tai Piiroiselta ja ensi sijaisesti kankaan tarkka hoito-ohje tuleekin olla tiedossa huoltotoimet aloitettaessa.
 `;

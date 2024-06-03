@@ -138,8 +138,8 @@ export async function getSpeechFromText(text: string) {
 
   const response = await openai.audio.speech.create({
     input: text,
-    voice: "alloy", // Valitse haluamasi ääni
-    model: "tts-1",
+    voice: "shimmer", // Valitse haluamasi ääni
+    model: "tts-1-hd",
   });
 
   // Save the audio file to a temporary location

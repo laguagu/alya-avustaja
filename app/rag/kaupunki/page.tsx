@@ -11,7 +11,7 @@ import {
   getSpeechFromText,
   getWhisperTranscription,
 } from "@/app/actions";
-
+import { TailSpin } from "react-loader-spinner";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface TTSResponse {
@@ -20,8 +20,9 @@ interface TTSResponse {
 }
 
 export default function Chat() {
-  const [lastAssistantMessage, setLastAssistantMessage] = useState<string | null>(null);
-  const [awaitingResponse, setAwaitingResponse] = useState(false);
+  const [lastAssistantMessage, setLastAssistantMessage] = useState<
+    string | null
+  >(null);
   const [recording, setRecording] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
@@ -34,32 +35,33 @@ export default function Chat() {
     handleSubmit,
     setInput,
     isLoading,
+    stop,
   } = useChat({
-    api: `${API_URL}simple`,
+    api: `${API_URL}example2`,
     onError: (e) => {
       console.log(e);
     },
-    onFinish: async (message) => {
-    if (message.role === 'assistant') {
-        console.log('Assistant message received:', message.content);
-        setLastAssistantMessage(message.content);
-        const ttsResponse: TTSResponse = await getSpeechFromText(message.content);
+    // onFinish: async (message) => {
+    //   if (message.role === "assistant") {
+    //     console.log("Assistant message received:", message.content);
+    //     setLastAssistantMessage(message.content);
+    //     const ttsResponse: TTSResponse = await getSpeechFromText(
+    //       message.content
+    //     );
 
-        const audio = new Audio(ttsResponse.audioURL);
-        audio.oncanplaythrough = () => {
-          console.log("Playing audio");
-          audio.play();
-        };
+    //     const audio = new Audio(ttsResponse.audioURL);
+    //     audio.oncanplaythrough = () => {
+    //       console.log("Playing audio");
+    //       audio.play();
+    //     };
 
-        audio.onended = async () => {
-          console.log("Deleting temporary audio file");
-          await deleteTempFile(ttsResponse.tempFilePath);
-        };
-      }
-    },
+    //     audio.onended = async () => {
+    //       console.log("Deleting temporary audio file");
+    //       await deleteTempFile(ttsResponse.tempFilePath);
+    //     };
+    //   }
+    // },
   });
-
-
 
   async function sendMessageToAPI(messages: Message[], API_URL: string) {
     const response = await fetch(`${API_URL}`, {
@@ -108,8 +110,6 @@ export default function Chat() {
     });
   };
 
-  
-
   const handleStartRecording = () => {
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       if (mediaRecorderRef.current) {
@@ -133,41 +133,11 @@ export default function Chat() {
           const transcriptionText = await getWhisperTranscription(formData);
 
           append({
-            role: 'user',
+            role: "user",
             content: transcriptionText,
-          })
-          setLastAssistantMessage(null);
-          
-          // let messagesWithUserReply: Message[] = addUserMessage(
-          //   primaryMessages,
-          //   uniqueId,
-          //   transcriptionText
-          // );
+          });
 
-          // setMessages(messagesWithUserReply);
-
-          // const llmResponse = await sendMessageToAPI(
-          //   messagesWithUserReply,
-          //   "http://localhost:3000/api/example2"
-          // );
-
-          // if (!lastAssistantMessage) return;
-
-          // const ttsResponse: TTSResponse = await getSpeechFromText(
-          //   lastAssistantMessage
-          // );
-
-          // const audio = new Audio(ttsResponse.audioURL);
-          // audio.oncanplaythrough = () => {
-          //   console.log("Soitetaan ääntä");
-            
-          //   audio.play();
-          // }
-          
-          // audio.onended = async () => {
-          //   console.log("poistetaan ääni");
-          //   await deleteTempFile(ttsResponse.tempFilePath);
-          // };
+          setLastAssistantMessage(null); // Reset last assistant message
         }
       };
       mediaRecorder.start();
@@ -209,22 +179,6 @@ export default function Chat() {
     }
   });
 
-  const getLastAssistantMessage = () => {
-    const assistantMessages = primaryMessages.filter(
-      (message) => message.role === "assistant"
-    );
-    if (assistantMessages.length > 0) {
-      console.log(assistantMessages[assistantMessages.length - 1].content);
-      
-      return assistantMessages[assistantMessages.length - 1].content;
-    } else {
-      console.log("No assistant messages found");
-      
-      return null;
-    }
-  };
-
-
   return (
     <main className="flex flex-col w-full h-screen max-h-dvh bg-background">
       <header className="p-4 border-b w-full max-w-3xl mx-auto">
@@ -238,7 +192,7 @@ export default function Chat() {
         >
           <Input
             className="flex-1 min-h-[40px]"
-            placeholder="Type your question here..."
+            placeholder="Kirjoita kysymyksesi tänne..."
             type="text"
             value={input}
             onChange={handleInputChange}
@@ -246,18 +200,13 @@ export default function Chat() {
           <Button className="ml-2" type="submit" disabled={isLoading}>
             Submit
           </Button>
+
           <Button
             className="ml-2"
             onClick={recording ? handleStopRecording : handleStartRecording}
             disabled={isLoading}
           >
             {recording ? "Stop Recording" : "Start Recording"}
-          </Button>
-          <Button
-            className="ml-2"
-            onClick={getLastAssistantMessage}
-          >
-            Last mesag
           </Button>
         </form>
       </section>
@@ -284,6 +233,19 @@ export default function Chat() {
               )}
             </div>
           ))}
+          {isLoading && (
+              <li className="flex flex-row-reverse">
+                <div className="">
+                  <TailSpin
+                    height="28"
+                    width="28"
+                    color="black"
+                    ariaLabel="loading"
+                  />
+                  {/* <p className="text-primary">Ladataan vastausta...</p> */}
+                </div>
+              </li>
+          )}
         </ul>
       </section>
     </main>

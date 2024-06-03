@@ -38,8 +38,8 @@ export async function POST(req: NextRequest) {
     );
 
     const splitter = new RecursiveCharacterTextSplitter({
-      chunkSize: 1000,
-      chunkOverlap: 50,
+      chunkSize: 1600,
+      chunkOverlap: 25,
       separators: ["\n\n", "\n", " ", ""],
     });
 
