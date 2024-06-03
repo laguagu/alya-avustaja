@@ -65,7 +65,7 @@ export async function POST(req: Request) {
       question: currentMessageContent,
     });
 
-    return new Response(stream);
+    // return new Response(stream);
     // Respond with the stream
     return new StreamingTextResponse(
       stream.pipeThrough(createStreamDataTransformer())

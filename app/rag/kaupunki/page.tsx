@@ -20,6 +20,11 @@ interface TTSResponse {
 }
 
 export default function Chat() {
+  const [lastAssistantMessage, setLastAssistantMessage] = useState<string | null>(null);
+  const [awaitingResponse, setAwaitingResponse] = useState(false);
+  const [recording, setRecording] = useState(false);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+
   const {
     messages: primaryMessages,
     input,
@@ -30,13 +35,31 @@ export default function Chat() {
     setInput,
     isLoading,
   } = useChat({
-    api: `${API_URL}example2`,
+    api: `${API_URL}simple`,
     onError: (e) => {
       console.log(e);
     },
+    onFinish: async (message) => {
+    if (message.role === 'assistant') {
+        console.log('Assistant message received:', message.content);
+        setLastAssistantMessage(message.content);
+        const ttsResponse: TTSResponse = await getSpeechFromText(message.content);
+
+        const audio = new Audio(ttsResponse.audioURL);
+        audio.oncanplaythrough = () => {
+          console.log("Playing audio");
+          audio.play();
+        };
+
+        audio.onended = async () => {
+          console.log("Deleting temporary audio file");
+          await deleteTempFile(ttsResponse.tempFilePath);
+        };
+      }
+    },
   });
-  const [recording, setRecording] = useState(false);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+
+
 
   async function sendMessageToAPI(messages: Message[], API_URL: string) {
     const response = await fetch(`${API_URL}`, {
@@ -70,6 +93,7 @@ export default function Chat() {
     }
     return responseText;
   }
+
   const handleAudioData = (data: BlobPart) => {
     const audioBlob = new Blob([data], { type: "audio/webm" });
     const audioURL = URL.createObjectURL(audioBlob);
@@ -84,17 +108,7 @@ export default function Chat() {
     });
   };
 
-  const addAssistantMessage = (
-    messages: Message[],
-    id: string,
-    content: string
-  ) => {
-    return messages.concat({
-      id,
-      role: "assistant",
-      content,
-    });
-  };
+  
 
   const handleStartRecording = () => {
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
@@ -102,9 +116,11 @@ export default function Chat() {
         mediaRecorderRef.current.stop();
         mediaRecorderRef.current = null;
       }
+
       const mediaRecorder = new MediaRecorder(stream, {
         mimeType: "audio/webm",
       });
+
       mediaRecorderRef.current = mediaRecorder;
       const uniqueId = nanoid();
 
@@ -116,36 +132,42 @@ export default function Chat() {
           formData.append("file", audioBlob, "audio.webm");
           const transcriptionText = await getWhisperTranscription(formData);
 
-          let messagesWithUserReply: Message[] = addUserMessage(
-            primaryMessages,
-            uniqueId,
-            transcriptionText
-          );
-          setMessages(messagesWithUserReply);
-
-          const llmResponse = await sendMessageToAPI(
-            messagesWithUserReply,
-            "http://localhost:3000/api/example2"
-          );
-
-          console.log(llmResponse);
-          if (!llmResponse) return;
+          append({
+            role: 'user',
+            content: transcriptionText,
+          })
+          setLastAssistantMessage(null);
           
-          const ttsResponse: TTSResponse = await getSpeechFromText(
-            llmResponse
-          );
+          // let messagesWithUserReply: Message[] = addUserMessage(
+          //   primaryMessages,
+          //   uniqueId,
+          //   transcriptionText
+          // );
 
-          const audio = new Audio(ttsResponse.audioURL);
-          audio.oncanplaythrough = () => {
-            console.log("Soitetaan ääntä");
+          // setMessages(messagesWithUserReply);
+
+          // const llmResponse = await sendMessageToAPI(
+          //   messagesWithUserReply,
+          //   "http://localhost:3000/api/example2"
+          // );
+
+          // if (!lastAssistantMessage) return;
+
+          // const ttsResponse: TTSResponse = await getSpeechFromText(
+          //   lastAssistantMessage
+          // );
+
+          // const audio = new Audio(ttsResponse.audioURL);
+          // audio.oncanplaythrough = () => {
+          //   console.log("Soitetaan ääntä");
             
-            audio.play();
-          }
+          //   audio.play();
+          // }
           
-          audio.onended = async () => {
-            console.log("poistetaan ääni");
-            await deleteTempFile(ttsResponse.tempFilePath);
-          };
+          // audio.onended = async () => {
+          //   console.log("poistetaan ääni");
+          //   await deleteTempFile(ttsResponse.tempFilePath);
+          // };
         }
       };
       mediaRecorder.start();
@@ -187,10 +209,26 @@ export default function Chat() {
     }
   });
 
+  const getLastAssistantMessage = () => {
+    const assistantMessages = primaryMessages.filter(
+      (message) => message.role === "assistant"
+    );
+    if (assistantMessages.length > 0) {
+      console.log(assistantMessages[assistantMessages.length - 1].content);
+      
+      return assistantMessages[assistantMessages.length - 1].content;
+    } else {
+      console.log("No assistant messages found");
+      
+      return null;
+    }
+  };
+
+
   return (
     <main className="flex flex-col w-full h-screen max-h-dvh bg-background">
       <header className="p-4 border-b w-full max-w-3xl mx-auto">
-        <h1 className="text-2xl font-bold">Whiper chat</h1>
+        <h1 className="text-2xl font-bold">Hoito-ohje assari</h1>
       </header>
 
       <section className="p-4">
@@ -214,6 +252,12 @@ export default function Chat() {
             disabled={isLoading}
           >
             {recording ? "Stop Recording" : "Start Recording"}
+          </Button>
+          <Button
+            className="ml-2"
+            onClick={getLastAssistantMessage}
+          >
+            Last mesag
           </Button>
         </form>
       </section>
