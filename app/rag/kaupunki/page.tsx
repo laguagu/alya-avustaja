@@ -185,7 +185,7 @@ export default function Chat() {
   });
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen">
      <Sidenav/>
       <main className="flex flex-col w-full h-screen max-h-dvh bg-background">
         <header className="p-4 border-b w-full max-w-3xl mx-auto">
@@ -254,7 +254,7 @@ export default function Chat() {
             )}
           </ul>
         </section>
-        <Button onClick={testSplitter}>Test</Button>
+        {/* <Button onClick={testSplitter}>Test</Button> */}
       </main>
     </div>
   );

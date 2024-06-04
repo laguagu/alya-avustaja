@@ -1,11 +1,18 @@
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
-import { XIcon, MenuIcon } from "lucide-react";
+import { XIcon, MenuIcon, Home, Mail } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import Link from "next/link";
 
 export default function Sidenav() {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <nav className="relative md:w-64">
+    <nav className="relative md:w-48 md:border-r ">
       <Button
         className="absolute top-0 left-0 mt-4 ml-4 md:hidden"
         onClick={() => setIsOpen(!isOpen)}
@@ -25,9 +32,9 @@ export default function Sidenav() {
       ></div>
 
       <aside
-        className={`fixed z-30 h-full transition-transform transform bg-white overflow-auto ${
+        className={`fixed z-30 h-full transition-transform transform bg-slate-50 overflow-auto ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } md:relative md:translate-x-0 w-64`}
+        } md:relative md:translate-x-0 w-64 md:w-auto`}
       >
         {isOpen && (
           <Button
@@ -37,10 +44,41 @@ export default function Sidenav() {
             <XIcon className="h-6 w-6" />
           </Button>
         )}
-        <div className="p-4 mt-10">
-          <p>Item 1</p>
-          <p>Item 2</p>
-          <p>Item 3</p>
+        <div className="p-4 mt-10 md:pl-6">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="#"
+                  className="flex flex-row h-9 w-auto items-center justify-start rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <div className="flex gap-1 font-semibold">
+                    <Home className="h-5 w-5" />
+                    Koti
+                  </div>
+                  <span className="sr-only">Koti</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="top">Chatbot</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="#"
+                  className="flex flex-row h-9 w-auto items-center justify-start rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <div className="flex gap-1 font-semibold">
+                    <Mail className="h-5 w-5" />
+                    Vikailmoitus
+                  </div>
+                  <span className="sr-only">Vikailmoitus</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                Piiroiselle vikailmoitus
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </aside>
     </nav>
