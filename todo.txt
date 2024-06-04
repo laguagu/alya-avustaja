@@ -16,3 +16,5 @@ Application Ask did solution problem was solved
 Application → Piiroinen: Autocomplete defect notification form.
 
 User → Application: Marks issue as resolved.
+
+-

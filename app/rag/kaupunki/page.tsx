@@ -6,16 +6,17 @@ import { useChat } from "ai/react";
 import { useRef, useEffect, useState } from "react";
 import { Message } from "ai";
 import { nanoid } from "nanoid";
+import { Send, Mic } from "lucide-react";
+
 import {
   deleteTempFile,
   getSpeechFromText,
   getWhisperTranscription,
 } from "@/app/actions";
-import { TailSpin } from "react-loader-spinner";
+import { TailSpin, Rings } from "react-loader-spinner";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import piiroinenHuoltoOhjeet from "@/data/piiroinen-huolto-ohjeet";
 import Sidenav from "@/app/ui/sidenav";
-
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -42,7 +43,7 @@ export default function Chat() {
     isLoading,
     stop,
   } = useChat({
-    api: `${API_URL}example2`,
+    api: `${API_URL}simple`,
     onError: (e) => {
       console.log(e);
     },
@@ -132,17 +133,19 @@ export default function Chat() {
       mediaRecorder.ondataavailable = async (event) => {
         if (event.data.size > 0) {
           const { audioBlob, audioURL } = handleAudioData(event.data);
+          return;
+          if (audioBlob.size > 25415) {
+            const formData = new FormData();
+            formData.append("file", audioBlob, "audio.webm");
+            const transcriptionText = await getWhisperTranscription(formData);
 
-          const formData = new FormData();
-          formData.append("file", audioBlob, "audio.webm");
-          const transcriptionText = await getWhisperTranscription(formData);
+            append({
+              role: "user",
+              content: transcriptionText,
+            });
 
-          append({
-            role: "user",
-            content: transcriptionText,
-          });
-
-          setLastAssistantMessage(null); // Reset last assistant message
+            setLastAssistantMessage(null); // Reset last assistant message
+          }
         }
       };
       mediaRecorder.start();
@@ -186,36 +189,13 @@ export default function Chat() {
 
   return (
     <div className="flex h-screen">
-     <Sidenav/>
+      <Sidenav />
       <main className="flex flex-col w-full h-screen max-h-dvh bg-background">
         <header className="p-4 border-b w-full max-w-3xl mx-auto">
-          <h1 className="text-2xl font-bold text-center">Hoito-ohje assari</h1>
+          <h1 className="text-2xl font-bold text-center pl-4 md:pl-0">
+            Huolto-ohje chatbot
+          </h1>
         </header>
-        <section className="p-4">
-          <form
-            onSubmit={handleSubmit}
-            className="flex w-full max-w-3xl mx-auto items-center"
-          >
-            <Input
-              className="flex-1 min-h-[40px]"
-              placeholder="Kirjoita kysymyksesi tänne..."
-              type="text"
-              value={input}
-              onChange={handleInputChange}
-            />
-            <Button className="ml-2" type="submit" disabled={isLoading}>
-              Submit
-            </Button>
-
-            <Button
-              className="ml-2"
-              onClick={recording ? handleStopRecording : handleStartRecording}
-              disabled={isLoading}
-            >
-              {recording ? "Stop Recording" : "Start Recording"}
-            </Button>
-          </form>
-        </section>
 
         <section className="container px-0 pb-10 flex flex-col flex-grow gap-4 mx-auto max-w-3xl">
           <ul
@@ -248,13 +228,51 @@ export default function Chat() {
                     color="black"
                     ariaLabel="loading"
                   />
-                  {/* <p className="text-primary">Ladataan vastausta...</p> */}
                 </div>
               </li>
             )}
           </ul>
         </section>
-        {/* <Button onClick={testSplitter}>Test</Button> */}
+
+        <section className="p-4">
+          <form
+            onSubmit={handleSubmit}
+            className="flex w-full flex-col sm:flex-row max-w-3xl mx-auto items-center space-y-2 sm:space-y-0"
+          >
+            <Input
+              className="flex-1 min-h-[40px]"
+              placeholder="Kirjoita kysymyksesi tänne..."
+              type="text"
+              value={input}
+              onChange={handleInputChange}
+            />
+            <div className="flex ">
+              <Button className="ml-2" type="submit" disabled={isLoading}>
+                <Send className="h-5 w-5 mr-2" />
+                Lähetä
+              </Button>
+
+              <Button
+                className="ml-2"
+                onClick={recording ? handleStopRecording : handleStartRecording}
+                disabled={isLoading}
+              >
+                {recording ? (
+                  <Rings color="white" height={100} width={20} />
+                ) : (
+                  <Mic className="h-5 w-5 mr-2" />
+                )}
+                {recording ? "Lopeta Nauhoitus" : "Aloita Nauhoitus"}
+              </Button>
+            </div>
+          </form>
+        </section>
+        <div>
+          <p className="text-center sm:text-base text-sm tracking-tight sm:mb-5">
+            Huolto-ohje chatbot voi tehdä virheitä. Suosittelemme tarkastamaan
+            tärkeät tiedot.
+          </p>
+        </div>
       </main>
     </div>
   );
