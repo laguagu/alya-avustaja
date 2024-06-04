@@ -1,3 +1,4 @@
+"use client"
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 import { XIcon, MenuIcon, Home, Mail } from "lucide-react";
@@ -12,7 +13,7 @@ import Link from "next/link";
 export default function Sidenav() {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <nav className="relative md:w-48 md:border-r">
+    <nav className="relative md:w-48 md:border-r ">
       <Button
         className="absolute top-0 left-0 mt-4 ml-4 md:hidden"
         onClick={() => setIsOpen(!isOpen)}

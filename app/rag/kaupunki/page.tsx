@@ -7,19 +7,15 @@ import { useRef, useEffect, useState } from "react";
 import { Message } from "ai";
 import { nanoid } from "nanoid";
 import { Send, Mic } from "lucide-react";
-
 import {
-  deleteTempFile,
-  getSpeechFromText,
   getWhisperTranscription,
 } from "@/app/actions";
 import { TailSpin, Rings } from "react-loader-spinner";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import piiroinenHuoltoOhjeet from "@/data/piiroinen-huolto-ohjeet";
-import Sidenav from "@/app/ui/sidenav";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
+console.log("API_URL", API_URL);
 interface TTSResponse {
   audioURL: string;
   tempFilePath: string;
@@ -133,7 +129,7 @@ export default function Chat() {
       mediaRecorder.ondataavailable = async (event) => {
         if (event.data.size > 0) {
           const { audioBlob, audioURL } = handleAudioData(event.data);
-          return;
+
           if (audioBlob.size > 25415) {
             const formData = new FormData();
             formData.append("file", audioBlob, "audio.webm");
@@ -188,92 +184,89 @@ export default function Chat() {
   });
 
   return (
-    <div className="flex h-screen">
-      <Sidenav />
-      <main className="flex flex-col w-full h-screen max-h-dvh bg-background">
-        <header className="p-4 border-b w-full max-w-3xl mx-auto">
-          <h1 className="text-xl md:text-2xl font-bold text-center pl-4 md:pl-0">
-            Huolto-ohje chatbot
-          </h1>
-        </header>
+    <div className="flex flex-col w-full h-screen max-h-dvh bg-background">
+      <header className="p-4 border-b w-full max-w-3xl mx-auto">
+        <h1 className="text-xl md:text-2xl font-bold text-center pl-4 md:pl-0">
+          Huolto-ohje chatbot
+        </h1>
+      </header>
 
-        <section className="container px-0 pb-10 flex flex-col flex-grow gap-4 mx-auto max-w-3xl">
-          <ul
-            ref={chatParent}
-            className="h-1 p-4 flex-grow bg-muted/50 rounded-lg overflow-y-auto flex flex-col gap-4"
-          >
-            {primaryMessages.map((m, index) => (
-              <div key={index}>
-                {m.role === "user" ? (
-                  <li key={m.id} className="flex flex-row">
-                    <div className="rounded-xl p-4 bg-background shadow-md flex">
-                      <p className="text-primary">{m.content}</p>
-                    </div>
-                  </li>
-                ) : (
-                  <li key={m.id} className="flex flex-row-reverse">
-                    <div className="rounded-xl p-4 bg-background shadow-md flex w-3/4">
-                      <p className="text-primary">{m.content}</p>
-                    </div>
-                  </li>
-                )}
-              </div>
-            ))}
-            {isLoading && (
-              <li className="flex flex-row-reverse">
-                <div className="">
-                  <TailSpin
-                    height="28"
-                    width="28"
-                    color="black"
-                    ariaLabel="loading"
-                  />
-                </div>
-              </li>
-            )}
-          </ul>
-        </section>
-
-        <section className="p-4">
-          <form
-            onSubmit={handleSubmit}
-            className="flex w-full flex-col sm:flex-row max-w-3xl mx-auto items-center space-y-2 sm:space-y-0"
-          >
-            <Input
-              className="flex-1 min-h-[40px]"
-              placeholder="Kirjoita kysymyksesi tänne..."
-              type="text"
-              value={input}
-              onChange={handleInputChange}
-            />
-            <div className="flex ">
-              <Button className="ml-2" type="submit" disabled={isLoading}>
-                <Send className="h-5 w-5 mr-2" />
-                Lähetä
-              </Button>
-
-              <Button
-                className="ml-2"
-                onClick={recording ? handleStopRecording : handleStartRecording}
-                disabled={isLoading}
-              >
-                {recording ? (
-                  <Rings color="white" height={100} width={20} />
-                ) : (
-                  <Mic className="h-5 w-5 mr-2" />
-                )}
-                {recording ? "Lopeta Nauhoitus" : "Aloita Nauhoitus"}
-              </Button>
+      <section className="container px-0 pb-10 flex flex-col flex-grow gap-4 mx-auto max-w-3xl">
+        <ul
+          ref={chatParent}
+          className="h-1 p-4 flex-grow bg-muted/50 rounded-lg overflow-y-auto flex flex-col gap-4"
+        >
+          {primaryMessages.map((m, index) => (
+            <div key={index}>
+              {m.role === "user" ? (
+                <li key={m.id} className="flex flex-row">
+                  <div className="rounded-xl p-4 bg-background shadow-md flex">
+                    <p className="text-primary">{m.content}</p>
+                  </div>
+                </li>
+              ) : (
+                <li key={m.id} className="flex flex-row-reverse">
+                  <div className="rounded-xl p-4 bg-background shadow-md flex w-3/4">
+                    <p className="text-primary">{m.content}</p>
+                  </div>
+                </li>
+              )}
             </div>
-          </form>
-        </section>
-        <div>
-          <p className="text-center sm:text-base text-sm tracking-tight sm:mb-5">
-            Huolto-ohje chatbot voi tehdä virheitä. Suosittelemme tarkastamaan
-            tärkeät tiedot.
-          </p>
-        </div>
-      </main>
+          ))}
+          {isLoading && (
+            <li className="flex flex-row-reverse">
+              <div className="">
+                <TailSpin
+                  height="28"
+                  width="28"
+                  color="black"
+                  ariaLabel="loading"
+                />
+              </div>
+            </li>
+          )}
+        </ul>
+      </section>
+
+      <section className="p-4">
+        <form
+          onSubmit={handleSubmit}
+          className="flex w-full flex-col sm:flex-row max-w-3xl mx-auto items-center space-y-2 sm:space-y-0"
+        >
+          <Input
+            className="flex-1 min-h-[40px]"
+            placeholder="Kirjoita kysymyksesi tänne..."
+            type="text"
+            value={input}
+            onChange={handleInputChange}
+          />
+          <div className="flex ">
+            <Button className="ml-2" type="submit" disabled={isLoading}>
+              <Send className="h-5 w-5 mr-2" />
+              Lähetä
+            </Button>
+
+            <Button
+              className="ml-2"
+              onClick={recording ? handleStopRecording : handleStartRecording}
+              disabled={isLoading}
+            >
+              {recording ? (
+                <Rings color="white" height={100} width={20} />
+              ) : (
+                <Mic className="h-5 w-5 mr-2" />
+              )}
+              {recording ? "Lopeta Nauhoitus" : "Aloita Nauhoitus"}
+            </Button>
+          </div>
+        </form>
+      </section>
+      <div>
+        <p className="text-center sm:text-base text-sm tracking-tight sm:mb-5">
+          Huolto-ohje chatbot voi tehdä virheitä. Suosittelemme tarkastamaan
+          tärkeät tiedot.
+        </p>
+      </div>
     </div>
   );
 }
