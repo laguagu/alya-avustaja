@@ -12,16 +12,12 @@ import Link from "next/link";
 export default function Sidenav() {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <nav className="relative md:w-48 md:border-r ">
+    <nav className="relative md:w-48 md:border-r">
       <Button
         className="absolute top-0 left-0 mt-4 ml-4 md:hidden"
         onClick={() => setIsOpen(!isOpen)}
       >
-        {isOpen ? (
-          <XIcon className="h-6 w-6" />
-        ) : (
-          <MenuIcon className="h-6 w-6" />
-        )}
+        <MenuIcon className="h-6 w-6" />
       </Button>
 
       <div
@@ -34,7 +30,7 @@ export default function Sidenav() {
       <aside
         className={`fixed z-30 h-full transition-transform transform bg-slate-50 overflow-auto ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } md:relative md:translate-x-0 w-64 md:w-auto`}
+        } md:relative md:translate-x-0 w-48 md:w-auto`}
       >
         {isOpen && (
           <Button

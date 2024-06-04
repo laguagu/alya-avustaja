@@ -192,7 +192,7 @@ export default function Chat() {
       <Sidenav />
       <main className="flex flex-col w-full h-screen max-h-dvh bg-background">
         <header className="p-4 border-b w-full max-w-3xl mx-auto">
-          <h1 className="text-2xl font-bold text-center pl-4 md:pl-0">
+          <h1 className="text-xl md:text-2xl font-bold text-center pl-4 md:pl-0">
             Huolto-ohje chatbot
           </h1>
         </header>
