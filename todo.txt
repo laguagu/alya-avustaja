@@ -2,6 +2,8 @@ Ideointia
 - Käyttäjä kun avaa sovelluken hän tuo esim URL paramsien avulla huonekalun nimen/id mukana
 - Tämän ID perusteella RAG LLM malli määritellään viittaamaan Supabase vektoritietokannasa olevaa taulua, jotka on nimetty esim Tuoli, Pöytä, Jakkara yms.
 - Näin chatbotti osaa keskustella tietyistä huonekaluryhmistä ja sen hoito-ohjeista yms paremmin käyttäjän kanssa
+- Tuotteen osat voidaan antaa suoraan <context> -> <parts> Ei tarvita RAG mallia näiden hakuun
+- Tuolin ja materiaali hoito-ohjeet yleisesti. Ei tarvita mallikohtaista
 
 Steps:
 User → Application: Records voice.
