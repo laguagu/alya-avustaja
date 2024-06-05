@@ -7,9 +7,7 @@ import { useRef, useEffect, useState } from "react";
 import { Message } from "ai";
 import { nanoid } from "nanoid";
 import { Send, Mic } from "lucide-react";
-import {
-  getWhisperTranscription,
-} from "@/app/actions";
+import { getWhisperTranscription } from "@/app/actions";
 import { TailSpin, Rings } from "react-loader-spinner";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import piiroinenHuoltoOhjeet from "@/data/piiroinen-huolto-ohjeet";
@@ -187,7 +185,7 @@ export default function Chat() {
     <div className="flex flex-col w-full h-screen max-h-dvh bg-background">
       <header className="p-4 border-b w-full max-w-3xl mx-auto">
         <h1 className="text-xl md:text-2xl font-bold text-center pl-4 md:pl-0">
-          Huolto-ohje chatbot
+          Älyä-avustaja
         </h1>
       </header>
 
@@ -263,8 +261,8 @@ export default function Chat() {
       </section>
       <div>
         <p className="text-center sm:text-base text-sm tracking-tight sm:mb-5">
-          Huolto-ohje chatbot voi tehdä virheitä. Suosittelemme tarkastamaan
-          tärkeät tiedot.
+          Älyä-avustaja voi tehdä virheitä. Suosittelemme tarkastamaan tärkeät
+          tiedot.
         </p>
       </div>
     </div>
