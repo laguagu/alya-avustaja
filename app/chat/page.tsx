@@ -182,12 +182,12 @@ export default function Chat() {
   });
 
   return (
-    <div className="flex flex-col w-full h-screen max-h-dvh bg-background">
-      <header className="p-4 border-b w-full max-w-3xl mx-auto">
+    <div className="flex flex-col w-full flex-grow max-h-dvh ">
+      <div className="p-4 border-b w-full max-w-3xl mx-auto">
         <h1 className="text-xl md:text-2xl font-bold text-center pl-4 md:pl-0">
           Älyä-avustaja
         </h1>
-      </header>
+      </div>
 
       <section className="container px-0 pb-10 flex flex-col flex-grow gap-4 mx-auto max-w-3xl">
         <ul

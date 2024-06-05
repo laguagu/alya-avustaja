@@ -5,7 +5,7 @@ import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
 import { createStreamableValue, createStreamableUI } from "ai/rsc";
 import { ReactNode } from "react";
-import { DefaultValues } from "./page";
+import { DefaultValues } from "./form/page";
 import { OpenAI } from "openai";
 import fs from "fs";
 import { nanoid } from "nanoid";
