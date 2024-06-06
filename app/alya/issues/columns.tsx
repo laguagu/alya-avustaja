@@ -82,7 +82,7 @@ export const columns: ColumnDef<Payment>[] = [
     },
   },
   {
-    accessorKey: "alyaHankeMakssu",
+    accessorKey: "alyaHankeMaksu",
     header: "Example",
   },
   {

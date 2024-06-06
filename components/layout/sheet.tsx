@@ -33,18 +33,18 @@ export default function SheetNav() {
         <SheetContent side="left" className="flex flex-col">
           <nav className="grid gap-2 text-lg font-medium">
             <Link
-              href="#"
+              href="/alya"
               className="flex items-center gap-2 text-lg font-semibold"
             >
               <Package2 className="h-6 w-6" />
               <span className="sr-only">Älyä-avustaja</span>
             </Link>
-            <Link href="#" className="sheet-link">
+            <Link href="/alya" className="sheet-link">
               <Home className="h-5 w-5" />
               Hallintapaneli
             </Link>
             <Link
-              href="#"
+              href="/alya/issues"
               className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
             >
               <ShoppingCart className="h-5 w-5" />
@@ -57,7 +57,7 @@ export default function SheetNav() {
               <Package className="h-5 w-5" />
               Huonekalut
             </Link>
-            <Link href="/chat" className="sheet-link">
+            <Link href="/alya/chat" className="sheet-link">
               <Users className="h-5 w-5" />
               Chat
             </Link>

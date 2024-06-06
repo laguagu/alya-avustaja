@@ -74,9 +74,9 @@ export function DataTable<TData, TValue>({
   const handleRowClick = (row: any) => {
     const params = new URLSearchParams(searchParams);
     params.set("id", row.original.id);
-    console.log(router.replace(pathname + "?" + params.toString()));
     replace(`${pathname}?${params.toString()}`);
-    router.push(`${pathname}/${row.original.id}?${params.toString()}`);
+    console.log(router.replace(pathname + "?" + params.toString()));
+    // router.push(`${pathname}/${row.original.id}?${params.toString()}`);
   };
 
   return (

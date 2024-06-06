@@ -23,7 +23,7 @@ export default function SimpleSidenav() {
   return (
     <div className="flex h-full max-h-screen flex-col gap-2">
       <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-        <Link href="/" className="flex items-center gap-2 font-semibold">
+        <Link href="/alya" className="flex items-center gap-2 font-semibold">
           <Package2 className="h-6 w-6" />
           <span className="">Älyä-avustaja</span>
         </Link>
@@ -38,7 +38,7 @@ export default function SimpleSidenav() {
             <Home className="h-4 w-4" />
             Hallintapaneli
           </Link>
-          <Link href="#" className="navbar-link">
+          <Link href="/alya/issues" className="navbar-link">
             <TriangleAlert className="h-4 w-4" />
             Vikalista
             <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
@@ -52,7 +52,7 @@ export default function SimpleSidenav() {
             <Package className="h-4 w-4" />
             Huonekalut
           </Link>
-          <Link href="/chat" className="navbar-link">
+          <Link href="/alya/chat" className="navbar-link">
             <Users className="h-4 w-4" />
             Chat
           </Link>
