@@ -75,7 +75,7 @@ export function DataTable<TData, TValue>({
     const params = new URLSearchParams(searchParams);
     params.set("id", row.original.id);
     replace(`${pathname}?${params.toString()}`);
-    console.log(router.replace(pathname + "?" + params.toString()));
+    console.log(row.original.id); // Log the item ID
     // router.push(`${pathname}/${row.original.id}?${params.toString()}`);
   };
 
@@ -83,10 +83,10 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter names..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
