@@ -37,7 +37,7 @@ export default function Chat() {
     isLoading,
     stop,
   } = useChat({
-    api: `${API_URL}simple`,
+    api: `${API_URL}example2`,
     onError: (e) => {
       console.log(e);
     },
