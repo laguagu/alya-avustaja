@@ -5,7 +5,7 @@ import {
   LineChart,
   Package,
   Package2,
-  ShoppingCart,
+  TriangleAlert,
   Users,
 } from "lucide-react";
 
@@ -25,7 +25,7 @@ export default function SimpleSidenav() {
       <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
         <Link href="/" className="flex items-center gap-2 font-semibold">
           <Package2 className="h-6 w-6" />
-          <span className="">Acme Inc</span>
+          <span className="">Älyä-avustaja</span>
         </Link>
         <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
           <Bell className="h-4 w-4" />
@@ -34,19 +34,13 @@ export default function SimpleSidenav() {
       </div>
       <div className="flex-1">
         <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-          <Link
-            href="#"
-            className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-          >
+          <Link href="#" className="navbar-link">
             <Home className="h-4 w-4" />
-            Dashboard
+            Hallintapaneli
           </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-          >
-            <ShoppingCart className="h-4 w-4" />
-            Orders
+          <Link href="#" className="navbar-link">
+            <TriangleAlert className="h-4 w-4" />
+            Vikalista
             <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
               6
             </Badge>
@@ -56,21 +50,15 @@ export default function SimpleSidenav() {
             className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
           >
             <Package className="h-4 w-4" />
-            Products{" "}
+            Huonekalut
           </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-          >
+          <Link href="/chat" className="navbar-link">
             <Users className="h-4 w-4" />
-            Customers
+            Chat
           </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-          >
+          <Link href="#" className="navbar-link">
             <LineChart className="h-4 w-4" />
-            Analytics
+            Analytiikka
           </Link>
         </nav>
       </div>

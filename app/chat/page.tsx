@@ -185,7 +185,7 @@ export default function Chat() {
     <div className="flex flex-col w-full flex-grow max-h-dvh ">
       <div className="p-4 border-b w-full max-w-3xl mx-auto">
         <h1 className="text-xl md:text-2xl font-bold text-center pl-4 md:pl-0">
-          Älyä-avustaja
+          Chatbot - Älyä-avustaja
         </h1>
       </div>
 
