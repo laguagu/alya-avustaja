@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { getNotifications, getRecipe } from "../actions";
+import { getNotifications, getRecipe } from "../../lib/ai-actions";
 import { useForm } from "react-hook-form";
 import { basicChatBot, output_parsers } from "@/lib/langchainActions";
 import React from "react";

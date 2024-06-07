@@ -5,7 +5,7 @@ import {
   deleteTempFile,
   getSpeechFromText,
   getWhisperTranscription,
-} from "../actions";
+} from "../../lib/ai-actions";
 
 interface TTSResponse {
   audioURL: string;

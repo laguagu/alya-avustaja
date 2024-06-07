@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-export default function SheetNav() {
+export default function SheetNav({ issues }: { issues: number }) {
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <Sheet>
@@ -50,10 +50,10 @@ export default function SheetNav() {
               <ShoppingCart className="h-5 w-5" />
               Vikalista
               <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                6
+                {issues}
               </Badge>
             </Link>
-            <Link href="#" className="sheet-link">
+            <Link href="/alya/furnitures" className="sheet-link">
               <Package className="h-5 w-5" />
               Huonekalut
             </Link>
