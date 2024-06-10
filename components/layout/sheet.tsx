@@ -1,14 +1,13 @@
+"use client";
 import Link from "next/link";
 import {
-  Menu,
   Home,
   LineChart,
   Package,
-  Package2,
-  ShoppingCart,
+  TriangleAlert,
   Users,
+  Menu,
 } from "lucide-react";
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,8 +18,24 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { usePathname } from "next/navigation";
+import clsx from "clsx";
 
 export default function SheetNav({ issues }: { issues: number }) {
+  const pathName = usePathname();
+  const navLinks = [
+    { href: "/alya", icon: Home, label: "Hallintapaneli" },
+    {
+      href: "/alya/issues",
+      icon: TriangleAlert,
+      label: "Vikalista",
+      badge: issues,
+    },
+    { href: "/alya/furnitures", icon: Package, label: "Huonekalut" },
+    { href: "/alya/chat", icon: Users, label: "Chat" },
+    { href: "#", icon: LineChart, label: "Analytiikka" },
+  ];
+
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <Sheet>
@@ -32,7 +47,24 @@ export default function SheetNav({ issues }: { issues: number }) {
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col">
           <nav className="grid gap-2 text-lg font-medium">
-            <Link
+            {navLinks.map((link, index) => (
+              <Link
+                key={index}
+                href={link.href}
+                className={clsx("navbar-link", {
+                  "text-primary bg-muted font-bold": pathName === link.href,
+                })}
+              >
+                <link.icon className="h-5 w-5" />
+                {link.label}
+                {link.badge && (
+                  <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
+                    {link.badge}
+                  </Badge>
+                )}
+              </Link>
+            ))}
+            {/* <Link
               href="/alya"
               className="flex items-center gap-2 text-lg font-semibold"
             >
@@ -47,7 +79,7 @@ export default function SheetNav({ issues }: { issues: number }) {
               href="/alya/issues"
               className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
             >
-              <ShoppingCart className="h-5 w-5" />
+              <TriangleAlert className="h-5 w-5" />
               Vikalista
               <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
                 {issues}
@@ -64,7 +96,7 @@ export default function SheetNav({ issues }: { issues: number }) {
             <Link href="#" className="sheet-link">
               <LineChart className="h-5 w-5" />
               Analytiikka
-            </Link>
+            </Link> */}
           </nav>
           <div className="mt-auto">
             <Card>
