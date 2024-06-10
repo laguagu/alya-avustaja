@@ -5,7 +5,7 @@ import {
   Home,
   LineChart,
   Package,
-  Package2,
+  Bot,
   TriangleAlert,
   Users,
 } from "lucide-react";
@@ -40,7 +40,7 @@ export default function SimpleSidenav({ issues }: { issues: number }) {
     <div className="flex h-full max-h-screen flex-col gap-2">
       <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
         <Link href="/alya" className="flex items-center gap-2 font-semibold">
-          <Package2 className="h-6 w-6" />
+          <Bot className="h-6 w-6" />
           <span className="">Älyä-avustaja</span>
         </Link>
         <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
@@ -72,9 +72,9 @@ export default function SimpleSidenav({ issues }: { issues: number }) {
       <div className="mt-auto p-4">
         <Card x-chunk="dashboard-02-chunk-0">
           <CardHeader className="p-2 pt-0 md:p-4">
-            <CardTitle>Upgrade to Pro</CardTitle>
+            <CardTitle>Template</CardTitle>
             <CardDescription>
-              Unlock all features and get unlimited access to our support team.
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas repudiandae, incidunt molestiae nisi animi corporis ea impedit qui illum natus in at, cumque veniam, inventore quod commodi neque. Porro, sit!
             </CardDescription>
           </CardHeader>
           <CardContent className="p-2 pt-0 md:p-4 md:pt-0">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Message, toolCall } from "@/app/actions";
+import { Message, toolCall } from "@/lib/ai-actions";
 
 export default function Home() {
   const [conversation, setConversation] = useState<Message[]>([]);
