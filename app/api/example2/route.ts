@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   Message as VercelChatMessage,
   StreamingTextResponse,
-  OpenAIStream,
   createStreamDataTransformer,
   LangChainAdapter,
 } from "ai";
@@ -18,6 +17,7 @@ import {
   BytesOutputParser,
   StringOutputParser,
 } from "@langchain/core/output_parsers";
+
 import { formatDocumentsAsString } from "langchain/util/document";
 export const dynamic = "force-dynamic";
 

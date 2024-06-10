@@ -7,7 +7,7 @@ import { useRef, useEffect, useState } from "react";
 import { Message } from "ai";
 import { nanoid } from "nanoid";
 import { Send, Mic } from "lucide-react";
-import { getWhisperTranscription } from "@/app/actions";
+import { getWhisperTranscription } from "@/lib/ai-actions";
 import { TailSpin, Rings } from "react-loader-spinner";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import piiroinenHuoltoOhjeet from "@/data/piiroinen-huolto-ohjeet";

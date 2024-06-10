@@ -1,5 +1,6 @@
 import { columns, FurnitureItem } from "./columns";
 import { DataTable } from "./data-table";
+import { Suspense } from "react";
 
 async function getData(): Promise<FurnitureItem[]> {
   const FurnitureItems = await fetch(
@@ -10,12 +11,14 @@ async function getData(): Promise<FurnitureItem[]> {
   return data;
 }
 
-export default async function DemoPage() {
+export default async function Page() {
   const data = await getData();
 
   return (
     <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={data} />
+      <Suspense fallback={<div>Loading furnitures...</div>} />
+        <DataTable columns={columns} data={data} />
+      <Suspense />
     </div>
   );
 }

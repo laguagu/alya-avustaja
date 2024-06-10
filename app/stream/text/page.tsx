@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Message, continueConversation } from '@/app/actions';
+import { Message, continueConversation } from '@/lib/ai-actions';
 import { readStreamableValue } from 'ai/rsc';
 
 export default function Home() {

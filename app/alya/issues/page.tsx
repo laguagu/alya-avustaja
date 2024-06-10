@@ -1,5 +1,6 @@
 import { IssueItem, DataType, apiData } from "@/data/vikailmoitusMockData";
 import { BentoGridDemo } from "@/components/BentoGridDemo";
+import { Suspense } from "react";
 
 export default function Page() {
   const filteredData: IssueItem[] = apiData.map((item: DataType) => ({
@@ -23,7 +24,9 @@ export default function Page() {
   return (
     <div>
       <h1 className="text-center text-2xl">Issues</h1>
-      <BentoGridDemo issues={filteredData} />
+      <Suspense fallback={<div>Loading issues...</div>}>
+        <BentoGridDemo issues={filteredData} />
+      </Suspense>
     </div>
   );
 }

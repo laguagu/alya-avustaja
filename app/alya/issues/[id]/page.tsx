@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Payment } from "../columns";
+import { Payment } from "../../furnitures/[id]/page";
 // Oletetaan, että meillä on funktio, joka hakee käyttäjän tiedot id:n perusteella
 async function fetchUser(id: string) {
   // Tässä on esimerkki, korvaa tämä todellisella koodilla
@@ -21,12 +21,9 @@ async function updateUser(user: Payment): Promise<void> {
 }
 
 export default function Page({ params }: { params?: { id?: string } }) {
-
   return (
     <div className="p-6 bg-white rounded shadow-md">
-      <h1 className="text-2xl font-bold mb-4">
-        Huoltopyynnön id {params?.id}
-      </h1>
+      <h1 className="text-2xl font-bold mb-4">Huoltopyynnön id {params?.id}</h1>
     </div>
   );
 }

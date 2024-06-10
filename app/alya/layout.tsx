@@ -1,6 +1,7 @@
 import SimpleSidenav from "@/components/layout/simple-sidenav";
 import SheetNav from "@/components/layout/sheet";
 import { getIssuesNumber } from "@/lib/actions";
+import { Suspense } from "react";
 
 export default async function DashboardLayout({
   children, // will be a page or nested layout
@@ -16,9 +17,9 @@ export default async function DashboardLayout({
         <SimpleSidenav issues={issues} />
       </div>
       <div className="flex flex-col overflow-hidden">
-        <SheetNav issues={issues}/>
+        <SheetNav issues={issues} />
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 overflow-auto">
-          {children}
+          <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
         </main>
       </div>
     </div>

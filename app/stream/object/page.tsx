@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { generate } from '@/app/actions';
+import { generate } from '@/lib/ai-actions';
 import { readStreamableValue } from 'ai/rsc';
 
 export default function Home() {

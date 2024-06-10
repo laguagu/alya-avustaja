@@ -1,4 +1,3 @@
-import { cn } from "@/lib/utils";
 import React from "react";
 import { BentoGrid, BentoGridItem } from "./ui/bento-grid";
 import {
@@ -12,9 +11,7 @@ import {
   IconSquareRoundedCheck,
   IconAlertSquare,
 } from "@tabler/icons-react";
-import Link from "next/link";
 import { IssueItem } from "@/data/vikailmoitusMockData";
-
 export function BentoGridDemo({ issues }: { issues: IssueItem[] }) {
   const issueItems = issues.map((issue, i) => ({
     issue_id: issue.id,
@@ -33,20 +30,20 @@ export function BentoGridDemo({ issues }: { issues: IssueItem[] }) {
   }));
 
   return (
-    <BentoGrid className="max-w-4xl mx-auto">
-      {issueItems.map((item, i) => (
-        <BentoGridItem
-          key={i}
-          title={item.title}
-          issue_id={item.issue_id}
-          device_id={item.device_id}
-          description={item.description}
-          header={item.header}
-          icon={item.icon}
-          className={i === 3 || i === 6 ? "md:col-span-2" : ""}
-        />
-      ))}
-    </BentoGrid>
+      <BentoGrid className="max-w-4xl mx-auto">
+        {issueItems.map((item, i) => (
+          <BentoGridItem
+            key={i}
+            title={item.title}
+            issue_id={item.issue_id}
+            device_id={item.device_id}
+            description={item.description}
+            header={item.header}
+            icon={item.icon}
+            className={i === 3 || i === 6 ? "md:col-span-2" : ""}
+          />
+        ))}
+      </BentoGrid>
   );
 }
 
