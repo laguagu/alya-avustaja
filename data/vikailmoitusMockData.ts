@@ -205,6 +205,15 @@ export type IssueItem = {
   description: string | null; // Työnselostus
 };
 
+export type IssueFormValues = {
+  location_id?: number | string | undefined ; // Huoltotarpeen kuvaus
+  priority: string | null; // priority
+  problem_description: string | null; // Huoltotarpeen kuvaus
+  type: string | null; // type
+  instruction: string | null; // AI:n Ehdotettu huolto-ohje
+  used_equipments: string | null; // AI:n Ehdotettu huolto-ohje
+};
+
 export const apiData: DataType[] = [
   {
     id: 5,
@@ -213,7 +222,7 @@ export const apiData: DataType[] = [
     approved: null,
     customer_responsibility: null,
     description: null,
-    instruction: null,
+    instruction: "Älyä-avustaja suosittelee huoltoa 2 vuoden välein.",
     summary: null,
     identifier: null,
     device_id: 3,

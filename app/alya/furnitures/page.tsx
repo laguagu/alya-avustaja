@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { FurnitureItem } from "@/data/vikailmoitusMockData";
 
 async function getData(): Promise<FurnitureItem[]> {
+  "use server"
   const FurnitureItems = await fetch(
     "https://6549f6b1e182221f8d523a44.mockapi.io/api/kalusteet"
     // {cache: "no-store"} // This will disable cache
