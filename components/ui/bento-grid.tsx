@@ -41,6 +41,7 @@ export const BentoGridItem = ({
 }) => {
   console.log(issue_id);
   const pathname = usePathname()
+  
   const createQueryString = (name: string, value: string) => {
     const params = new URLSearchParams();
     params.set(name, value);
