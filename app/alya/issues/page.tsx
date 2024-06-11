@@ -23,8 +23,8 @@ export default function Page() {
 
   return (
     <div>
-      <h1 className="text-center text-2xl">Issues</h1>
-      <Suspense fallback={<div>Loading issues...</div>}>
+      <h1 className="text-center text-2xl">Vikailmoitukset</h1>
+      <Suspense fallback={<div>Ladataaan vikailmoituksia...</div>}>
         <BentoGridDemo issues={filteredData} />
       </Suspense>
     </div>

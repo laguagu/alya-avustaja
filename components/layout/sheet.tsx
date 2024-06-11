@@ -33,7 +33,7 @@ export default function SheetNav({ issues }: { issues: number }) {
     },
     { href: "/alya/furnitures", icon: Package, label: "Huonekalut" },
     { href: "/alya/chat", icon: Users, label: "Chat" },
-    { href: "#", icon: LineChart, label: "Analytiikka" },
+    // { href: "#", icon: LineChart, label: "Analytiikka" },
   ];
 
   return (
