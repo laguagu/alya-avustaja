@@ -1,6 +1,7 @@
-import { columns, FurnitureItem } from "./columns";
+import { columns } from "./columns";
 import { DataTable } from "./data-table";
 import { Suspense } from "react";
+import { FurnitureItem } from "@/data/vikailmoitusMockData";
 
 async function getData(): Promise<FurnitureItem[]> {
   const FurnitureItems = await fetch(

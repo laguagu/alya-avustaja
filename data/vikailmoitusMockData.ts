@@ -1,3 +1,112 @@
+export type Device = {
+  id: number;
+  name: string;
+  description: string;
+  functionallocation_id: number | null;
+  amount: number | null;
+  status: string;
+  serial: string;
+  identifier: string | null;
+  batch: string | null;
+  location: string | null;
+  location_extension: string;
+  location_latitude: number | null;
+  location_longitude: number | null;
+  address_id: number | null;
+  warehouse_id: number | null;
+  controlroom_id: number | null;
+  container_id: number | null;
+  spreadsheettemplate_id: number | null;
+  assembly_id: number | null;
+  classification: string | null;
+  ip: number | null;
+  ip2: number | null;
+  ip3: number | null;
+  has_warehouse_service_program: number;
+  location_in_warehouse: string | null;
+  location_in_warehouse_extension: string | null;
+  previous_maintenance: string | null;
+  next_maintenance: string | null;
+  previous_inspection: number | null;
+  previous_inspection_time: string | null;
+  hours: number | null;
+  total_hours: number | null;
+  weekly_hours_avg: number | null;
+  has_hours: number;
+  account_id: number;
+  contact_id: number | null;
+  is_sold: number;
+  owner_account_id: number;
+  location_id: number | null;
+  default_location_id: number;
+  opportunity_id: number | null;
+  comissioning: string | null;
+  manufacturing_year: number | null;
+  devicecategory_id: number;
+  person_id: number;
+  image: number;
+  next_inspection: string | null;
+  reviewpattern_id: number;
+  condition_mapping_template: number | null;
+  previous_review_id: number | null;
+  previous_review_time: string | null;
+  waiting_for_pickup: number;
+  service_company: number | null;
+  service_company_phone: string | null;
+  service_company_email: string | null;
+  weight: number | null;
+  measurements: string | null;
+  seller_id: number | null;
+  manufacturer_id: number | null;
+  brand: string;
+  model: string;
+  type: string | null;
+  warranty_period: string | null;
+  warranty_ends: string | null;
+  warranty_terms: string | null;
+  account_service_responsibility: number;
+  qr_code: string;
+  product_id: number;
+  employee_id: number | null;
+  serviceprogram_id: number | null;
+  device_id: number | null;
+  service_catalogitem_id: number | null;
+  created_by_employee: number | null;
+  usage_prohibited: number;
+  reason_for_probited_usage: string | null;
+  prohibited_usage_classification: string | null;
+  disposal_recommendation: number;
+  reason_for_disposal_recommendation: string;
+  disposal_recommendation_classification: string | null;
+  disposed: number;
+  missing: number;
+  allow_lease: number;
+  usage_prohibitation_ends: string | null;
+  is_active: number;
+  recordtype_id: number | null;
+  created_by: number;
+  updated_by: number;
+  created: string;
+  updated: string;
+  latitude: number | null;
+  longitude: number | null;
+  in_recyclebin: number | null;
+};
+
+export type FurnitureItem = {
+  id: string;
+  name: string;
+  category: string;
+  status: string;
+  owner: string;
+  location: string;
+  serialNumber: string;
+  image?: string;
+  issue: boolean;
+  updateTime: Date;
+  parts: Array<string>;
+};
+
 // Huom tarvitaan vielä image
 export type DataType = {
   id: number;
@@ -95,7 +204,6 @@ export type IssueItem = {
   device_model: string | null;
   description: string | null; // Työnselostus
 };
-
 
 export const apiData: DataType[] = [
   {

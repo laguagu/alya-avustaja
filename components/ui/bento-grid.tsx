@@ -40,8 +40,8 @@ export const BentoGridItem = ({
   issue_id?: Number;
 }) => {
   console.log(issue_id);
-  const pathname = usePathname()
-  
+  const pathname = usePathname();
+
   const createQueryString = (name: string, value: string) => {
     const params = new URLSearchParams();
     params.set(name, value);
@@ -57,7 +57,10 @@ export const BentoGridItem = ({
       )}
     >
       <Link
-       href={`${pathname}/${issue_id}?${createQueryString("device_id", device_id?.toString() ?? "")}`}
+        href={`${pathname}/${issue_id}?${createQueryString(
+          "device_id",
+          device_id?.toString() ?? ""
+        )}`}
         className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100"
       >
         {header}
