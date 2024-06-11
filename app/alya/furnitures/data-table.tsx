@@ -80,7 +80,7 @@ export function DataTable<TData, TValue>({
   };
 
   return (
-    <Suspense fallback={<div>Loading furnitures...</div>}>
+    <Suspense fallback={<div>Ladataan huonekaluja...</div>}>
       <div>
         <div className="flex items-center py-4">
           <Input

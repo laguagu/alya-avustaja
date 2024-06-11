@@ -16,7 +16,7 @@ export default async function Page() {
 
   return (
     <div className="container mx-auto py-10">
-      <Suspense fallback={<div>Loading furnitures...</div>} />
+      <Suspense fallback={<div>Ladataan huonekaluja...</div>} />
         <DataTable columns={columns} data={data} />
       <Suspense />
     </div>
