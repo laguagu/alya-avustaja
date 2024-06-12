@@ -11,11 +11,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
-import { FurnitureItem } from "@/data/vikailmoitusMockData";
+import { DeviceItemExample } from "@/data/types";
 
 
 // Use zod schema to define the shape of the data later
-export const columns: ColumnDef<FurnitureItem>[] = [
+export const columns: ColumnDef<DeviceItemExample>[] = [
   {
     id: "select",
     header: ({ table }) => (

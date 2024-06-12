@@ -23,7 +23,8 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
-import { IssueFormValues } from "@/data/vikailmoitusMockData";
+import { IssueFormValues } from "@/data/types";
+import { useState } from "react";
 
 const FormSchema = z.object({
   location_id: z.union([
@@ -48,10 +49,11 @@ const FormSchema = z.object({
     })
     .min(1, { message: "type ei voi olla tyhjä" }),
   instruction: z.string(),
-  used_equipments: z.string(),
+  missing_equipments: z.string(),
 });
 
 export default function ClientForm({ data }: { data: IssueFormValues | null }) {
+  const [isEditing, setIsEditing] = useState(false);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -60,29 +62,44 @@ export default function ClientForm({ data }: { data: IssueFormValues | null }) {
       type: data?.type ?? "",
       problem_description: data?.problem_description ?? "",
       instruction: data?.instruction ?? "",
-      used_equipments: data?.used_equipments ?? "",
+      missing_equipments: data?.missing_equipments ?? "",
     },
   });
 
   const { errors } = form.formState;
+  const { reset } = form;
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    setIsEditing(false);
     toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+      // title: "Tallennettu",
+      duration: 4000,
+      description: "Vikailmoitusta muokattu onnistuneesti",
     });
   }
 
+  function handleEdit() {
+    setIsEditing(true);
+  }
+
+  function handleCancel() {
+    reset({
+      location_id: data?.location_id ?? "Arabian peruskoulu",
+      priority: data?.priority ?? "",
+      type: data?.type ?? "",
+      problem_description: data?.problem_description ?? "",
+      instruction: data?.instruction ?? "",
+      missing_equipments: data?.missing_equipments ?? "",
+    });
+    setIsEditing(false);
+  }
+
   return (
-    <div>
+    <div className="max-w-2xl">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-2/3 space-y-6"
+          className="md:w-2/3 space-y-6"
         >
           <FormField
             control={form.control}
@@ -104,6 +121,7 @@ export default function ClientForm({ data }: { data: IssueFormValues | null }) {
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
+                  disabled={!isEditing}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -129,7 +147,11 @@ export default function ClientForm({ data }: { data: IssueFormValues | null }) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>problem_description</FormLabel>
-                <Input placeholder="Huoltotarpeen kuvaus" {...field} />
+                <Input
+                  placeholder="Huoltotarpeen kuvaus"
+                  {...field}
+                  disabled={!isEditing}
+                />
                 <FormMessage>{errors.problem_description?.message}</FormMessage>
               </FormItem>
             )}
@@ -141,6 +163,7 @@ export default function ClientForm({ data }: { data: IssueFormValues | null }) {
               <FormItem>
                 <FormLabel>type</FormLabel>
                 <Select
+                  disabled={!isEditing}
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
@@ -182,10 +205,19 @@ export default function ClientForm({ data }: { data: IssueFormValues | null }) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>instruction</FormLabel>
-                <Input placeholder="Ehdotettu huolto-ohje" {...field} />
+                <Input
+                  placeholder="Ehdotettu huolto-ohje"
+                  {...field}
+                  disabled={!isEditing}
+                />
                 <div className="mt-2 tracking-tight md:tracking-normal">
-                  Kysy tekoälyltä ehdotusta huolto-ohjeista{" "}
-                  <Button type="button" variant={"outline"}>
+                  Kysy AI ehdotusta huolto-ohjeista
+                  <Button
+                    type="button"
+                    variant={"outline"}
+                    className="ml-2"
+                    disabled={!isEditing}
+                  >
                     Avaa
                     <Bot className="ml-2 h-5 w-5" />
                   </Button>
@@ -196,25 +228,45 @@ export default function ClientForm({ data }: { data: IssueFormValues | null }) {
           />
           <FormField
             control={form.control}
-            name="used_equipments"
+            name="missing_equipments"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>used_equipments</FormLabel>
+                <FormLabel>missing_equipments</FormLabel>
                 <div>
-                  <Input placeholder="Tarvittavat varaosat" {...field} />
+                  <Input
+                    placeholder="Tarvittavat varaosat"
+                    {...field}
+                    disabled={!isEditing}
+                  />
                   <div className="mt-2 tracking-tight md:tracking-normal">
-                    Kysy tekoälyltä ehdotusta varaosista{" "}
-                    <Button type="button" variant={"outline"}>
+                    Kysy AI ehdotusta varaosista{" "}
+                    <Button
+                      type="button"
+                      variant={"outline"}
+                      className="ml-2"
+                      disabled={!isEditing}
+                    >
                       Avaa
                       <Bot className="ml-2 h-5 w-5" />
                     </Button>
                   </div>
                 </div>
-                <FormMessage>{errors.used_equipments?.message}</FormMessage>
+                <FormMessage>{errors.missing_equipments?.message}</FormMessage>
               </FormItem>
             )}
           />
-          <Button type="submit">Tallenna</Button>
+          {isEditing ? (
+            <div className="flex space-x-4">
+              <Button type="submit">Tallenna</Button>
+              <Button type="button" variant={"outline"} onClick={handleCancel}>
+                Peruuta
+              </Button>
+            </div>
+          ) : (
+            <Button type="button" onClick={handleEdit}>
+              Muokkaa
+            </Button>
+          )}
         </form>
       </Form>
     </div>

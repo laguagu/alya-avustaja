@@ -1,4 +1,4 @@
-import { IssueFormValues } from "@/data/vikailmoitusMockData";
+import { IssueFormValues } from "@/data/types";
 
 export async function getIssuesNumber(): Promise<number> {
   "use server";
@@ -52,6 +52,18 @@ export async function fetchLunniFormData(id: string): Promise<IssueFormValues> {
     problem_description: data.problem_description ?? "",
     type: data.type ?? "",
     instruction: data.instruction ?? "",
-    used_equipments: data.used_equipments ?? "",
+    missing_equipments: data.used_equipments ?? "",
   };
+}
+
+async function fetchLocationData(locationId: number): Promise<Location | null> {
+  // Mockattu sijainti data. Oikeassa tapauksessa tämä olisi API-kutsu
+  const response = await fetch(`https://apiv3.lunni.io/locations/${locationId}`);
+  const data = await response.json();
+  
+  if (!data) {
+    throw new Error("Failed to fetch location data");
+  }
+
+  return data;
 }

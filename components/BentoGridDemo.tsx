@@ -11,8 +11,8 @@ import {
   IconSquareRoundedCheck,
   IconAlertSquare,
 } from "@tabler/icons-react";
-import { IssueItem } from "@/data/vikailmoitusMockData";
-export function BentoGridDemo({ issues }: { issues: IssueItem[] }) {
+import { ServiceItem } from "@/data/types";
+export function BentoGridDemo({ issues }: { issues: ServiceItem[] }) {
   const issueItems = issues.map((issue, i) => ({
     issue_id: issue.id,
     title: issue.name,

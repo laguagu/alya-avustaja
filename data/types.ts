@@ -1,4 +1,54 @@
-export type Device = {
+export type Location = {
+  id: number;
+  name: string;
+  street: string | null;
+  zip: string | null;
+  city: string | null;
+  region: string | null;
+  country: string;
+  invoice_address: string | null;
+  invoice_routercode: string | null;
+  description: string;
+  created_by_employee: number | null;
+  name_extension: string;
+  number: string;
+  qr_code: string | null;
+  reviewpattern_id: number | null;
+  condition_mapping_template: number | null;
+  previous_review_id: number | null;
+  previous_review_time: string | null;
+  account_id: number;
+  parent_id: number | null;
+  contract_id: number | null;
+  previous_maintenance: string | null;
+  next_maintenance: string | null;
+  billing_account_id: number | null;
+  www: string | null;
+  image: string | null;
+  address_id: number | null;
+  coordinates: string | null;
+  type: string | null;
+  service_contact_id: number | null;
+  service_account_id: number | null;
+  user_id: number | null;
+  serviceprogram_id: number | null;
+  stage: string | null;
+  device_amount: number | null;
+  device_amount_default: number;
+  potential: string | null;
+  is_active: number;
+  recordtype_id: number | null;
+  created_by: number;
+  updated_by: number;
+  created: string;
+  updated: string;
+  latitude: number | null;
+  longitude: number | null;
+  in_recyclebin: number | null;
+};
+
+export type DataDevice = {
+  custom_testi: string | null;
   id: number;
   name: string;
   description: string;
@@ -93,10 +143,22 @@ export type Device = {
   in_recyclebin: number | null;
 };
 
-export type FurnitureItem = {
+export type DeviceItemCard = {
   id: string;
   name: string;
-  category: string;
+  model: string; // Malli tai muu nimeäminen
+  brand: string | null; // merkki
+  devicecategory_id: number | null;
+  image?: string;
+  location: string | null;
+  default_location_id: number | null; // Oletussijainti
+  serial: string; // Sarjanumero
+};
+
+export type DeviceItemExample = {
+  id: string;
+  name: string;
+  devicecategory_id: number;
   status: string;
   owner: string;
   location: string;
@@ -108,7 +170,7 @@ export type FurnitureItem = {
 };
 
 // Huom tarvitaan vielä image
-export type DataType = {
+export type DataServices = {
   id: number;
   name: string;
   approved_by_contact: string | null;
@@ -187,7 +249,7 @@ export type DataType = {
   in_recyclebin: number | null;
 };
 
-export type IssueItem = {
+export type ServiceItem = {
   id: number;
   name: string;
   device_id: number;
@@ -206,15 +268,15 @@ export type IssueItem = {
 };
 
 export type IssueFormValues = {
-  location_id?: number | string | undefined ; // Huoltotarpeen kuvaus
+  location_id?: number | string | undefined; // Huoltotarpeen kuvaus
   priority: string | null; // priority
   problem_description: string | null; // Huoltotarpeen kuvaus
   type: string | null; // type
   instruction: string | null; // AI:n Ehdotettu huolto-ohje
-  used_equipments: string | null; // AI:n Ehdotettu huolto-ohje
+  missing_equipments: string | null; // Tarvittavat työkalut
 };
 
-export const apiData: DataType[] = [
+export const issuesData: DataServices[] = [
   {
     id: 5,
     name: "Huoltopyyntö",
@@ -257,7 +319,7 @@ export const apiData: DataType[] = [
     employee_id: null,
     next_service_id: null,
     next_service_description: null,
-    missing_equipments: null,
+    missing_equipments: "Jalkanasta,V2-kangas",
     used_equipments: null,
     purchase_suggestion: null,
     repair_deficit: null,
@@ -454,3 +516,245 @@ export const apiData: DataType[] = [
     in_recyclebin: null,
   },
 ];
+
+export const deviceData: DataDevice[] = [
+  {
+    custom_testi: null,
+    id: 2,
+    name: "Arena 300 pöytä",
+    description: "Kuvaus",
+    functionallocation_id: null,
+    amount: null,
+    status: "{{{TRANSLATE_CONTENT}}}picklist_devices_status_inownuse",
+    serial: "",
+    identifier: null,
+    batch: null,
+    location: "Neuvotteluhuone 101",
+    location_extension: "",
+    location_latitude: null,
+    location_longitude: null,
+    address_id: null,
+    warehouse_id: null,
+    controlroom_id: null,
+    container_id: null,
+    spreadsheettemplate_id: null,
+    assembly_id: null,
+    classification: null,
+    ip: null,
+    ip2: null,
+    ip3: null,
+    has_warehouse_service_program: 0,
+    location_in_warehouse: null,
+    location_in_warehouse_extension: null,
+    previous_maintenance: null,
+    next_maintenance: null,
+    previous_inspection: null,
+    previous_inspection_time: null,
+    hours: null,
+    total_hours: null,
+    weekly_hours_avg: null,
+    has_hours: 1,
+    account_id: 1,
+    contact_id: null,
+    is_sold: 0,
+    owner_account_id: 3,
+    location_id: null,
+    default_location_id: 4,
+    opportunity_id: null,
+    comissioning: null,
+    manufacturing_year: null,
+    devicecategory_id: 2,
+    person_id: 1,
+    image: 3,
+    next_inspection: null,
+    reviewpattern_id: 0,
+    condition_mapping_template: null,
+    previous_review_id: null,
+    previous_review_time: null,
+    waiting_for_pickup: 0,
+    service_company: null,
+    service_company_phone: null,
+    service_company_email: null,
+    weight: null,
+    measurements: null,
+    seller_id: null,
+    manufacturer_id: null,
+    brand: "Merkki",
+    model: "Malli",
+    type: null,
+    warranty_period: null,
+    warranty_ends: null,
+    warranty_terms: null,
+    account_service_responsibility: 1,
+    qr_code: "1H37Q.4X2TNM0",
+    product_id: 5,
+    employee_id: null,
+    serviceprogram_id: null,
+    device_id: null,
+    service_catalogitem_id: null,
+    created_by_employee: null,
+    usage_prohibited: 0,
+    reason_for_probited_usage: null,
+    prohibited_usage_classification: null,
+    disposal_recommendation: 0,
+    reason_for_disposal_recommendation: "",
+    disposal_recommendation_classification: null,
+    disposed: 0,
+    missing: 0,
+    allow_lease: 1,
+    usage_prohibitation_ends: null,
+    is_active: 1,
+    recordtype_id: null,
+    created_by: 1,
+    updated_by: 1,
+    created: "2024-06-05 05:40:30",
+    updated: "2024-06-05 05:40:30",
+    latitude: null,
+    longitude: null,
+    in_recyclebin: null,
+  },
+  {
+    custom_testi: null,
+    id: 3,
+    name: "Arena 022",
+    description: "Hieno tuoli",
+    functionallocation_id: null,
+    amount: null,
+    status: "{{{TRANSLATE_CONTENT}}}picklist_devices_status_inownuse",
+    serial: "100",
+    identifier: null,
+    batch: null,
+    location: "Neuvotteluhuone 101",
+    location_extension: "Sijainnin tarkenne",
+    location_latitude: null,
+    location_longitude: null,
+    address_id: null,
+    warehouse_id: null,
+    controlroom_id: null,
+    container_id: null,
+    spreadsheettemplate_id: null,
+    assembly_id: null,
+    classification: null,
+    ip: null,
+    ip2: null,
+    ip3: null,
+    has_warehouse_service_program: 0,
+    location_in_warehouse: null,
+    location_in_warehouse_extension: null,
+    previous_maintenance: null,
+    next_maintenance: null,
+    previous_inspection: null,
+    previous_inspection_time: null,
+    hours: null,
+    total_hours: null,
+    weekly_hours_avg: null,
+    has_hours: 1,
+    account_id: 1,
+    contact_id: null,
+    is_sold: 0,
+    owner_account_id: 3,
+    location_id: null,
+    default_location_id: 4,
+    opportunity_id: null,
+    comissioning: null,
+    manufacturing_year: null,
+    devicecategory_id: 9,
+    person_id: 1,
+    image: 8,
+    next_inspection: null,
+    reviewpattern_id: 0,
+    condition_mapping_template: null,
+    previous_review_id: null,
+    previous_review_time: null,
+    waiting_for_pickup: 0,
+    service_company: null,
+    service_company_phone: null,
+    service_company_email: null,
+    weight: null,
+    measurements: null,
+    seller_id: null,
+    manufacturer_id: null,
+    brand: "tuolin merkki",
+    model: "\"Yleistuoli\" tai muu nimeäminen",
+    type: null,
+    warranty_period: null,
+    warranty_ends: null,
+    warranty_terms: null,
+    account_service_responsibility: 1,
+    qr_code: "1H37Q.4X4JOW0",
+    product_id: 6,
+    employee_id: null,
+    serviceprogram_id: null,
+    device_id: null,
+    service_catalogitem_id: null,
+    created_by_employee: null,
+    usage_prohibited: 0,
+    reason_for_probited_usage: null,
+    prohibited_usage_classification: null,
+    disposal_recommendation: 0,
+    reason_for_disposal_recommendation: "",
+    disposal_recommendation_classification: null,
+    disposed: 0,
+    missing: 0,
+    allow_lease: 1,
+    usage_prohibitation_ends: null,
+    is_active: 1,
+    recordtype_id: null,
+    created_by: 1,
+    updated_by: 1,
+    created: "2024-06-05 06:07:47",
+    updated: "2024-06-07 07:43:39",
+    latitude: null,
+    longitude: null,
+    in_recyclebin: null,
+  },
+];
+
+export const locationData: Location[] = [{
+  id: 4,
+  name: "Neuvotteluhuone 101",
+  street: null,
+  zip: null,
+  city: null,
+  region: null,
+  country: "",
+  invoice_address: null,
+  invoice_routercode: null,
+  description: "",
+  created_by_employee: null,
+  name_extension: "Neuvotteluhuone 101",
+  number: "",
+  qr_code: null,
+  reviewpattern_id: null,
+  condition_mapping_template: null,
+  previous_review_id: null,
+  previous_review_time: null,
+  account_id: 3,
+  parent_id: null,
+  contract_id: null,
+  previous_maintenance: null,
+  next_maintenance: "2024-06-05",
+  billing_account_id: null,
+  www: null,
+  image: null,
+  address_id: null,
+  coordinates: null,
+  type: null,
+  service_contact_id: null,
+  service_account_id: null,
+  user_id: null,
+  serviceprogram_id: null,
+  stage: null,
+  device_amount: null,
+  device_amount_default: 0,
+  potential: null,
+  is_active: 1,
+  recordtype_id: null,
+  created_by: 1,
+  updated_by: 1,
+  created: "2024-06-04 07:59:50",
+  updated: "2024-06-05 05:37:37",
+  latitude: null,
+  longitude: null,
+  in_recyclebin: null
+}];

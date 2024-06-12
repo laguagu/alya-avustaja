@@ -2,6 +2,7 @@ import SimpleSidenav from "@/components/layout/simple-sidenav";
 import SheetNav from "@/components/layout/sheet";
 import { getIssuesNumber } from "@/lib/actions";
 import { Suspense } from "react";
+import { Toaster } from "@/components/ui/toaster";
 
 export default async function DashboardLayout({
   children, // will be a page or nested layout
@@ -21,6 +22,7 @@ export default async function DashboardLayout({
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 overflow-auto">
           <Suspense fallback={<div>Ladataan...</div>}>{children}</Suspense>
         </main>
+        <Toaster />
       </div>
     </div>
   );

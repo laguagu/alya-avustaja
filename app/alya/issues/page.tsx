@@ -1,9 +1,9 @@
-import { IssueItem, DataType, apiData } from "@/data/vikailmoitusMockData";
+import { ServiceItem, DataServices, issuesData } from "@/data/types";
 import { BentoGridDemo } from "@/components/BentoGridDemo";
 import { Suspense } from "react";
 
 export default function Page() {
-  const filteredData: IssueItem[] = apiData.map((item: DataType) => ({
+  const filteredData: ServiceItem[] = issuesData.map((item: DataServices) => ({
     id: item.id,
     name: item.name,
     device_id: item.device_id,
