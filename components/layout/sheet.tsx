@@ -23,6 +23,12 @@ import clsx from "clsx";
 
 export default function SheetNav({ issues }: { issues: number }) {
   const pathName = usePathname();
+  // Tällä tarkistuksella saadaan oikea baseSegment, joka on joko /alya tai /alya/issues esimerkiksi. Tämä on tarpeellista, jotta saadaan korostettua oikea linkki sivupalkissa.
+  const pathSegments = pathName.split("/");
+  const baseSegment = pathSegments[2]
+    ? `/${pathSegments[1]}/${pathSegments[2]}`
+    : `/${pathSegments[1]}`;
+
   const navLinks = [
     { href: "/alya", icon: Home, label: "Hallintapaneli" },
     {
@@ -52,7 +58,7 @@ export default function SheetNav({ issues }: { issues: number }) {
                 key={index}
                 href={link.href}
                 className={clsx("navbar-link", {
-                  "text-primary bg-muted font-bold": pathName === link.href,
+                  "text-primary bg-muted font-bold": baseSegment === link.href,
                 })}
               >
                 <link.icon className="h-5 w-5" />

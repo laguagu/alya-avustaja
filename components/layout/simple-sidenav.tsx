@@ -23,6 +23,12 @@ import clsx from "clsx";
 
 export default function SimpleSidenav({ issues }: { issues: number }) {
   const pathName = usePathname();
+  // Tällä tarkistuksella saadaan oikea baseSegment, joka on joko /alya tai /alya/issues esimerkiksi. Tämä on tarpeellista, jotta saadaan korostettua oikea linkki sivupalkissa.
+  const pathSegments = pathName.split("/");
+  const baseSegment = pathSegments[2]
+    ? `/${pathSegments[1]}/${pathSegments[2]}`
+    : `/${pathSegments[1]}`;
+    
   const navLinks = [
     { href: "/alya", icon: Home, label: "Hallintapaneli" },
     {
@@ -55,7 +61,7 @@ export default function SimpleSidenav({ issues }: { issues: number }) {
               key={index}
               href={link.href}
               className={clsx("navbar-link", {
-                "text-primary bg-muted font-bold": pathName === link.href,
+                "text-primary bg-muted font-bold": baseSegment === link.href,
               })}
             >
               <link.icon className="h-4 w-4" />
@@ -74,7 +80,10 @@ export default function SimpleSidenav({ issues }: { issues: number }) {
           <CardHeader className="p-2 pt-0 md:p-4">
             <CardTitle>Template</CardTitle>
             <CardDescription>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas repudiandae, incidunt molestiae nisi animi corporis ea impedit qui illum natus in at, cumque veniam, inventore quod commodi neque. Porro, sit!
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas
+              repudiandae, incidunt molestiae nisi animi corporis ea impedit qui
+              illum natus in at, cumque veniam, inventore quod commodi neque.
+              Porro, sit!
             </CardDescription>
           </CardHeader>
           <CardContent className="p-2 pt-0 md:p-4 md:pt-0">
