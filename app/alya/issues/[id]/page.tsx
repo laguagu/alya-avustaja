@@ -82,13 +82,16 @@ export default async function Page({
       <h1 className="text-2xl">Vikailmoitus - {params?.id}</h1>
       <Separator className="md:my-4 my-3 " />
       <Tabs defaultValue="info">
-        <TabsList>
+        <TabsList className="md:mb-2">
           <TabsTrigger value="info">Tiedot</TabsTrigger>
           <TabsTrigger value="edit">Muokkaa</TabsTrigger>
-          <TabsTrigger value="chat">Avustaja</TabsTrigger>
+          <TabsTrigger value="chat">Huolto-ohjeet</TabsTrigger>
         </TabsList>
         <TabsContent value="info">
-          <InformationCard deviceData={deviceData} locationName={locationData}/>
+          <InformationCard
+            deviceData={deviceData}
+            locationName={locationData}
+          />
         </TabsContent>
         <TabsContent value="edit">
           <ClientForm data={data} />
