@@ -7,7 +7,6 @@ import InformationCard from "@/components/issues/information-card";
 
 // Käytetään mockattua dataa
 async function fetchLunniFormData(id: string): Promise<IssueFormValues> {
-  "use server";
   const data = issuesData.find((item) => item.id.toString() === id);
 
   if (!data) {
@@ -27,7 +26,6 @@ async function fetchLunniFormData(id: string): Promise<IssueFormValues> {
 async function fetchDeviceData(
   device_id: string
 ): Promise<DeviceItemCard | null> {
-  "use server";
   const data = deviceData.find((item) => item.id.toString() === device_id);
 
   if (!data) {
@@ -48,7 +46,6 @@ async function fetchDeviceData(
 }
 
 async function fetchLocationData(locationId: number): Promise<string | null> {
-  "use server";
   // Mockattu sijainti data. Oikeassa tapauksessa tämä olisi API-kutsu
   // const response = await fetch(`https://apiv3.lunni.io/locations/${locationId}`);
   // const data = await response.json();
