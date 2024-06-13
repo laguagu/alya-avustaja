@@ -78,9 +78,9 @@ export default async function Page({
   console.log("locationData", locationData);
 
   return (
-    <div className="">
+    <div>
       <h1 className="text-2xl">Vikailmoitus - {params?.id}</h1>
-      <Separator className="md:my-4 my-2" />
+      <Separator className="md:my-4 my-3 " />
       <Tabs defaultValue="info">
         <TabsList>
           <TabsTrigger value="info">Tiedot</TabsTrigger>

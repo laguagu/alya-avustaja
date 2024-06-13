@@ -28,7 +28,7 @@ export default function SimpleSidenav({ issues }: { issues: number }) {
   const baseSegment = pathSegments[2]
     ? `/${pathSegments[1]}/${pathSegments[2]}`
     : `/${pathSegments[1]}`;
-    
+
   const navLinks = [
     { href: "/alya", icon: Home, label: "Hallintapaneli" },
     {
