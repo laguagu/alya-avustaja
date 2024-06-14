@@ -159,7 +159,6 @@ export async function getSpeechFromText(text: string) {
 }
 
 export async function deleteTempFile(filePath: string) {
-  "use server";
   if (fs.existsSync(filePath)) {
     fs.unlinkSync(filePath);
     console.log(`Deleted file: ${filePath}`);
