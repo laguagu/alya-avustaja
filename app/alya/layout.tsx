@@ -1,6 +1,6 @@
 import SimpleSidenav from "@/components/layout/simple-sidenav";
 import SheetNav from "@/components/layout/sheet";
-import { getIssuesNumber } from "@/lib/actions";
+import { getIssuesNumber } from "@/lib/dataFetching";
 import { Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 

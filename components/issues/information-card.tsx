@@ -1,5 +1,4 @@
-"use client";
-import { DeviceItemCard } from "@/data/types";
+import { DeviceItemCard, IssueFormValues } from "@/data/types";
 import {
   Card,
   CardContent,
@@ -8,81 +7,73 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "../ui/button";
-import { useState } from "react";
-
-interface Part {
-  id: string;
-  name: string;
-  quantity: number;
-}
 
 interface InformationCardProps {
   deviceData: DeviceItemCard | null;
+  issueData: IssueFormValues | null;
   locationName: string | null;
-  partsList: Part[] | null;
+  partsList: string[] | null;
 }
 
 export default function InformationCard({
   deviceData,
   locationName,
   partsList,
+  issueData,
 }: InformationCardProps) {
-  const [showDetails, setShowDetails] = useState(false);
-  const [showPartsList, setShowPartsList] = useState(false);
 
-  if (!deviceData) {
-    return <div>No device data available</div>;
+
+ if (!deviceData) {
+    return <div>Ei saatavilla olevia huonekalutietoja</div>;
   }
 
-  const handleShowDetails = () => {
-    setShowDetails(!showDetails);
-  };
-
-  const handleShowPartsList = () => {
-    setShowPartsList(!showPartsList);
-  };
-
-   return (
-    <div className="max-w-md  p-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>Device Information</CardTitle>
-          <CardDescription>Details of the selected device</CardDescription>
+  return (
+    <div className="flex flex-wrap gap-6 p-6 max-w-full">
+      <Card className="flex-1 min-w-[300px] bg-white shadow-lg rounded-lg  border-gray-200 border-4">
+        <CardHeader className="bg-gray-50 p-4 rounded-t-lg">
+          <CardTitle className="text-2xl font-semibold">Huonekalun tiedot</CardTitle>
+          <CardDescription>Tiedot valitusta huonekalusta</CardDescription>
         </CardHeader>
-        <CardContent>
-          <p>Name: {deviceData.name}</p>
-          <p>Model: {deviceData.model}</p>
-          <p>Brand: {deviceData.brand}</p>
-          <p>Serial: {deviceData.serial}</p>
-          <p>Location: {locationName}</p>
+        <CardContent className="p-6">
+          <div className="mb-4">
+            <h3 className="text-lg font-medium">Huonekalun tiedot:</h3>
+            <p className="font-semibold">Nimi: <span className="font-normal">{deviceData.name}</span></p>
+            <p className="font-semibold">Malli: <span className="font-normal">{deviceData.model}</span></p>
+            <p className="font-semibold">Merkki: <span className="font-normal">{deviceData.brand}</span></p>
+            <p className="font-semibold">Sarjanumero: <span className="font-normal">{deviceData.serial}</span></p>
+            <p className="font-semibold">Sijainti: <span className="font-normal">{locationName}</span></p>
+          </div>
+          {partsList && (
+            <div>
+              <h3 className="text-lg font-medium mt-4">Osaluettelo:</h3>
+              <ul className="list-disc pl-5 mt-2">
+                {partsList.map((partName, index) => (
+                  <li key={index}>{partName}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button onClick={handleShowDetails}>
-            {showDetails ? "Hide Details" : "Show Details"}
-          </Button>
-          <Button onClick={handleShowPartsList}>
-            {showPartsList ? "Hide Parts List" : "Show Parts List"}
-          </Button>
-        </CardFooter>
       </Card>
-      {showDetails && (
-        <CardContent className="mt-4">
-          <h2 className="text-xl font-bold">Additional Device Details</h2>
-          <p>More information about the device can be displayed here.</p>
-        </CardContent>
-      )}
-      {showPartsList && partsList && (
-        <CardContent className="mt-4">
-          <h2 className="text-xl font-bold">Parts List</h2>
-          <ul className="list-disc pl-5">
-            {partsList.map((part) => (
-              <li key={part.id}>
-                {part.name} - Quantity: {part.quantity}
-              </li>
-            ))}
-          </ul>
-        </CardContent>
+
+      {issueData && (
+        <Card className="flex-1 min-w-[300px] bg-white shadow-lg rounded-lg border-gray-200 border-4 mt-6 md:mt-0">
+          <CardHeader className="bg-gray-50 p-4 rounded-t-lg">
+            <CardTitle className="text-2xl font-semibold">Vikailmoituksen tiedot</CardTitle>
+            <CardDescription>Tiedot raportoidusta viasta</CardDescription>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div className="mb-4">
+              <h3 className="text-lg font-medium">Vian tiedot:</h3>
+              <p className="font-semibold">Sijainti ID: <span className="font-normal">{issueData.location_id}</span></p>
+              <p className="font-semibold">Prioriteetti: <span className="font-normal">{issueData.priority}</span></p>
+              <p className="font-semibold">Vian kuvaus: <span className="font-normal">{issueData.problem_description}</span></p>
+              <p className="font-semibold">Tyyppi: <span className="font-normal">{issueData.type}</span></p>
+              <p className="font-semibold">Ohje: <span className="font-normal">{issueData.instruction}</span></p>
+              <p className="font-semibold">Tarvittavat varaosat: <span className="font-normal">{issueData.missing_equipments}</span></p>
+            </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   );
