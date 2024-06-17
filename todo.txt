@@ -4,6 +4,8 @@ Ideointia
 - Näin chatbotti osaa keskustella tietyistä huonekaluryhmistä ja sen hoito-ohjeista yms paremmin käyttäjän kanssa
 - Tuotteen osat voidaan antaa suoraan <context> -> <parts> Ei tarvita RAG mallia näiden hakuun
 - Tuolin ja materiaali hoito-ohjeet yleisesti. Ei tarvita mallikohtaista
+ 2.
+  - Käyttäjä voi tehdä huoltopyynnön/ilmoituksen jolloin tekoäly täydentää kentät automaattisesti
 
 Steps:
 User → Application: Records voice.
@@ -18,3 +20,5 @@ Application Ask did solution problem was solved
 Application → Piiroinen: Autocomplete defect notification form.
 
 User → Application: Marks issue as resolved.
+
+

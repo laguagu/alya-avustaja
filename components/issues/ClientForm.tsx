@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { FieldErrors, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Bot } from "lucide-react";
@@ -25,12 +25,12 @@ import { toast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { IssueFormValues } from "@/data/types";
 import { useState } from "react";
+import { updateIssueData } from "@/data/mockDataFetch";
 
 const FormSchema = z.object({
-  location_id: z.union([
-    z.string().min(1, { message: "Sijainti vaaditaan" }),
-    z.number().min(1, { message: "Sijainti vaaditaan" }),
-  ]),
+  locationName: z
+    .string({ required_error: "Sijainti vaaditaan" })
+    .min(1, { message: "Sijainti vaaditaan" }),
   priority: z
     .string({
       required_error: "priority vaaditaan",
@@ -52,12 +52,19 @@ const FormSchema = z.object({
   missing_equipments: z.string(),
 });
 
-export default function ClientForm({ data }: { data: IssueFormValues | null }) {
+interface IssueFormProps {
+  data: IssueFormValues | null;
+  locationName: string | null;
+  params?: { id?: string };
+}
+
+export default function ClientForm({ data, locationName }: IssueFormProps) {
   const [isEditing, setIsEditing] = useState(false);
+  const issueId = data?.id;
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      location_id: data?.location_id ?? "Arabian peruskoulu",
+      locationName: locationName ?? "Arabian peruskoulu",
       priority: data?.priority ?? "",
       type: data?.type ?? "",
       problem_description: data?.problem_description ?? "",
@@ -69,13 +76,20 @@ export default function ClientForm({ data }: { data: IssueFormValues | null }) {
   const { errors } = form.formState;
   const { reset } = form;
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(formData: z.infer<typeof FormSchema>) {
     setIsEditing(false);
-    toast({
-      // title: "Tallennettu",
-      duration: 4000,
-      description: "Vikailmoitusta muokattu onnistuneesti",
-    });
+    try {
+      await updateIssueData(issueId, formData);
+      toast({
+        duration: 4000,
+        description: "Vikailmoitusta muokattu onnistuneesti",
+      });
+    } catch (error: FieldErrors | any) {
+      toast({
+        duration: 4000,
+        description: `Virhe vikailmoituksen muokkaamisessa: ${error.message}`,
+      });
+    }
   }
 
   function handleEdit() {
@@ -84,7 +98,7 @@ export default function ClientForm({ data }: { data: IssueFormValues | null }) {
 
   function handleCancel() {
     reset({
-      location_id: data?.location_id ?? "Arabian peruskoulu",
+      locationName: locationName ?? "Arabian peruskoulu",
       priority: data?.priority ?? "",
       type: data?.type ?? "",
       problem_description: data?.problem_description ?? "",
@@ -103,12 +117,12 @@ export default function ClientForm({ data }: { data: IssueFormValues | null }) {
         >
           <FormField
             control={form.control}
-            name="location_id"
+            name="locationName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>location_id</FormLabel>
+                <FormLabel>locationName</FormLabel>
                 <Input placeholder="Sijainti" {...field} disabled={true} />
-                <FormMessage>{errors.location_id?.message}</FormMessage>
+                <FormMessage>{errors.locationName?.message}</FormMessage>
               </FormItem>
             )}
           />

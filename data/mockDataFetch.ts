@@ -3,7 +3,9 @@ import { issuesData, deviceData, locationData } from "@/data/types";
 import { arabiaKaikkiTilaukset } from "./arabiaKaikkiTilaukset";
 
 // Käytetään mockattua dataa
-export async function fetchLunniFormData(id: string): Promise<IssueFormValues | null> {
+export async function getIssueFormDataById(
+  id: string
+): Promise<IssueFormValues | null> {
   try {
     const data = issuesData.find((item) => item.id.toString() === id);
 
@@ -12,7 +14,7 @@ export async function fetchLunniFormData(id: string): Promise<IssueFormValues | 
     }
 
     return {
-      // location_id: data.location_id ?? null,
+      id: data.id,
       priority: data.priority ?? "",
       problem_description: data.problem_description ?? "",
       type: data.type ?? "",
@@ -25,8 +27,7 @@ export async function fetchLunniFormData(id: string): Promise<IssueFormValues | 
   }
 }
 
-
-export async function fetchDeviceData(
+export async function getDataForDevice(
   device_id: string
 ): Promise<DeviceItemCard | null> {
   try {
@@ -44,8 +45,9 @@ export async function fetchDeviceData(
       devicecategory_id: data.devicecategory_id,
       image: data.image?.toString() ?? undefined,
       location: data.location,
-      default_location_id: data.default_location_id,
+      default_location_id: data.default_location_id, // Huonekalun sijainti
       serial: data.serial,
+      image_url: data.image_url,
     };
   } catch (error) {
     console.error("Error fetching device data:", error);
@@ -53,7 +55,9 @@ export async function fetchDeviceData(
   }
 }
 
-export async function fetchLocationData(locationId: number): Promise<string | null> {
+export async function retrieveLocationName(
+  locationId: number
+): Promise<string | null> {
   try {
     const data = locationData.find((item) => item.id === locationId);
 
@@ -68,9 +72,13 @@ export async function fetchLocationData(locationId: number): Promise<string | nu
   }
 }
 
-export async function fetchPartsList(furnitureName: string): Promise<string[] | null> {
+export async function retrieveFurnitureParts(
+  furnitureName: string
+): Promise<string[] | null> {
   try {
-    const item = arabiaKaikkiTilaukset.find((order) => order.nimi === furnitureName);
+    const item = arabiaKaikkiTilaukset.find(
+      (order) => order.nimi === furnitureName
+    );
 
     if (!item) {
       throw new Error("Failed to fetch parts list");
@@ -81,4 +89,27 @@ export async function fetchPartsList(furnitureName: string): Promise<string[] | 
     console.error("Error fetching parts list:", error);
     return null; // Palauttaa null, jos datan haku epäonnistuu
   }
+}
+
+export async function updateIssueData(issueId: number | undefined, formData: IssueFormValues) {
+  if (issueId === undefined) {
+    throw new Error('issueId is undefined');
+  }
+
+  const url = `https://apiv3.lunni.io/services/${issueId}`;
+
+  const response = await fetch(url, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(formData),
+  });
+
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+
+  const data = await response.json();
+  return data; // Palautetaan päivitetty data
 }

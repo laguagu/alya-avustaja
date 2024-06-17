@@ -141,6 +141,7 @@ export type DataDevice = {
   latitude: number | null;
   longitude: number | null;
   in_recyclebin: number | null;
+  image_url?: string | undefined;
 };
 
 export type DeviceItemCard = {
@@ -153,6 +154,7 @@ export type DeviceItemCard = {
   location: string | null;
   default_location_id: number | null; // Oletussijainti
   serial: string; // Sarjanumero
+  image_url?: string;
 };
 
 export type DeviceItemExample = {
@@ -268,6 +270,7 @@ export type ServiceItem = {
 };
 
 export type IssueFormValues = {
+  id?: number;
   location_id?: number | string | undefined; // Huoltotarpeen kuvaus
   priority: string | null; // priority
   problem_description: string | null; // Huoltotarpeen kuvaus
@@ -413,7 +416,7 @@ export const issuesData: DataServices[] = [
     classification:
       "{{{TRANSLATE_CONTENT}}}picklist_service_classification_maintenance_request",
     is_servicerequest: 1,
-    priority: null,
+    priority: "Huomioitava",
     workorder_classification: null,
     contact_id: null,
     warranty_service: 0,
@@ -612,6 +615,7 @@ export const deviceData: DataDevice[] = [
     latitude: null,
     longitude: null,
     in_recyclebin: null,
+    image_url: "/chairs/arena022.jpg",
   },
   {
     custom_testi: null,
@@ -707,6 +711,7 @@ export const deviceData: DataDevice[] = [
     latitude: null,
     longitude: null,
     in_recyclebin: null,
+    image_url: "/chairs/arena022.jpg",
   },
 ];
 
