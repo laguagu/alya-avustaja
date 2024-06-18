@@ -1,22 +1,31 @@
-"use server";
-import { StreamingTextResponse, LangChainAdapter } from "ai";
+import { NextRequest, NextResponse } from "next/server";
+import {
+  StreamingTextResponse,
+  LangChainAdapter,
+} from "ai";
 import { createClient } from "@supabase/supabase-js";
 import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 import { Document } from "@langchain/core/documents";
 import { RunnableSequence } from "@langchain/core/runnables";
-import { StringOutputParser } from "@langchain/core/output_parsers";
+import {
+  StringOutputParser,
+} from "@langchain/core/output_parsers";
 
-// Template kysymyksen tiivistämiseen standalone-kysymykseksi.
-const STANDALONE_QUESTION_TEMPLATE = `Given the following furniture information and issue description, generate a standalone question that can be used to retrieve relevant maintenance and repair information from a database.
+import { formatDocumentsAsString } from "langchain/util/document";
+export const dynamic = "force-dynamic";
 
-Furniture Name: {furniture_name}
-Issue Description: {issue_description}
+const STANDALONE_QUESTION_TEMPLATE = `Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question, in its original language.
 
+<chat_history>
+  {chat_history}
+</chat_history>
+
+Follow Up Input: {question}
 Standalone question:`;
 
-const standAloneQuestionPrompt = PromptTemplate.fromTemplate(
+const condenseQuestionPrompt = PromptTemplate.fromTemplate(
   STANDALONE_QUESTION_TEMPLATE
 );
 
@@ -41,14 +50,22 @@ Answer the question based only on the following context and chat history (if any
 Question: {question}
 `;
 
+
 const answerPrompt = PromptTemplate.fromTemplate(ANSWER_TEMPLATE);
 
-export async function generateAIinstruction(name: string): Promise<string> {
- 
+export async function POST(req: NextRequest) {
+  return NextResponse.json({ message: "Hello, world!" });
   try {
+    const body = await req.json();
+    const furnitureInfo = {
+      name: body.name, // Huonekalun nimi
+      model: body.model, // Malli
+      brand: body.brand, // Merkki
+      issueDescription: body.issueDescription, // Vikakuvaus
+    };
     // Vaiheet 1. Ota body rungon mukana tiedot huonekalusta
     // 2. Muodosta standalone-kysymys jolla haet vastauksen supabasesta perustuen furnitureInfoon
-    // 3.
+    // 3. 
 
     // Alustaa OpenAI-mallin ja Supabase-asiakasohjelman.
     const model = new ChatOpenAI({
@@ -71,19 +88,12 @@ export async function generateAIinstruction(name: string): Promise<string> {
 
     // Muodostaa LangChain-ketjuja tiedonhaulle ja vastausten generoinnille.
     const standaloneQuestionChain = RunnableSequence.from([
-      standAloneQuestionPrompt,
+      condenseQuestionPrompt,
       model,
       new StringOutputParser(),
     ]);
-
-    const standaloneAnswer = await standaloneQuestionChain.invoke({
-      furniture_name: "Arena 022",
-      issue_description: "Minulla on piiroisen sininen lipasto mitä sillä pitäisi tehdä jos haluan korjata sen nyt tänään"
-      })
-      
-    console.log("Vastaus",standaloneAnswer);
+    console.log(JSON.stringify(standaloneQuestionChain, null, 2));
     
-    return "success";
     let resolveWithDocuments: (value: Document[]) => void;
     // const documentPromise = new Promise<Document[]>((resolve) => {
     //   resolveWithDocuments = resolve;
@@ -137,8 +147,9 @@ export async function generateAIinstruction(name: string): Promise<string> {
 
     const aiStream = LangChainAdapter.toAIStream(stream);
     return new StreamingTextResponse(aiStream);
+
   } catch (e: any) {
     console.error(e);
-    return e;
+    return NextResponse.json({ error: e.message }, { status: e.status ?? 500 });
   }
 }

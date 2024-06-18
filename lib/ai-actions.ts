@@ -8,6 +8,7 @@ import { ReactNode } from "react";
 import { DefaultValues } from "../app/form/page";
 import { OpenAI } from "openai";
 import fs from "fs";
+import { promises as fsPromises } from 'fs';
 import { nanoid } from "nanoid";
 import path from "path";
 
@@ -158,12 +159,23 @@ export async function getSpeechFromText(text: string) {
   return { audioURL, tempFilePath };
 }
 
+// Lintti virheitä kuulema vanhentunut fs.existsSync sitä ei enää suositella käytettäväksi
+// export async function deleteTempFile(filePath: string) {
+//   if (fs.existsSync(filePath)) {
+//     fs.unlinkSync(filePath);
+//     console.log(`Deleted file: ${filePath}`);
+//   } else {
+//     console.log(`File ${filePath} does not exist`);
+//   }
+// }
+
 export async function deleteTempFile(filePath: string) {
-  if (fs.existsSync(filePath)) {
-    fs.unlinkSync(filePath);
+  try {
+    await fsPromises.access(filePath);
+    await fsPromises.unlink(filePath);
     console.log(`Deleted file: ${filePath}`);
-  } else {
-    console.log(`File ${filePath} does not exist`);
+  } catch (error) {
+    console.log(`File ${filePath} does not exist or cannot be accessed`);
   }
 }
 

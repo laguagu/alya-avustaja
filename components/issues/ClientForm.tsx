@@ -23,9 +23,10 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
-import { IssueFormValues } from "@/data/types";
+import { deviceData, DeviceItemCard, FurnitureInfo, IssueFormValues } from "@/data/types";
 import { useState } from "react";
 import { updateIssueData } from "@/data/mockDataFetch";
+import { AiInstructionButton, AiPartsButton } from "./Buttons";
 
 const FormSchema = z.object({
   locationName: z
@@ -55,12 +56,20 @@ const FormSchema = z.object({
 interface IssueFormProps {
   data: IssueFormValues | null;
   locationName: string | null;
+  deviceData: DeviceItemCard | null;
   params?: { id?: string };
 }
 
-export default function ClientForm({ data, locationName }: IssueFormProps) {
+export default function ClientForm({ data, locationName, deviceData }: IssueFormProps) {
   const [isEditing, setIsEditing] = useState(false);
   const issueId = data?.id;
+
+  const furnitureInfo: FurnitureInfo = {
+    name: deviceData?.name || '',
+    model: deviceData?.model || '',
+    brand: deviceData?.brand || '',
+  }
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -74,7 +83,7 @@ export default function ClientForm({ data, locationName }: IssueFormProps) {
   });
 
   const { errors } = form.formState;
-  const { reset } = form;
+  const { reset, setValue } = form;
 
   async function onSubmit(formData: z.infer<typeof FormSchema>) {
     setIsEditing(false);
@@ -107,6 +116,10 @@ export default function ClientForm({ data, locationName }: IssueFormProps) {
     });
     setIsEditing(false);
   }
+
+  const updateInstruction = (instruction: string) => {
+    setValue("instruction", instruction);
+  };
 
   return (
     <div className="max-w-2xl">
@@ -224,17 +237,9 @@ export default function ClientForm({ data, locationName }: IssueFormProps) {
                   {...field}
                   disabled={!isEditing}
                 />
-                <div className="mt-2 tracking-tight md:tracking-normal">
-                  Kysy AI ehdotusta huolto-ohjeista
-                  <Button
-                    type="button"
-                    variant={"outline"}
-                    className="ml-2"
-                    disabled={!isEditing}
-                  >
-                    Avaa
-                    <Bot className="ml-2 h-5 w-5" />
-                  </Button>
+                <div className="mt-2 tracking-tight md:tracking-normal flex items-center">
+                  Kysy AI suositusta kalusteen huollosta
+                  <AiInstructionButton isEditing={isEditing} instruction={field.value} updateInstruction={updateInstruction} furnitureInfo={furnitureInfo}/>
                 </div>
                 <FormMessage>{errors.instruction?.message}</FormMessage>
               </FormItem>
@@ -252,17 +257,12 @@ export default function ClientForm({ data, locationName }: IssueFormProps) {
                     {...field}
                     disabled={!isEditing}
                   />
-                  <div className="mt-2 tracking-tight md:tracking-normal">
-                    Kysy AI ehdotusta varaosista{" "}
-                    <Button
-                      type="button"
-                      variant={"outline"}
-                      className="ml-2"
-                      disabled={!isEditing}
-                    >
-                      Avaa
-                      <Bot className="ml-2 h-5 w-5" />
-                    </Button>
+                  <div className="mt-2 tracking-tight md:tracking-normal flex items-center">
+                    Kysy AI ehdotusta varaosista
+                    {/* <AiPartsButton
+                      isEditing={isEditing}
+                      problem_description="Rikki"
+                    /> */}
                   </div>
                 </div>
                 <FormMessage>{errors.missing_equipments?.message}</FormMessage>

@@ -2,12 +2,7 @@ import ClientForm from "@/components/issues/ClientForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import InformationCard from "@/components/issues/information-card";
-import {
-  getIssueFormDataById,
-  getDataForDevice,
-  retrieveLocationName,
-  retrieveFurnitureParts,
-} from "@/data/mockDataFetch";
+import { fetchIssuePageData } from "@/data/mockDataFetch";
 
 export default async function Page({
   params,
@@ -22,31 +17,8 @@ export default async function Page({
   const deviceId = searchParams?.["device_id"];
   const issueId = params?.id.toString();
 
-  const issueFormPromise = issueId
-    ? getIssueFormDataById(issueId)
-    : Promise.resolve(null);
-
-  const deviceDataPromise = deviceId
-    ? getDataForDevice(deviceId)
-    : Promise.resolve(null);
-
-  const [issueData, deviceData] = await Promise.all([
-    issueFormPromise,
-    deviceDataPromise,
-  ]);
-
-  const locationDataPromise = deviceData?.default_location_id
-    ? retrieveLocationName(deviceData.default_location_id)
-    : Promise.resolve(null);
-
-  const furniturePartsPromise = deviceData?.name
-    ? retrieveFurnitureParts(deviceData.name)
-    : Promise.resolve(null);
-
-  const [locationData, partsList] = await Promise.all([
-    locationDataPromise,
-    furniturePartsPromise,
-  ]);
+  const { issueData, deviceData, locationData, partsList } =
+    await fetchIssuePageData(issueId, deviceId!);
 
   return (
     <div>
@@ -63,7 +35,12 @@ export default async function Page({
           <TabsTrigger value="chat" className="hover:font-semibold">
             Huolto-ohjeet
           </TabsTrigger>
+          <TabsTrigger value="newIssue" className="hover:font-semibold">
+            Luo vikailmoitus
+          </TabsTrigger>
         </TabsList>
+
+        {/* Inffo */}
         <TabsContent value="info">
           <InformationCard
             partsList={partsList}
@@ -72,10 +49,17 @@ export default async function Page({
             locationName={locationData}
           />
         </TabsContent>
+
+        {/* Edit */}
         <TabsContent value="edit">
-          <ClientForm data={issueData} locationName={locationData} />
+          <ClientForm data={issueData} locationName={locationData} deviceData={deviceData}/>
         </TabsContent>
+
+        {/* Chat */}
         <TabsContent value="chat">Chatti.</TabsContent>
+
+        {/* NewIssue */}
+        <TabsContent value="newIssue">New Isssue</TabsContent>
       </Tabs>
     </div>
   );

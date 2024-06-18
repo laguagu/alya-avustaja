@@ -1,5 +1,5 @@
 import { DeviceItemCard, IssueFormValues } from "@/data/types";
-import { issuesData, deviceData, locationData } from "@/data/types";
+import { issuesData, deviceData, locationData, DataDevice } from "@/data/types";
 import { arabiaKaikkiTilaukset } from "./arabiaKaikkiTilaukset";
 
 // Käytetään mockattua dataa
@@ -31,7 +31,9 @@ export async function getDataForDevice(
   device_id: string
 ): Promise<DeviceItemCard | null> {
   try {
-    const data = deviceData.find((item) => item.id.toString() === device_id);
+    const data = deviceData.find(
+      (device) => device.id.toString() === device_id
+    );
 
     if (!data) {
       return null;
@@ -91,25 +93,66 @@ export async function retrieveFurnitureParts(
   }
 }
 
-export async function updateIssueData(issueId: number | undefined, formData: IssueFormValues) {
+export async function updateIssueData(
+  issueId: number | undefined,
+  formData: IssueFormValues
+) {
+  throw new Error("Not implemented");
   if (issueId === undefined) {
-    throw new Error('issueId is undefined');
+    throw new Error("issueId is undefined");
   }
 
   const url = `https://apiv3.lunni.io/services/${issueId}`;
 
   const response = await fetch(url, {
-    method: 'PATCH',
+    method: "PATCH",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(formData),
   });
 
   if (!response.ok) {
-    throw new Error('Network response was not ok');
+    throw new Error("Network response was not ok");
   }
 
   const data = await response.json();
   return data; // Palautetaan päivitetty data
+}
+
+export async function fetchIssuePageData(
+  issueId: string,
+  deviceId: string
+): Promise<{
+  issueData: IssueFormValues | null;
+  deviceData: DeviceItemCard | null;
+  locationData: string | null;
+  partsList: string[] | null;
+}> {
+  const issueFormPromise = issueId
+    ? getIssueFormDataById(issueId)
+    : Promise.resolve(null);
+  const deviceDataPromise = deviceId
+    ? getDataForDevice(deviceId)
+    : Promise.resolve(null);
+
+  const [issueData, deviceData] = await Promise.all([
+    issueFormPromise,
+    deviceDataPromise,
+  ]);
+
+  const locationDataPromise = deviceData?.default_location_id
+    ? retrieveLocationName(deviceData.default_location_id)
+    : Promise.resolve(null);
+
+  const furniturePartsPromise = deviceData?.name
+    ? retrieveFurnitureParts(deviceData.name)
+    : Promise.resolve(null);
+
+  const [locationData, partsList] = await Promise.all([
+    locationDataPromise,
+    furniturePartsPromise,
+  ]);
+
+  return { issueData, deviceData, locationData, partsList };
 }

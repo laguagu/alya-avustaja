@@ -269,7 +269,7 @@ export type ServiceItem = {
   description: string | null; // Työnselostus
 };
 
-export type IssueFormValues = {
+export interface IssueFormValues {
   id?: number;
   location_id?: number | string | undefined; // Huoltotarpeen kuvaus
   priority: string | null; // priority
@@ -278,6 +278,12 @@ export type IssueFormValues = {
   instruction: string | null; // AI:n Ehdotettu huolto-ohje
   missing_equipments: string | null; // Tarvittavat työkalut
 };
+
+export interface FurnitureInfo {
+  name: string | null;
+  model: string | null;
+  brand: string | null;
+}
 
 export const issuesData: DataServices[] = [
   {

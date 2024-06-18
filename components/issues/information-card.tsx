@@ -34,7 +34,7 @@ export default function InformationCard({
           <CardTitle className="text-2xl font-semibold">
             Huonekalun tiedot
           </CardTitle>
-          <CardDescription>Tiedot valitusta huonekalusta</CardDescription>
+          <CardDescription>Tiedot vikailmoituksen huonekalusta</CardDescription>
         </CardHeader>
         <CardContent className="p-6">
           <div className="mb-4">
@@ -63,7 +63,9 @@ export default function InformationCard({
                 height={350}
                 src={deviceData.image_url}
                 alt={deviceData.name}
+                priority
                 className="rounded-lg"
+                style={{ width: 'auto', height: 'auto' }}
               />
             </div>
           )}

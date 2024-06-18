@@ -57,9 +57,11 @@ export async function fetchLunniFormData(id: string): Promise<IssueFormValues> {
 
 async function fetchLocationData(locationId: number): Promise<Location | null> {
   // Mockattu sijainti data. Oikeassa tapauksessa tämä olisi API-kutsu
-  const response = await fetch(`https://apiv3.lunni.io/locations/${locationId}`);
+  const response = await fetch(
+    `https://apiv3.lunni.io/locations/${locationId}`
+  );
   const data = await response.json();
-  
+
   if (!data) {
     throw new Error("Failed to fetch location data");
   }
