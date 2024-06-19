@@ -283,6 +283,7 @@ export interface FurnitureInfo {
   name: string | null;
   model: string | null;
   brand: string | null;
+  problem_description: string | null;
 }
 
 export const issuesData: DataServices[] = [

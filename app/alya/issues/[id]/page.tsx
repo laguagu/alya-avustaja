@@ -52,7 +52,11 @@ export default async function Page({
 
         {/* Edit */}
         <TabsContent value="edit">
-          <ClientForm data={issueData} locationName={locationData} deviceData={deviceData}/>
+          <ClientForm
+            data={issueData}
+            locationName={locationData}
+            deviceData={deviceData}
+          />
         </TabsContent>
 
         {/* Chat */}

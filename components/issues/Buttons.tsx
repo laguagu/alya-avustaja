@@ -50,7 +50,11 @@ export const AiInstructionButton: React.FC<CustomButtonProps> = ({
   // Käsittelijä huolto-ohjeiden generoinnille
   const handleGenerate = async () => {
     const furnitureName = furnitureInfo?.name || "";
-    const result = await generateAIinstruction(furnitureName);
+    const furnitureProblem = furnitureInfo?.problem_description || "";
+    const result = await generateAIinstruction({
+      furniture_name: furnitureName,
+      furnitureProblem: furnitureProblem,
+    });
     console.log(result);
     // Tässä voisi olla logiikka huolto-ohjeiden generoimiseksi
     // Aseta isGenerated true, kun ohjeet on generoitu
@@ -81,7 +85,10 @@ export const AiInstructionButton: React.FC<CustomButtonProps> = ({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Avustajan huolto-ohje suositus</DialogTitle>
-          <DialogDescription></DialogDescription>
+          <DialogDescription>
+            Tekoäly analysoi vikailmoituksesi ja tarjoaa parhaan mahdollisen
+            suosituksen.
+          </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
@@ -89,6 +96,7 @@ export const AiInstructionButton: React.FC<CustomButtonProps> = ({
               Suositus
             </Label>
             <textarea
+              placeholder="Paina generoi suositus -nappia saadaksesi huolto-ohjeet."
               id="instructionInput"
               defaultValue={instruction}
               rows={4}

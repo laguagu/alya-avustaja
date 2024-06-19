@@ -68,6 +68,7 @@ export default function ClientForm({ data, locationName, deviceData }: IssueForm
     name: deviceData?.name || '',
     model: deviceData?.model || '',
     brand: deviceData?.brand || '',
+    problem_description: data?.problem_description || '',
   }
 
   const form = useForm<z.infer<typeof FormSchema>>({
