@@ -95,21 +95,19 @@ export const AiInstructionButton: React.FC<CustomButtonProps> = ({
             suosituksen.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="instruction" className="text-right">
-              Suositus
-            </Label>
-            <textarea
-              placeholder="Paina generoi suositus -nappia saadaksesi huolto-ohjeet."
-              id="instructionInput"
-              rows={4}
-              value={instructionInput}
-              onChange={handleInstructionInputChange}
-              className="col-span-3 p-4 text-base border-2 border-gray-300 rounded-lg focus:outline-none focus:border-zinc-500 transition-colors"
-            />
-          </div>
-        </div>
+        <div className="py-4">
+      <Label htmlFor="instruction" className="block mb-2 text-center">
+        Suositus
+      </Label>
+      <textarea
+        placeholder="Paina generoi suositus -nappia saadaksesi huolto-ohjeet."
+        id="instructionInput"
+        rows={12}
+        value={instructionInput}
+        onChange={handleInstructionInputChange}
+        className="w-full p-4 tracking-tight text-sm border-2 border-gray-300 rounded-lg focus:outline-none focus:border-zinc-500 transition-colors"
+      />
+    </div>
         <DialogFooter>
           <div>
             {isGenerated ? (
