@@ -75,62 +75,46 @@ export async function generateAIinstruction({
       model,
       new StringOutputParser(),
     ]);
-
-    // Kutsutaan standalone-kysymyksen ketjua ja saadaan standalone-kysymys
-    const standaloneQuestion  = await standaloneQuestionChain.invoke({
-      furniture_name,
-      issue_description: furnitureProblem,
-    });
-    
+    let resolveWithDocuments: (value: Document[]) => void;
     // Vaihe 3: Hakee dokumentit Supabase-tietokannasta
     const retriever = vectorstore.asRetriever({
       k: 2,
+      callbacks: [
+        {
+          handleRetrieverEnd(documents: Document<Record<string, any>>[]) {
+            console.log("documents", documents); // Tulostaa kaikki haetut dokumentit
+            resolveWithDocuments(documents); // Kun dokumentit on haettu, ratkaisee lupauksen dokumenteilla
+          },
+        },
+      ],
     });
 
     // Muotoillaan haetut dokumentit
-    const retrievedDocs = await retriever.invoke(standaloneQuestion);
-    const formattedDocs = formatDocumentsAsString(retrievedDocs);
-
     const retrievalChain = retriever.pipe(formatDocumentsAsString);
 
     // Vaihe 4: Alustetaan ketju vastauksen generoimiseen
     const answerChain = RunnableSequence.from([
-      new RunnablePassthrough(),
+      standaloneQuestionChain,
       {
-        context: async () => formattedDocs,
-        question: async (input: any) => input,
+        context: RunnableSequence.from([
+          (input) => input,
+          retrievalChain,
+        ]),
+        question: new RunnablePassthrough(),
       },
       answerPrompt,
       model,
+      new StringOutputParser(),
     ]);
 
     // Kutsutaan vastausketjua ja saadaan lopullinen vastaus
     const finalAnswer = await answerChain.invoke({
-      context: formattedDocs,
-      question: standaloneQuestion,
+      furniture_name,
+      issue_description: furnitureProblem,
     });
-    
-    console.log("Final Answer: ", finalAnswer);
-    return "success";
 
-    // Suorittaa ketjun, joka tuottaa vastauksen käyttäjän kysymykseen.
-    // const conversationalRetrievalQAChain = RunnableSequence.from([
-    //   {
-    //     question: standaloneQuestionChain, // Saa standalone-kysymyksen ketjusta
-    //     chat_history: (input) => input.chat_history, // Saa keskusteluhistorian syötteenä
-    //   },
-    //   answerChain,
-    //   // new BytesOutputParser(), // Striimaa vastauksen
-    //   // new StringOutputParser(), // Ei striimaukseen sendMessage kanssa frontendissa
-    // ]);
+    return finalAnswer;
 
-    // Lähettää vastauksen streamattuna takaisin klientille.
-    // const stream = await conversationalRetrievalQAChain.stream({
-    //   furniture_name: furniture_name,
-    //   issue_description: furnitureProblem,
-    // });
-
-    const aiStream = LangChainAdapter.toAIStream(stream);
   } catch (e: any) {
     console.error(e);
     return e;

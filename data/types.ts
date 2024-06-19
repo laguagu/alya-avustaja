@@ -336,7 +336,7 @@ export const issuesData: DataServices[] = [
     group_id: null,
     payer_id: null,
     instruction_file_id: null,
-    problem_description: "Selkänoja heiluu..",
+    problem_description: "Verhoilun kangas on kulunut ja selkänoja heiluu.",
     task_id: null,
     reviewpattern_id: null,
     workorder_id: null,
