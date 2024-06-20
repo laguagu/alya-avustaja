@@ -5,7 +5,10 @@ import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 import { Document } from "@langchain/core/documents";
-import { RunnableSequence, RunnablePassthrough  } from "@langchain/core/runnables";
+import {
+  RunnableSequence,
+  RunnablePassthrough,
+} from "@langchain/core/runnables";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { formatDocumentsAsString } from "langchain/util/document";
 
@@ -42,7 +45,6 @@ Focus on the specific issue mentioned in the context. If the exact issue is not 
 
 Question: {question}
 `;
-
 
 // Vastausmalli, joka käyttää kontekstia vastauksen generoimiseen.
 const ANSWER_TEMPLATE = `
@@ -83,12 +85,13 @@ interface GenerateInstructionParams {
   furnitureProblem: string;
 }
 
+
 export async function generateAIinstruction({
   furniture_name,
   furnitureProblem,
 }: GenerateInstructionParams): Promise<string> {
   try {
-     // Vaihe 1: Alustetaan OpenAI-malli ja Supabase-asiakasohjelma
+    // Vaihe 1: Alustetaan OpenAI-malli ja Supabase-asiakasohjelma
     const model = new ChatOpenAI({
       modelName: "gpt-4o",
       temperature: 0.0,
@@ -113,6 +116,7 @@ export async function generateAIinstruction({
       model,
       new StringOutputParser(),
     ]);
+
     let resolveWithDocuments: (value: Document[]) => void;
     // Vaihe 3: Hakee dokumentit Supabase-tietokannasta
     const retriever = vectorstore.asRetriever({
@@ -134,10 +138,7 @@ export async function generateAIinstruction({
     const answerChain = RunnableSequence.from([
       standaloneQuestionChain,
       {
-        context: RunnableSequence.from([
-          (input) => input,
-          retrievalChain,
-        ]),
+        context: RunnableSequence.from([(input) => input, retrievalChain]),
         question: new RunnablePassthrough(),
       },
       answerPrompt,
@@ -152,7 +153,6 @@ export async function generateAIinstruction({
     });
 
     return finalAnswer;
-
   } catch (e: any) {
     console.error(e);
     return e;
