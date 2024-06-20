@@ -8,7 +8,7 @@ import { ReactNode } from "react";
 import { DefaultValues } from "../app/form/page";
 import { OpenAI } from "openai";
 import fs from "fs";
-import { promises as fsPromises } from 'fs';
+import { promises as fsPromises } from "fs";
 import { nanoid } from "nanoid";
 import path from "path";
 
@@ -104,7 +104,10 @@ export async function getWhisperTranscription(formData: FormData) {
 
   const file = formData.get("file") as File;
   console.log("getWhisperTranscription called with file: ", file.name);
-  
+  if (!file) {
+    console.error("No file found in formData");
+    return "No file found";
+  }
   // Luodaan väliaikainen tiedosto
   const tempDir = path.join(process.cwd(), "public", "temp");
   if (!fs.existsSync(tempDir)) {
@@ -131,7 +134,7 @@ export async function getWhisperTranscription(formData: FormData) {
 export async function getSpeechFromText(text: string) {
   "use server";
   console.log("getSpeechFromText called with text: ", text);
-  
+
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
   });
@@ -205,46 +208,3 @@ export async function continueConversation(history: Message[]) {
   };
 }
 
-function getWeather({ city, unit }: { city: string; unit: string }) {
-  // This function would normally make an
-  // API request to get the weather.
-  return { value: 25, description: "Sunny" };
-}
-
-export async function toolCall(history: Message[]) {
-  "use server";
-  const stream = createStreamableUI();
-  const { text, toolResults } = await generateText({
-    model: openai("gpt-3.5-turbo"),
-    system: "You are a friendly weather assistant!",
-    messages: history,
-    tools: {
-      getWeather: {
-        description: "Get the weather for a location",
-        parameters: z.object({
-          city: z.string().describe("The city to get the weather for"),
-          unit: z
-            .enum(["C", "F"])
-            .describe("The unit to display the temperature in"),
-        }),
-        execute: async ({ city, unit }) => {
-          const weather = getWeather({ city, unit });
-          return `It is currently ${weather.value}°C and ${weather.description} in ${city}!`;
-        },
-      },
-    },
-  });
-
-  return {
-    messages: [
-      ...history,
-      {
-        role: "assistant" as const,
-        content:
-          text || toolResults.map((toolResult) => toolResult.result).join("\n"),
-      },
-    ],
-  };
-}
-
-// Generative UI

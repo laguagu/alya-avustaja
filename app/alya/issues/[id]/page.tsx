@@ -35,9 +35,6 @@ export default async function Page({
           <TabsTrigger value="chat" className="hover:font-semibold">
             Huolto-ohjeet
           </TabsTrigger>
-          <TabsTrigger value="newIssue" className="hover:font-semibold">
-            Luo vikailmoitus
-          </TabsTrigger>
         </TabsList>
 
         {/* Inffo */}
@@ -62,8 +59,6 @@ export default async function Page({
         {/* Chat */}
         <TabsContent value="chat">Chatti.</TabsContent>
 
-        {/* NewIssue */}
-        <TabsContent value="newIssue">New Isssue</TabsContent>
       </Tabs>
     </div>
   );

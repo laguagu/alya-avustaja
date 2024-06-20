@@ -2,12 +2,16 @@
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useChat } from "ai/react";
+import { useChat } from "@ai-sdk/react";
 import { useRef, useEffect, useState } from "react";
 import { Message } from "ai";
 import { nanoid } from "nanoid";
 import { Send, Mic } from "lucide-react";
-import { getWhisperTranscription } from "@/lib/ai-actions";
+import {
+  deleteTempFile,
+  getSpeechFromText,
+  getWhisperTranscription,
+} from "@/lib/ai-actions";
 import { TailSpin, Rings } from "react-loader-spinner";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import piiroinenHuoltoOhjeet from "@/data/piiroinen-huolto-ohjeet";
@@ -25,7 +29,7 @@ export default function Chat() {
   >(null);
   const [recording, setRecording] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-
+  const [audioURL, setAudioURL] = useState<string | null>(null);
   const {
     messages: primaryMessages,
     input,
@@ -63,6 +67,65 @@ export default function Chat() {
     // },
   });
 
+  const handleAudioData = (data: BlobPart) => {
+    const audioBlob = new Blob([data], { type: "audio/webm" });
+    const audioURL = URL.createObjectURL(audioBlob);
+    return { audioBlob, audioURL };
+  };
+
+  const handleStartRecording = () => {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      if (mediaRecorderRef.current) {
+        mediaRecorderRef.current.stop();
+        mediaRecorderRef.current = null;
+      }
+
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: "audio/webm",
+      });
+
+      mediaRecorderRef.current = mediaRecorder;
+      const uniqueId = nanoid();
+
+      mediaRecorder.ondataavailable = async (event) => {
+        if (event.data.size > 0) {
+          const { audioBlob, audioURL } = handleAudioData(event.data);
+
+          // setAudioURL(audioURL); // For debuging if you want to play audio record
+
+          if (audioBlob.size > 25415) {
+            const formData = new FormData();
+            formData.append("file", audioBlob, "audio.webm");
+            const transcriptionText = await getWhisperTranscription(formData);
+            console.log(transcriptionText, "Käännös");
+            return;
+            append({
+              role: "user",
+              content: transcriptionText,
+            });
+
+            setLastAssistantMessage(null); // Reset last assistant message
+          }
+        }
+      };
+      mediaRecorder.start();
+      setRecording(true);
+    });
+  };
+
+  const handleStopRecording = () => {
+    mediaRecorderRef.current?.stop();
+    setRecording(false);
+  };
+
+  const addUserMessage = (messages: Message[], id: string, content: string) => {
+    return messages.concat({
+      id,
+      content,
+      role: "user",
+    });
+  };
+
   async function sendMessageToAPI(messages: Message[], API_URL: string) {
     const response = await fetch(`${API_URL}`, {
       method: "POST",
@@ -95,62 +158,6 @@ export default function Chat() {
     }
     return responseText;
   }
-
-  const handleAudioData = (data: BlobPart) => {
-    const audioBlob = new Blob([data], { type: "audio/webm" });
-    const audioURL = URL.createObjectURL(audioBlob);
-    return { audioBlob, audioURL };
-  };
-
-  const addUserMessage = (messages: Message[], id: string, content: string) => {
-    return messages.concat({
-      id,
-      content,
-      role: "user",
-    });
-  };
-
-  const handleStartRecording = () => {
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      if (mediaRecorderRef.current) {
-        mediaRecorderRef.current.stop();
-        mediaRecorderRef.current = null;
-      }
-
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: "audio/webm",
-      });
-
-      mediaRecorderRef.current = mediaRecorder;
-      const uniqueId = nanoid();
-
-      mediaRecorder.ondataavailable = async (event) => {
-        if (event.data.size > 0) {
-          const { audioBlob, audioURL } = handleAudioData(event.data);
-
-          if (audioBlob.size > 25415) {
-            const formData = new FormData();
-            formData.append("file", audioBlob, "audio.webm");
-            const transcriptionText = await getWhisperTranscription(formData);
-
-            append({
-              role: "user",
-              content: transcriptionText,
-            });
-
-            setLastAssistantMessage(null); // Reset last assistant message
-          }
-        }
-      };
-      mediaRecorder.start();
-      setRecording(true);
-    });
-  };
-
-  const handleStopRecording = () => {
-    mediaRecorderRef.current?.stop();
-    setRecording(false);
-  };
 
   const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

@@ -1,5 +1,5 @@
 // CustomButton.tsx
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import { Button } from "../ui/button";
 import { Bot } from "lucide-react";
 import {
@@ -16,7 +16,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { generateAIinstruction } from "@/lib/langchainActions";
 import { FurnitureInfo } from "@/data/types";
-
+import { ReloadIcon } from "@radix-ui/react-icons";
+import AiButtonSkeleton from "../skeletons";
+import { Skeleton } from "../ui/skeleton";
 
 interface CustomButtonProps {
   isEditing: boolean;
@@ -34,6 +36,7 @@ export const AiInstructionButton: React.FC<CustomButtonProps> = ({
   const [open, setOpen] = useState(false);
   const [isGenerated, setIsGenerated] = useState(false);
   const [instructionInput, setInstructionInput] = useState(instruction);
+  const [isPending, startTransition] = useTransition();
 
   const handleInstructionInputChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
@@ -51,18 +54,26 @@ export const AiInstructionButton: React.FC<CustomButtonProps> = ({
 
   // Käsittelijä huolto-ohjeiden generoinnille
   const handleGenerate = async () => {
-    const furnitureName = furnitureInfo?.name || "";
-    const furnitureProblem = furnitureInfo?.problem_description || "";
-
-    const result = await generateAIinstruction({
-      furniture_name: furnitureName,
-      furnitureProblem: furnitureProblem,
+    setIsGenerated(false);
+    startTransition(async () => {
+      try {
+        const furnitureName = furnitureInfo?.name || "";
+        const furnitureProblem = furnitureInfo?.problem_description || "";
+        const result = await generateAIinstruction({
+          furniture_name: furnitureName,
+          furnitureProblem: furnitureProblem,
+        });
+        setInstructionInput(result);
+        console.log("Saatu vastaus", result);
+        // Tässä voisi olla logiikka huolto-ohjeiden generoimiseksi
+        // Aseta isGenerated true, kun ohjeet on generoitu
+        setIsGenerated(true);
+      } catch (error) {
+        setInstructionInput("Tapahtui virhe, yritä uudelleen");
+        console.error("Error generating instructions:", error);
+        // Käsittele virhe tarvittaessa
+      }
     });
-    setInstructionInput(result);
-    console.log("Saatu vastaus",result);
-    // Tässä voisi olla logiikka huolto-ohjeiden generoimiseksi
-    // Aseta isGenerated true, kun ohjeet on generoitu
-    setIsGenerated(true);
   };
 
   const handleDialogChange = (isOpen: boolean) => {
@@ -96,21 +107,35 @@ export const AiInstructionButton: React.FC<CustomButtonProps> = ({
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">
-      <Label htmlFor="instruction" className="block mb-2 text-center">
-        Suositus
-      </Label>
-      <textarea
-        placeholder="Paina generoi suositus -nappia saadaksesi huolto-ohjeet."
-        id="instructionInput"
-        rows={12}
-        value={instructionInput}
-        onChange={handleInstructionInputChange}
-        className="w-full p-4 tracking-tight text-sm border-2 border-gray-300 rounded-lg focus:outline-none focus:border-zinc-500 transition-colors"
-      />
-    </div>
+          <Label htmlFor="instruction" className="block mb-2 text-center">
+            Suositus
+          </Label>
+          <div className="relative">
+            <textarea
+              placeholder={
+                instructionInput === "" && !isPending
+                  ? "Paina generoi suositus -nappia saadaksesi huolto-ohjeet."
+                  : ""
+              }
+              id="instructionInput"
+              rows={12}
+              value={isPending ? "" : instructionInput}
+              onChange={handleInstructionInputChange}
+              className="w-full p-4 tracking-tight text-sm border-2 border-gray-300 rounded-lg focus:outline-none focus:border-zinc-500 transition-colors"
+              disabled={isPending}
+            />
+            {isPending && <AiButtonSkeleton />}
+          </div>
+        </div>
         <DialogFooter>
           <div>
-            {isGenerated ? (
+            {isPending ? (
+              // Näytä latauskuva, kun dataa haetaan
+              <Button disabled>
+                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                Luodaan vastausta
+              </Button>
+            ) : isGenerated ? (
               // Näytä nämä napit, kun huolto-ohjeet on generoitu
               <>
                 <Button type="button" onClick={handleSave}>
@@ -124,7 +149,11 @@ export const AiInstructionButton: React.FC<CustomButtonProps> = ({
               </>
             ) : (
               // Näytä tämä painike, kun huolto-ohjeita ei ole vielä generoitu
-              <Button type="button" onClick={handleGenerate}>
+              <Button
+                type="button"
+                onClick={handleGenerate}
+                disabled={isPending}
+              >
                 Generoi suositus
               </Button>
             )}
