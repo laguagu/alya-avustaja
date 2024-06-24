@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 
 export default async function DashboardLayout({
-  children, // will be a page or nested layout
+  children,
 }: {
   children: React.ReactNode;
 }) {

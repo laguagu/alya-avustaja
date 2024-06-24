@@ -40,17 +40,13 @@ export const columns: ColumnDef<DeviceItemExample>[] = [
   },
   {
     accessorKey: "name",
-    header: "Name",
-  },
-  {
-    accessorKey: "category",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Category
+          Nimi
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -69,7 +65,7 @@ export const columns: ColumnDef<DeviceItemExample>[] = [
     header: "Location",
   },
   {
-    accessorKey: "serialNumber",
+    accessorKey: "serial",
     header: "Serial Number",
   },
   {
@@ -77,11 +73,14 @@ export const columns: ColumnDef<DeviceItemExample>[] = [
     header: "Issue",
     cell: ({ row }) => (row.getValue("issue") ? "Yes" : "No"),
   },
-  // {
-  //   accessorKey: "updateTime",
-  //   header: "Update Time",
-  //   cell: ({ row }) => new Date(row.getValue("updateTime")).toLocaleString(),
-  // },
+  {
+    accessorKey: "brand", // Lisätty vastaamaan dataavain "brand"
+    header: "Brand",
+  },
+  {
+    accessorKey: "model", // Lisätty vastaamaan dataavain "model"
+    header: "Model",
+  },
   {
     id: "actions",
     cell: ({ row }) => {

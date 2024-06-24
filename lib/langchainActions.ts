@@ -46,7 +46,6 @@ Focus on the specific issue mentioned in the context. If the exact issue is not 
 Question: {question}
 `;
 
-// Vastausmalli, joka käyttää kontekstia vastauksen generoimiseen.
 const ANSWER_TEMPLATE = `
 You are an AI assistant designed to assist in maintaining and repairing furniture. You are a Finnish-speaking assistant, so all responses must be in Finnish. Your primary tasks include providing detailed maintenance and repair instructions for various furniture pieces, as well as information on the parts they use.
 
@@ -84,7 +83,6 @@ interface GenerateInstructionParams {
   furniture_name: string;
   furnitureProblem: string;
 }
-
 
 export async function generateAIinstruction({
   furniture_name,

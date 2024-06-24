@@ -1,5 +1,6 @@
-import { IssueFormValues } from "@/data/types";
+import { DeviceItemExample, IssueFormValues } from "@/data/types";
 
+// Haetaan vikailmoitusten määrä lunniapista joka tullaan näyttämään sidebarissa
 export async function getIssuesNumber(): Promise<number> {
   if (!process.env.LUNNI_SERVICES) {
     console.error("LUNNI_SERVICES environment variable is not set");
@@ -34,7 +35,7 @@ export async function fetchLunniFormData(id: string): Promise<IssueFormValues> {
     `https://apiv3.lunni.io/services/${id}?fields=location_id,priority,problem_description,type,instruction,used_equipments`,
     {
       headers: {
-        Authorization: `Bearer ${process.env.LUNNI_API}`, // Replace with your actual access token
+        Authorization: `Bearer ${process.env.LUNNI_API}`, 
         "Content-Type": "application/json",
       },
     }
@@ -55,8 +56,7 @@ export async function fetchLunniFormData(id: string): Promise<IssueFormValues> {
   };
 }
 
-async function fetchLocationData(locationId: number): Promise<Location | null> {
-  // Mockattu sijainti data. Oikeassa tapauksessa tämä olisi API-kutsu
+async function retrieveLocationName(locationId: number): Promise<Location | null> {
   const response = await fetch(
     `https://apiv3.lunni.io/locations/${locationId}`
   );
@@ -66,5 +66,48 @@ async function fetchLocationData(locationId: number): Promise<Location | null> {
     throw new Error("Failed to fetch location data");
   }
 
+  return data;
+}
+
+export async function updateIssueData(
+  issueId: number | undefined,
+  formData: IssueFormValues
+) {
+  throw new Error("Not implemented");
+  if (issueId === undefined) {
+    throw new Error("issueId is undefined");
+  }
+
+  const url = `https://apiv3.lunni.io/services/${issueId}`;
+
+  const response = await fetch(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+  });
+
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  const data = await response.json();
+  return data; // Palautetaan päivitetty data
+}
+
+export async function fetchAllFurnitures(): Promise<DeviceItemExample[]> {
+  const FurnitureItems = await fetch(
+    `${process.env.LUNNI_UNITS}`,
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.LUNNI_API}`, 
+        "Content-Type": "application/json",
+      },
+    }
+    // {cache: "no-store"} // This will disable cache
+  );
+  const data = await FurnitureItems.json();
+  console.log(data);
   return data;
 }

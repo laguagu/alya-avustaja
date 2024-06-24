@@ -3,6 +3,8 @@ import { BentoGridDemo } from "@/components/BentoGridDemo";
 import { Suspense } from "react";
 
 export default function Page() {
+  // Hae data apista
+  // Suodatetaan data
   const filteredData: ServiceItem[] = issuesData.map((item: DataServices) => ({
     id: item.id,
     name: item.name,
