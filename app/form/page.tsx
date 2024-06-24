@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { getNotifications, getRecipe } from "../../lib/ai-actions";
 import { useForm } from "react-hook-form";
-import { basicChatBot, output_parsers } from "@/lib/langchainActions";
 import React from "react";
 
 export type DefaultValues = {
@@ -63,7 +62,6 @@ export default function Home() {
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.preventDefault();
-    const result = await output_parsers();
   };
 
   const handleClick = async () => {

@@ -22,7 +22,7 @@ export default function InformationCard({
   partsList,
   issueData,
 }: InformationCardProps) {
-
+  
   if (!deviceData) {
     return <div>Ei saatavilla olevia huonekalutietoja</div>;
   }

@@ -1,11 +1,10 @@
-import { ServiceItem, DataServices, issuesData } from "@/data/types";
+import { FilteredServiceItem, ServiceTask, issuesData } from "@/data/types";
 import { BentoGridDemo } from "@/components/BentoGridDemo";
 import { Suspense } from "react";
+import { fetchIssuesData } from "@/lib/dataFetching";
 
-export default function Page() {
-  // Hae data apista
-  // Suodatetaan data
-  const filteredData: ServiceItem[] = issuesData.map((item: DataServices) => ({
+const extractFilteredServiceItems = (issuesData: ServiceTask[]): FilteredServiceItem[] => {
+  return issuesData.map((item: ServiceTask) => ({
     id: item.id,
     name: item.name,
     device_id: item.device_id,
@@ -19,10 +18,16 @@ export default function Page() {
     updated: item.updated,
     completed: item.completed,
     is_completed: item.is_completed,
-    instruction: item.instruction, // Palautetaan tähän AI:lla rikastettu huolto-ohje
-    description: item.description, // Työnselostus mikäli huoltopyyntö on ratkaistu ja työnselostus on kirjattu
+    instruction: item.instruction, // AI:lla rikastettu huolto-ohje
+    description: item.description, // Työnselostus, mikäli huoltopyyntö on ratkaistu
   }));
+};
 
+export default async function Page() {
+  // Hae data apista
+  // const issuesData = await fetchIssuesData();
+  // Suodatetaan data
+  const filteredData = extractFilteredServiceItems(issuesData);
 
   return (
     <div>

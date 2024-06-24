@@ -13,7 +13,6 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { DeviceItemExample } from "@/data/types";
 
-
 // Use zod schema to define the shape of the data later
 export const columns: ColumnDef<DeviceItemExample>[] = [
   {

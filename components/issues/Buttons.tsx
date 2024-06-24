@@ -86,10 +86,6 @@ export const AiInstructionButton: React.FC<CustomButtonProps> = ({
     }
   };
 
-  const formatBoldText = (text) => {
-    return text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-  };
-
   return (
     <Dialog open={open} onOpenChange={handleDialogChange}>
       <DialogTrigger asChild>

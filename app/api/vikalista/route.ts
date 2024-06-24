@@ -55,101 +55,101 @@ const answerPrompt = PromptTemplate.fromTemplate(ANSWER_TEMPLATE);
 
 export async function POST(req: NextRequest) {
   return NextResponse.json({ message: "Hello, world!" });
-  try {
-    const body = await req.json();
-    const furnitureInfo = {
-      name: body.name, // Huonekalun nimi
-      model: body.model, // Malli
-      brand: body.brand, // Merkki
-      issueDescription: body.issueDescription, // Vikakuvaus
-    };
-    // Vaiheet 1. Ota body rungon mukana tiedot huonekalusta
-    // 2. Muodosta standalone-kysymys jolla haet vastauksen supabasesta perustuen furnitureInfoon
-    // 3. 
+  // try {
+  //   const body = await req.json();
+  //   const furnitureInfo = {
+  //     name: body.name, // Huonekalun nimi
+  //     model: body.model, // Malli
+  //     brand: body.brand, // Merkki
+  //     issueDescription: body.issueDescription, // Vikakuvaus
+  //   };
+  //   // Vaiheet 1. Ota body rungon mukana tiedot huonekalusta
+  //   // 2. Muodosta standalone-kysymys jolla haet vastauksen supabasesta perustuen furnitureInfoon
+  //   // 3. 
 
-    // Alustaa OpenAI-mallin ja Supabase-asiakasohjelman.
-    const model = new ChatOpenAI({
-      modelName: "gpt-4o",
-      temperature: 0.0,
-      verbose: true, // Tulostaa lisätietoja, jos true
-      streaming: true,
-    });
+  //   // Alustaa OpenAI-mallin ja Supabase-asiakasohjelman.
+  //   const model = new ChatOpenAI({
+  //     modelName: "gpt-4o",
+  //     temperature: 0.0,
+  //     verbose: true, // Tulostaa lisätietoja, jos true
+  //     streaming: true,
+  //   });
 
-    const client = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_PRIVATE_KEY!
-    );
+  //   const client = createClient(
+  //     process.env.SUPABASE_URL!,
+  //     process.env.SUPABASE_PRIVATE_KEY!
+  //   );
 
-    const vectorstore = new SupabaseVectorStore(new OpenAIEmbeddings(), {
-      client,
-      tableName: "piiroinen_chairs", // Tietokantataulun nimi
-      queryName: "matching_documents", // Kysely funktion nimi
-    });
+  //   const vectorstore = new SupabaseVectorStore(new OpenAIEmbeddings(), {
+  //     client,
+  //     tableName: "piiroinen_chairs", // Tietokantataulun nimi
+  //     queryName: "matching_documents", // Kysely funktion nimi
+  //   });
 
-    // Muodostaa LangChain-ketjuja tiedonhaulle ja vastausten generoinnille.
-    const standaloneQuestionChain = RunnableSequence.from([
-      condenseQuestionPrompt,
-      model,
-      new StringOutputParser(),
-    ]);
-    console.log(JSON.stringify(standaloneQuestionChain, null, 2));
+  //   // Muodostaa LangChain-ketjuja tiedonhaulle ja vastausten generoinnille.
+  //   const standaloneQuestionChain = RunnableSequence.from([
+  //     condenseQuestionPrompt,
+  //     model,
+  //     new StringOutputParser(),
+  //   ]);
+  //   console.log(JSON.stringify(standaloneQuestionChain, null, 2));
     
-    let resolveWithDocuments: (value: Document[]) => void;
-    // const documentPromise = new Promise<Document[]>((resolve) => {
-    //   resolveWithDocuments = resolve;
-    // });
+  //   let resolveWithDocuments: (value: Document[]) => void;
+  //   // const documentPromise = new Promise<Document[]>((resolve) => {
+  //   //   resolveWithDocuments = resolve;
+  //   // });
 
-    // Hakee dokumentit Supabase-tietokannasta.
-    const retriever = vectorstore.asRetriever({
-      k: 2,
-      callbacks: [
-        {
-          handleRetrieverEnd(documents: Document<Record<string, any>>[]) {
-            console.log("documents", documents); // Tulostaa kaikki haetut dokumentit
-            resolveWithDocuments(documents); // Kun dokumentit on haettu, ratkaisee lupauksen dokumenteilla
-          },
-        },
-      ],
-    });
+  //   // Hakee dokumentit Supabase-tietokannasta.
+  //   const retriever = vectorstore.asRetriever({
+  //     k: 2,
+  //     callbacks: [
+  //       {
+  //         handleRetrieverEnd(documents: Document<Record<string, any>>[]) {
+  //           console.log("documents", documents); // Tulostaa kaikki haetut dokumentit
+  //           resolveWithDocuments(documents); // Kun dokumentit on haettu, ratkaisee lupauksen dokumenteilla
+  //         },
+  //       },
+  //     ],
+  //   });
 
-    const retrievalChain = retriever.pipe(formatDocumentsAsString); // Kombinoi haetut dokumentit yhdeksi tekstiksi
+  //   const retrievalChain = retriever.pipe(formatDocumentsAsString); // Kombinoi haetut dokumentit yhdeksi tekstiksi
 
-    // Alustaa ketjun vastauksen generoimiseen.
-    const answerChain = RunnableSequence.from([
-      {
-        context: RunnableSequence.from([
-          (input) => input.question,
-          retrievalChain,
-        ]),
-        chat_history: (input) => input.chat_history,
-        question: (input) => input.question,
-      },
-      answerPrompt,
-      model,
-    ]);
+  //   // Alustaa ketjun vastauksen generoimiseen.
+  //   const answerChain = RunnableSequence.from([
+  //     {
+  //       context: RunnableSequence.from([
+  //         (input) => input.question,
+  //         retrievalChain,
+  //       ]),
+  //       chat_history: (input) => input.chat_history,
+  //       question: (input) => input.question,
+  //     },
+  //     answerPrompt,
+  //     model,
+  //   ]);
 
-    // Suorittaa ketjun, joka tuottaa vastauksen käyttäjän kysymykseen.
-    const conversationalRetrievalQAChain = RunnableSequence.from([
-      {
-        question: standaloneQuestionChain, // Saa standalone-kysymyksen ketjusta
-        chat_history: (input) => input.chat_history, // Saa keskusteluhistorian syötteenä
-      },
-      answerChain,
-      // new BytesOutputParser(), // Striimaa vastauksen
-      // new StringOutputParser(), // Ei striimaukseen sendMessage kanssa frontendissa
-    ]);
+  //   // Suorittaa ketjun, joka tuottaa vastauksen käyttäjän kysymykseen.
+  //   const conversationalRetrievalQAChain = RunnableSequence.from([
+  //     {
+  //       question: standaloneQuestionChain, // Saa standalone-kysymyksen ketjusta
+  //       chat_history: (input) => input.chat_history, // Saa keskusteluhistorian syötteenä
+  //     },
+  //     answerChain,
+  //     // new BytesOutputParser(), // Striimaa vastauksen
+  //     // new StringOutputParser(), // Ei striimaukseen sendMessage kanssa frontendissa
+  //   ]);
 
-    // Lähettää vastauksen streamattuna takaisin klientille.
-    const stream = await conversationalRetrievalQAChain.stream({
-      question: currentMessageContent,
-      chat_history: formatVercelMessages(previousMessages), // Muotoilee keskusteluhistorian
-    });
+  //   // Lähettää vastauksen streamattuna takaisin klientille.
+  //   const stream = await conversationalRetrievalQAChain.stream({
+  //     question: currentMessageContent,
+  //     chat_history: formatVercelMessages(previousMessages), // Muotoilee keskusteluhistorian
+  //   });
 
-    const aiStream = LangChainAdapter.toAIStream(stream);
-    return new StreamingTextResponse(aiStream);
+  //   const aiStream = LangChainAdapter.toAIStream(stream);
+  //   return new StreamingTextResponse(aiStream);
 
-  } catch (e: any) {
-    console.error(e);
-    return NextResponse.json({ error: e.message }, { status: e.status ?? 500 });
-  }
+  // } catch (e: any) {
+  //   console.error(e);
+  //   return NextResponse.json({ error: e.message }, { status: e.status ?? 500 });
+  // }
 }

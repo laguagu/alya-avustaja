@@ -172,7 +172,7 @@ export type DeviceItemExample = {
 };
 
 // Huom tarvitaan vielä image
-export type DataServices = {
+export type ServiceTask = {
   id: number;
   name: string;
   approved_by_contact: string | null;
@@ -251,7 +251,7 @@ export type DataServices = {
   in_recyclebin: number | null;
 };
 
-export type ServiceItem = {
+export type FilteredServiceItem = {
   id: number;
   name: string;
   device_id: number;
@@ -286,7 +286,7 @@ export interface FurnitureInfo {
   problem_description: string | null;
 }
 
-export const issuesData: DataServices[] = [
+export const issuesData: ServiceTask[] = [
   {
     id: 5,
     name: "Huoltopyyntö",

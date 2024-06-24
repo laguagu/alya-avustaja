@@ -2,7 +2,8 @@ import ClientForm from "@/components/issues/ClientForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import InformationCard from "@/components/issues/information-card";
-import { fetchIssuePageData } from "@/data/mockDataFetch";
+// import { fetchIssuePageData } from "@/data/mockDataFetch";
+import { fetchIssuePageData } from "@/lib/dataFetching";
 
 export default async function Page({
   params,
@@ -16,7 +17,7 @@ export default async function Page({
   }
   const deviceId = searchParams?.["device_id"];
   const issueId = params?.id.toString();
-
+  fetchIssuePageData(issueId, deviceId!);
   const { issueData, deviceData, locationData, partsList } =
     await fetchIssuePageData(issueId, deviceId!);
 
