@@ -22,3 +22,5 @@ Application → Piiroinen: Autocomplete defect notification form.
 User → Application: Marks issue as resolved.
 
 
+Lunni API:sta tarvitaan
+ - Huoltopyynnön kuva. Nyt vain mahdollista hakea huonekalun kuva S3 bucketista
