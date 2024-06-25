@@ -7,20 +7,13 @@ Ideointia
  2.
   - Käyttäjä voi tehdä huoltopyynnön/ilmoituksen jolloin tekoäly täydentää kentät automaattisesti
 
-Steps:
-User → Application: Records voice.
-Application → WhisperAPI: Sends audio.
-WhisperAPI → Application: Transforms to text.
-Application → GPT4Model (RAG model): Sends text RAG model uses data that Piiroinen has provided.
-GPT4Model → Application: Returns JSON with defects.
-Then application displays defects form. Where user can select and valiadate fields. Then
-Application shows Care Instructions based of selected form checkboxes and user can reviews solution.
-Application Ask did solution problem was solved
-[If solution not satisfactory]:
-Application → Piiroinen: Autocomplete defect notification form.
-
-User → Application: Marks issue as resolved.
-
-
 Lunni API:sta tarvitaan
  - Huoltopyynnön kuva. Nyt vain mahdollista hakea huonekalun kuva S3 bucketista
+
+Tehtävät näytöt:
+ -"/"
+  -HomeScreen josta käyttäjä ohjataan "Dashboard" näytölle jos kirjautunut, muuten "login" sivulle
+-"/login"
+  -Kirjautumis näyttö lomakkeella
+-"dashboard"
+  -Jonkinlainen Gridi missä kaikki ominaisuudet sovelluksesta
