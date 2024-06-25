@@ -12,6 +12,7 @@ import {
   IconAlertSquare,
 } from "@tabler/icons-react";
 import { FilteredServiceItem } from "@/data/types";
+import Image from "next/image";
 
 export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
   const issueItems = issues.map((issue, i) => ({
@@ -20,7 +21,7 @@ export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
     description: issue.problem_description,
     priority: issue.priority,
     device_id: issue.device_id,
-    header: <Skeleton />,
+    header: <ImageSkeleton src={"/chairs/arena022.jpg"}/>,
     icon:
       issue.is_completed === 1 ? (
         <IconSquareRoundedCheck className="h-4 w-4 text-neutral-500" />
@@ -47,6 +48,18 @@ export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
     </BentoGrid>
   );
 }
+
+const ImageSkeleton = ({ src }: { src: string }) => (
+  <div className="relative flex justify-center items-center w-full  min-h-[6rem] rounded-xl md:h-full h-64">
+    <Image
+      src={src}
+      alt="Vikailmoituksen kuva"
+      layout="fill"
+      objectFit="cover"
+      className="rounded-xl sm:object-cover md:object-contain"
+    />
+  </div>
+);
 
 const Skeleton = () => (
   <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100"></div>
