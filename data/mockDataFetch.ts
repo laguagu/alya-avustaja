@@ -83,7 +83,8 @@ export async function retrieveFurnitureParts(
     );
 
     if (!item) {
-      throw new Error("Failed to fetch parts list");
+      console.warn(`No parts found for furniture: ${furnitureName}`);
+      return []; // Return an empty array if no parts are found
     }
 
     return item.osat;
