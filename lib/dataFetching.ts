@@ -56,6 +56,7 @@ export async function getIssueFormDataById(
   const data = await response.json();
 
   return {
+    id: data.id,
     location_id: data.location_id ?? null,
     priority: data.priority ?? "",
     problem_description: data.problem_description ?? "",

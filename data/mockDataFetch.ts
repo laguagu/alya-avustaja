@@ -94,32 +94,6 @@ export async function retrieveFurnitureParts(
   }
 }
 
-export async function updateIssueData(
-  issueId: number | undefined,
-  formData: IssueFormValues
-) {
-  throw new Error("Not implemented");
-  if (issueId === undefined) {
-    throw new Error("issueId is undefined");
-  }
-
-  const url = `https://apiv3.lunni.io/services/${issueId}`;
-
-  const response = await fetch(url, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(formData),
-  });
-
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-
-  const data = await response.json();
-  return data; // Palautetaan päivitetty data
-}
 
 export async function fetchIssuePageData(
   issueId: string,

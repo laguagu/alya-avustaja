@@ -17,6 +17,7 @@ export default async function Page({
   }
   const deviceId = searchParams?.["device_id"];
   const issueId = params?.id.toString();
+
   fetchIssuePageData(issueId, deviceId!);
   const { issueData, deviceData, locationData, partsList } =
     await fetchIssuePageData(issueId, deviceId!);
