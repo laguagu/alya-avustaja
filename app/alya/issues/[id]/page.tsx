@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import InformationCard from "@/components/issues/information-card";
 // import { fetchIssuePageData } from "@/data/mockDataFetch";
 import { fetchIssuePageData } from "@/lib/dataFetching";
+import BackButton from "@/components/issues/back-button";
 
 export default async function Page({
   params,
@@ -12,6 +13,8 @@ export default async function Page({
   params?: { id?: string };
   searchParams: { [key: string]: string | undefined };
 }) {
+
+
   if (!params || !params.id) {
     return <div>Page ID is missing.</div>;
   }
@@ -24,7 +27,10 @@ export default async function Page({
 
   return (
     <div>
+      <div className="flex items-center gap-2">
+      <BackButton />
       <h1 className="text-2xl">Vikailmoitus - {params?.id}</h1>
+      </div>
       <Separator className="md:my-4 my-3 " />
       <Tabs defaultValue="info">
         <TabsList className="md:mb-2 ">
@@ -60,7 +66,6 @@ export default async function Page({
 
         {/* Chat */}
         <TabsContent value="chat">Chatti.</TabsContent>
-
       </Tabs>
     </div>
   );
