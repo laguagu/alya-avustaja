@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { BentoGrid, BentoGridItem } from "./ui/bento-grid";
 import {
   IconArrowWaveRightUp,
@@ -13,15 +14,24 @@ import {
 } from "@tabler/icons-react";
 import { FilteredServiceItem } from "@/data/types";
 import Image from "next/image";
+import { Button } from "./ui/button";
 
 export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
-  const issueItems = issues.map((issue, i) => ({
+  const [showCompleted, setShowCompleted] = useState(true);
+
+  const toggleShowCompleted = () => setShowCompleted(!showCompleted);
+
+  const filteredIssues = issues.filter(
+    (issue) => showCompleted || issue.is_completed !== 1
+  );
+
+  const issueItems = filteredIssues.map((issue, i) => ({
     issue_id: issue.id,
     title: issue.name,
     description: issue.problem_description,
     priority: issue.priority,
     device_id: issue.device_id,
-    header: <ImageSkeleton src={"/chairs/arena022.jpg"}/>,
+    header: <ImageSkeleton src={"/chairs/arena022.jpg"} />,
     icon:
       issue.is_completed === 1 ? (
         <IconSquareRoundedCheck className="h-4 w-4 text-neutral-500" />
@@ -32,20 +42,30 @@ export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
   }));
 
   return (
-    <BentoGrid className="max-w-4xl mx-auto">
-      {issueItems.map((item, i) => (
-        <BentoGridItem
-          key={i}
-          title={item.title}
-          issue_id={item.issue_id}
-          device_id={item.device_id}
-          description={item.description}
-          header={item.header}
-          icon={item.icon}
-          className={i === 3 || i === 6 ? "md:col-span-2" : ""}
-        />
-      ))}
-    </BentoGrid>
+    <div>
+      <Button onClick={toggleShowCompleted}
+      className="absolute top-0 right-0 mt-2 mr-4"
+      variant={"outline"}
+      >
+        {showCompleted
+          ? "Näytä vain avoimet vikailmoitukset"
+          : "Näytä kaikki vikailmoitukset"}
+      </Button>
+      <BentoGrid className="max-w-4xl mx-auto">
+        {issueItems.map((item, i) => (
+          <BentoGridItem
+            key={i}
+            title={item.title}
+            issue_id={item.issue_id}
+            device_id={item.device_id}
+            description={item.description}
+            header={item.header}
+            icon={item.icon}
+            className={i === 3 || i === 6 ? "md:col-span-2" : ""}
+          />
+        ))}
+      </BentoGrid>
+    </div>
   );
 }
 
