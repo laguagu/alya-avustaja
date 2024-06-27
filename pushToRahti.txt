@@ -2,8 +2,8 @@ docker build --no-cache -t hki-piiroinen .
 docker run -p 3000:3000 hki-piiroinen
 
 DockerHub
-docker tag my-nextjs-app laguagu/nikari:latest
-docker push laguagu/nikari:latest
+docker tag hki-piiroinen laguagu/alya:latest
+docker push laguagu/alya:latest
 
 Rahti 2 - Rahti Image registry
 docker tag my-nextjs-app image-registry.apps.2.rahti.csc.fi/alyakokeilut/nikari:latest
