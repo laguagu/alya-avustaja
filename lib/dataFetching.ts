@@ -119,18 +119,33 @@ export async function updateIssueData(
 }
 
 export async function fetchAllFurnitures(): Promise<DeviceItemExample[]> {
-  const FurnitureItems = await fetch(
-    `${process.env.LUNNI_UNITS}`,
-    {
+  const url = process.env.LUNNI_UNITS;
+  if (!url) {
+    throw new Error("LUNNI_UNITS environment variable is not defined");
+  }
+
+  try {
+    const response = await fetch(url, {
       headers: {
         Authorization: `Bearer ${process.env.LUNNI_API}`,
         "Content-Type": "application/json",
       },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-    // {cache: "no-store"} // This will disable cache
-  );
-  const data = await FurnitureItems.json();
-  return data;
+
+    const data = await response.json();
+    if (!data || data.length === 0) {
+      throw new Error("No data found");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch furniture data:", error);
+    throw error;
+  }
 }
 
 export async function fetchIssuesData(): Promise<ServiceTask[]> {

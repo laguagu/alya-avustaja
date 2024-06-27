@@ -5,14 +5,24 @@ import { DeviceItemExample } from "@/data/types";
 import { fetchAllFurnitures } from "@/lib/dataFetching";
 
 export default async function Page() {
-  const data = await fetchAllFurnitures();
-  
+  let data: DeviceItemExample[] | null = null;
+  let error: string | null = null;
+
+  try {
+    data = await fetchAllFurnitures();
+  } catch (err) {
+    error = (err as Error).message;
+  }
+
+  if (error) {
+    return <div className="container mx-auto py-10">Error: {error}</div>;
+  }
+
   return (
     <div className="container mx-auto py-10">
       <Suspense fallback={<div>Ladataan huonekaluja...</div>} />
-      <DataTable columns={columns} data={data} />
+      {data && <DataTable columns={columns} data={data} />}
       <Suspense />
-    dadas
     </div>
   );
 }
