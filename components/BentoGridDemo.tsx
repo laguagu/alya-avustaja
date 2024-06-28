@@ -34,9 +34,15 @@ export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
     header: <ImageSkeleton src={"/chairs/arena022.jpg"} />,
     icon:
       issue.is_completed === 1 ? (
-        <IconSquareRoundedCheck className="h-4 w-4 text-neutral-500" />
+        <div className="flex items-center">
+        <IconSquareRoundedCheck className="h-4 w-4 text-neutral-500 " />
+        <span className="ml-2">Valmis</span>
+        </div>
       ) : (
+        <div className="flex items-center">
         <IconAlertSquare className="h-4 w-4 text-neutral-500" />
+        <span className="ml-2">Avoin</span>
+      </div>
       ),
     className: i === 3 || i === 6 ? "md:col-span-2" : "",
   }));
