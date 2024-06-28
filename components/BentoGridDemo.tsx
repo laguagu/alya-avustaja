@@ -54,7 +54,7 @@ export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
       variant={"outline"}
       >
         {showCompleted
-          ? "Näytä vain avoimet vikailmoitukset"
+          ? "Näytä avoimet vikailmoitukset"
           : "Näytä kaikki vikailmoitukset"}
       </Button>
       <BentoGrid className="max-w-4xl mx-auto">
