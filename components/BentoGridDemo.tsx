@@ -17,7 +17,7 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 
 export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
-  const [showCompleted, setShowCompleted] = useState(true);
+  const [showCompleted, setShowCompleted] = useState(false);
 
   const toggleShowCompleted = () => setShowCompleted(!showCompleted);
 

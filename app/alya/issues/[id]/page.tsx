@@ -6,7 +6,7 @@ import InformationCard from "@/components/issues/information-card";
 import { fetchIssuePageData } from "@/lib/dataFetching";
 import BackButton from "@/components/issues/back-button";
 import { Suspense } from "react";
-
+import ChatBot from "@/components/issues/chat-bot";
 
 const AsyncDataComponent = async ({ issueId, deviceId }: { issueId: string, deviceId: string }) => {
   const { issueData, deviceData, locationData, partsList } = await fetchIssuePageData(issueId, deviceId);
@@ -42,7 +42,7 @@ const AsyncDataComponent = async ({ issueId, deviceId }: { issueId: string, devi
         />
       </TabsContent>
 
-      <TabsContent value="chat">Chatti.</TabsContent>
+      <TabsContent value="chat"><ChatBot/></TabsContent>
     </Tabs>
   );
 };
@@ -67,12 +67,12 @@ export default function Page({
   }
 
   return (
-    <div>
+    <div className="flex flex-col h-screen">
       <div className="flex items-center gap-2">
         <BackButton />
         <h1 className="text-2xl">Vikailmoitus - {params?.id}</h1>
       </div>
-      <Separator className="md:my-4 my-3 " />
+      <Separator className="md:my-4 my-3" />
       <Suspense fallback={<LoadingIndicator />}>
         <AsyncDataComponent issueId={issueId} deviceId={deviceId} />
       </Suspense>

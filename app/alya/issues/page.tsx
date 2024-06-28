@@ -31,7 +31,7 @@ export default async function Page() {
 
   return (
     <div>
-      <h1 className="text-center text-2xl">Vikailmoitukset</h1>
+      <h1 className="text-center text-2xl ">Vikailmoitukset</h1>
       {/* Tämä suspense toimii oikein kun annat BentoGrid elementille TimeOut function */}
       <Suspense fallback={<div>Ladataaan vikailmoituksia...</div>}>
         <BentoGridDemo issues={filteredData} />
