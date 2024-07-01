@@ -17,3 +17,5 @@ Tehtävät näytöt:
   -Kirjautumis näyttö lomakkeella
 -"dashboard"
   -Jonkinlainen Gridi missä kaikki ominaisuudet sovelluksesta
+
+  
