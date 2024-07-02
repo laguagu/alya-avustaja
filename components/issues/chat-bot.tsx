@@ -185,7 +185,7 @@ export default function ChatBot() {
   });
 
   return (
-    <div className="flex flex-col w-full h-full max-h-[calc(62vh-4rem)]">
+    <div className="flex flex-col w-full xl:max-w-[1200px] h-full max-h-[calc(62vh-4rem)]">
       <div className="p-4 border-b w-full">
         <h1 className="text-xl md:text-2xl font-bold text-center pl-4 md:pl-0">
           Chatbot - Älyä-avustaja
