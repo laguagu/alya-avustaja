@@ -22,7 +22,7 @@ import { Skeleton } from "../ui/skeleton";
 
 interface CustomButtonProps {
   isEditing: boolean;
-  instruction: string;
+  instruction: string | undefined;
   furnitureInfo?: FurnitureInfo;
   updateInstruction: (instruction: string) => void;
 }

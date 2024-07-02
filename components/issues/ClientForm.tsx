@@ -23,11 +23,13 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
-import { deviceData, DeviceItemCard, FurnitureInfo, IssueFormValues } from "@/data/types";
+import { DeviceItemCard, FurnitureInfo, IssueFormValues } from "@/data/types";
 import { useState } from "react";
-import { updateIssueData } from "@/app/actions";
+import { updateIssueAction } from "@/app/actions";
 import { AiInstructionButton, AiPartsButton } from "./Buttons";
 import { FormSchema } from "@/lib/schemas";
+import { useAction } from "next-safe-action/hooks";
+import { useRouter } from "next/navigation";
 
 interface IssueFormProps {
   data: IssueFormValues | null;
@@ -36,16 +38,40 @@ interface IssueFormProps {
   params?: { id?: string };
 }
 
-export default function ClientForm({ data, locationName, deviceData }: IssueFormProps) {
+export default function ClientForm({
+  data,
+  locationName,
+  deviceData,
+}: IssueFormProps) {
+  const router = useRouter()
   const [isEditing, setIsEditing] = useState(false);
+  const { execute, result, isExecuting } = useAction(updateIssueAction, {
+    onSuccess: ({ data }) => {
+      console.log("onSuccess", data);
+      toast({
+        variant: "default",
+        title: "Vikailmoitus päivitetty! 🎉",
+        duration: 5000,
+        description: data?.message,
+      });
+    },
+    onError: ({ error }) => {
+      console.log("error", error);
+      toast({
+        variant: "destructive",
+        title: "Virhe",
+        duration: 5000,
+        description: "Vikailmoitus ei päivittynyt onnistuneesti"});
+    },
+  });
   const issueId = data?.id;
 
   const furnitureInfo: FurnitureInfo = {
-    name: deviceData?.name || '',
-    model: deviceData?.model || '',
-    brand: deviceData?.brand || '',
-    problem_description: data?.problem_description || '',
-  }
+    name: deviceData?.name || "",
+    model: deviceData?.model || "",
+    brand: deviceData?.brand || "",
+    problem_description: data?.problem_description || "",
+  };
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -62,20 +88,11 @@ export default function ClientForm({ data, locationName, deviceData }: IssueForm
   const { errors } = form.formState;
   const { reset, setValue } = form;
 
-  async function onSubmit(formData: z.infer<typeof FormSchema>) {
+  async function onSubmit() {
     setIsEditing(false);
-    try {
-      await updateIssueData(issueId, formData);
-      toast({
-        duration: 4000,
-        description: "Vikailmoitusta muokattu onnistuneesti",
-      });
-    } catch (error: FieldErrors | any) {
-      toast({
-        duration: 4000,
-        description: `Virhe vikailmoituksen muokkaamisessa: ${error.message}`,
-      });
-    }
+    const completeFormData = { id: issueId, ...form.getValues() };
+    await execute(completeFormData);
+    router.refresh()
   }
 
   function handleEdit() {
@@ -216,7 +233,12 @@ export default function ClientForm({ data, locationName, deviceData }: IssueForm
                 />
                 <div className="mt-2 tracking-tight md:tracking-normal flex items-center">
                   Kysy AI suositusta kalusteen huollosta
-                  <AiInstructionButton isEditing={isEditing} instruction={field.value} updateInstruction={updateInstruction} furnitureInfo={furnitureInfo}/>
+                  <AiInstructionButton
+                    isEditing={isEditing}
+                    instruction={field.value}
+                    updateInstruction={updateInstruction}
+                    furnitureInfo={furnitureInfo}
+                  />
                 </div>
                 <FormMessage>{errors.instruction?.message}</FormMessage>
               </FormItem>
