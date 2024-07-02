@@ -127,7 +127,7 @@ export default function ClientForm({
             name="locationName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>locationName</FormLabel>
+                <FormLabel>Sijainti</FormLabel>
                 <Input placeholder="Sijainti" {...field} disabled={true} />
                 <FormMessage>{errors.locationName?.message}</FormMessage>
               </FormItem>
@@ -138,7 +138,7 @@ export default function ClientForm({
             name="priority"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>priority</FormLabel>
+                <FormLabel>Prioriteetti</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -167,7 +167,8 @@ export default function ClientForm({
             name="problem_description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>problem_description</FormLabel>
+                <FormLabel>Huoltotarpeen kuvaus
+                </FormLabel>
                 <Input
                   placeholder="Huoltotarpeen kuvaus"
                   {...field}
@@ -182,7 +183,7 @@ export default function ClientForm({
             name="type"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>type</FormLabel>
+                <FormLabel>Vikatyyppi</FormLabel>
                 <Select
                   disabled={!isEditing}
                   onValueChange={field.onChange}
@@ -225,7 +226,7 @@ export default function ClientForm({
             name="instruction"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>instruction</FormLabel>
+                <FormLabel>Tekoälyn huolto-ohje ehdotus</FormLabel>
                 <Input
                   placeholder="Ehdotettu huolto-ohje"
                   {...field}
@@ -249,7 +250,7 @@ export default function ClientForm({
             name="missing_equipments"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>missing_equipments</FormLabel>
+                <FormLabel>Puuttuvat tarvikkeet</FormLabel>
                 <div>
                   <Input
                     placeholder="Tarvittavat varaosat"
