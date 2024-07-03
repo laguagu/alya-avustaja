@@ -29,12 +29,6 @@ function LoginForm() {
             <div className="grid gap-2">
               <div className="flex items-center">
                 <Label htmlFor="password">Salasana</Label>
-                <Link
-                  href="/forgot-password"
-                  className="ml-auto inline-block text-sm underline"
-                >
-                  Unohtuiko salasana
-                </Link>
               </div>
               <Input id="password" type="password" required />
             </div>
