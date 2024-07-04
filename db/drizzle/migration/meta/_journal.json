@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1720009634663,
-      "tag": "0000_high_praxagora",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1720010439969,
-      "tag": "0001_nasty_yellowjacket",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1720082683030,
-      "tag": "0002_material_ricochet",
+      "when": 1720088049595,
+      "tag": "0000_foamy_lilith",
       "breakpoints": true
     }
   ]

@@ -1,12 +1,14 @@
-import Image from "next/image";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { BoxRevealDemo } from "./BoxRevealDemo";
+import { useFormState, useFormStatus } from 'react-dom';
+import { login } from '@/app/auth/auth';
 
 function LoginForm() {
+  const [state, action] = useFormState(login, undefined);
+
   return (
+    <form>
     <div className="w-full lg:min-h-[600px] xl:min-h-[800px]">
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
@@ -39,6 +41,7 @@ function LoginForm() {
         </div>
       </div>
     </div>
+    </form>
   );
 }
 
