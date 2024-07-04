@@ -1,11 +1,10 @@
-import { Client } from 'pg';
-import { drizzle } from 'drizzle-orm/node-postgres';
-import * as schema from '@/db/drizzle/schema';
+import "dotenv/config";
+import * as schema from "@/db/drizzle/schema";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 
-const client = new Client({
-  connectionString: process.env.PG_LOCAL_DATABASE_URL,
-});
+const connectionString = process.env.DATABASE_URL;
 
-client.connect();
-
+// Disable prefetch as it is not supported for "Transaction" pool mode
+export const client = postgres(connectionString!, { prepare: false });
 export const db = drizzle(client, { schema });

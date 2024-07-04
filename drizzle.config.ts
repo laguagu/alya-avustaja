@@ -1,3 +1,4 @@
+import '@/db/drizzle/envConfig';
 import { defineConfig } from "drizzle-kit";
 
 export default defineConfig({
@@ -5,11 +6,6 @@ export default defineConfig({
   schema: "./db/drizzle/schema.ts",
   out: "./db/drizzle/migration/",
   dbCredentials: {
-    user: process.env.PGUSER || "",
-    password: process.env.PGPASSWORD || "",
-    database: process.env.PGDATABASE || "",
-    host: process.env.PGHOST || "",
-    port: Number(process.env.PGPORT) || 5432,
-    ssl: false, // Lisää tämä rivi estääksesi SSL-yhteyden
+    url: process.env.DATABASE_URL!,
   },
 });

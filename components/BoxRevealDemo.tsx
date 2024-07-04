@@ -11,20 +11,20 @@ export async function BoxRevealDemo() {
 
       <BoxReveal boxColor={"#b6cfff"} duration={0.5}>
         <h2 className="mt-[.5rem] text-[1rem] md:text-[1.5rem]">
-          Huolto ja hoito-ohjeita tarjoava sovellus{" "}
-          <span className="text-[#5046e6]">Älyä Avustaja</span>
+          Huolto ja hoito-ohjeita tarjoava{" "}
+          <span className="text-[#5046e6]">Tekoäly sovellus</span>
         </h2>
       </BoxReveal>
 
       <BoxReveal boxColor={"#b6cfff"} duration={0.5}>
         <div className="mt-[1.5rem] text-[0.875rem] md:text-[1rem]">
           <p>
-            -&gt; Toteutettu yhteistyössä:
+            {/* -&gt; Toteutettu yhteistyössä:
             <span className="font-semibold text-[#5046e6]"> Huoltoyhtiö Piiroisen</span>, 
             <span className="font-semibold text-[#5046e6]"> Helsingin kaupungin</span>, ja
-            <span className="font-semibold text-[#5046e6]"> Haaga-Helian kanssa</span>.
-            <br />
-            -&gt; Integroitu Lunni-järjestelmään. <br />
+            <span className="font-semibold text-[#5046e6]"> Haaga-Helian kanssa</span>. */}
+            {/* <br /> */}
+            {/* -&gt; Integroitu Lunni-järjestelmään. <br /> */}
             -&gt; Sovelluksessa voit tarkistella huoltokohteen vikailmoituksia ja täydentää niitä sekä käyttää tekoälyä hyödyksi etsiessäsi huonekalujen huolto-ohjeita. <br />
           </p>
         </div>
