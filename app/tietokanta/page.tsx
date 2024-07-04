@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import { AddUser, getUsers } from '@/app/tietokanta/actions';
 import { db } from '@/db/drizzle/db';
-import { users } from '@/db/drizzle/schema';
+import { user } from '@/db/drizzle/formSchema';
 
 type User = {
   id: number;
@@ -11,7 +10,7 @@ type User = {
 
 
 export default async function Home() {
-  const users: User[] = await getUsers();
+  // const users: User[] = await getUsers();
 
   return (
     <div>

@@ -8,7 +8,7 @@ const nextConfig = {
             hostname: 'pbs.twimg.com'
           }
         ]
-      }
+      },
 };
 
 export default nextConfig;

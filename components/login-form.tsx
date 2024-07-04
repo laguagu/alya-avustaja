@@ -1,3 +1,4 @@
+"use client"
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,7 +9,7 @@ function LoginForm() {
   const [state, action] = useFormState(login, undefined);
 
   return (
-    <form>
+    <form action={action}>
     <div className="w-full lg:min-h-[600px] xl:min-h-[800px]">
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
@@ -24,6 +25,7 @@ function LoginForm() {
               <Input
                 id="email"
                 type="email"
+                name="email"
                 placeholder="m@example.com"
                 required
               />
@@ -32,7 +34,7 @@ function LoginForm() {
               <div className="flex items-center">
                 <Label htmlFor="password">Salasana</Label>
               </div>
-              <Input id="password" type="password" required />
+              <Input id="password" type="password" name="password" required />
             </div>
             <Button type="submit" className="w-full">
               Kirjaudu

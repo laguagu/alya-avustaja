@@ -5,7 +5,6 @@ import { users } from '@/db/drizzle/schema';
 import {
   FormState,
   LoginFormSchema,
-  SignupFormSchema,
 } from '@/app/auth/definitions';
 import { createSession, deleteSession } from '@/app/auth/sessions';
 import bcrypt from 'bcrypt';
@@ -20,6 +19,7 @@ export async function login(
     email: formData.get('email'),
     password: formData.get('password'),
   });
+  console.log(validatedFields,"validatedFields")
   const errorMessage = { message: 'Invalid login credentials.' };
 
   // If any form fields are invalid, return early
@@ -43,6 +43,8 @@ export async function login(
     validatedFields.data.password,
     user.password,
   );
+  // 3. Compare the user's password with the plaintext password in the database (not recommended for production)
+  // const passwordMatch = validatedFields.data.password === user.password;
 
   // If the password does not match, return early
   if (!passwordMatch) {
