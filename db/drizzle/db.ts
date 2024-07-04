@@ -1,10 +1,12 @@
-import '@/db/drizzle/envConfig';
+import { loadEnvConfig } from '@next/env';
 import * as schema from "@/db/drizzle/schema";
 import { users, NewUser } from "@/db/drizzle/schema";
-// import { drizzle } from "drizzle-orm/neon-serverless";
-// import { Pool } from "@neondatabase/serverless";
-import { drizzle } from 'drizzle-orm/postgres-js'
-import postgres from 'postgres'
+// Edge runtime virheen korjaukseen
+import { drizzle } from "drizzle-orm/neon-serverless";
+import { Pool } from "@neondatabase/serverless";
+
+// import { drizzle } from 'drizzle-orm/postgres-js'
+// import postgres from 'postgres'
 
 
 const connectionString = process.env.DATABASE_URL;
@@ -15,13 +17,18 @@ if (!connectionString) {
 }
 
 // Disable prefetch as it is not supported for "Transaction" pool mode
-export const client = postgres(connectionString, { prepare: false });
-export const db = drizzle(client, { schema });
-// const pool = new Pool({ connectionString });
-// export const db = drizzle(pool, { schema });
+// export const client = postgres(connectionString, { prepare: false });
+// export const db = drizzle(client, { schema });
+
+// Edge runtime virheen korjaukseen
+const pool = new Pool({ connectionString });
+export const db = drizzle(pool, { schema });
 
 export const insertUser = async (user: NewUser) => {
   console.log("connectionString", connectionString);
-  return;
-  // return db.insert(users).values(user).returning();
+  return db.insert(users).values(user).returning();
+};
+
+export const getAllUsers = async () => {
+  return db.select().from(users);
 };

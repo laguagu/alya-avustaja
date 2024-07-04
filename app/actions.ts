@@ -4,6 +4,7 @@ import { IssueFormValues } from "@/data/types";
 import { actionClient } from "@/lib/safe-actions";
 import { FormSchema } from "@/lib/schemas";
 import { flattenValidationErrors } from "next-safe-action";
+import { getAllUsers } from '@/db/drizzle/db';
 
 export async function updateIssueData(
   issueId: number | undefined,
@@ -47,3 +48,9 @@ export const updateIssueAction = actionClient
     
     return { message: "Vikailmoitus Päivitetty! 🎉" }
   });
+
+
+export const fetchUsers = async () => {
+  const users = await getAllUsers();
+  return users;
+};

@@ -1,21 +1,20 @@
-import { AddUser, getUsers } from '@/app/tietokanta/actions';
-import { db } from '@/db/drizzle/db';
-import { user } from '@/db/drizzle/formSchema';
+import {fetchUsers} from '@/app/actions';
 
 type User = {
   id: number;
-  fullName: string | null;
-  phone: string | null;
+  name: string | null;
+  email: string | null;
+  // password: string | null;
 };
 
 
 export default async function Home() {
-  // const users: User[] = await getUsers();
-
+  const users: User[] = await fetchUsers();
+  console.log(users);
   return (
     <div>
       <h1>Users</h1>
-      <form action={AddUser}>
+      <form>
         <input type="text" name="fullName" placeholder="Full Name" required />
         <input type="text" name="phone" placeholder="Phone" required />
         <button type="submit">Add User</button>
@@ -23,7 +22,7 @@ export default async function Home() {
       <ul>
         {users.map((user:User) => (
           <li key={user.id}>
-            {user.fullName} - {user.phone}
+            {user.name} - {user.email}
           </li>
         ))}
       </ul>

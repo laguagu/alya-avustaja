@@ -4,8 +4,8 @@ import { NewUser } from '@/db/drizzle/schema';
 
 async function main() {
   const newUser: NewUser = {
-    name: 'user2',
-    email: 'user2@example.com',
+    name: 'user',
+    email: 'user@example.com',
     password: '123456',
   };
   try {
