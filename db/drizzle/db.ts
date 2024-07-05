@@ -1,4 +1,3 @@
-import { loadEnvConfig } from '@next/env';
 import * as schema from "@/db/drizzle/schema";
 import { users, NewUser } from "@/db/drizzle/schema";
 // Edge runtime virheen korjaukseen
@@ -7,7 +6,6 @@ import { Pool } from "@neondatabase/serverless";
 
 // import { drizzle } from 'drizzle-orm/postgres-js'
 // import postgres from 'postgres'
-
 
 const connectionString = process.env.DATABASE_URL;
 console.log("Loaded connectionString:", connectionString); // Lisää tämä rivi

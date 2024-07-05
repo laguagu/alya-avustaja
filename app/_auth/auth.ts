@@ -1,28 +1,25 @@
-'use server';
+"use server";
 
-import { db } from '@/db/drizzle/db'; 
-import { users } from '@/db/drizzle/schema'; 
-import {
-  FormState,
-  LoginFormSchema,
-} from '@/app/_auth/definitions';
-import { createSession, deleteSession } from '@/app/_auth/sessions';
-import bcrypt from 'bcrypt';
-import { eq } from 'drizzle-orm';
-import { redirect } from 'next/navigation';
+import { db } from "@/db/drizzle/db";
+import { users } from "@/db/drizzle/schema";
+import { FormState, LoginFormSchema } from "@/app/_auth/definitions";
+import { createSession, deleteSession } from "@/app/_auth/sessions";
+import bcrypt from "bcrypt";
+import { eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
 export async function login(
   state: FormState,
-  formData: FormData,
+  formData: FormData
 ): Promise<FormState> {
   // 1. Validate form fields
   const validatedFields = LoginFormSchema.safeParse({
-    email: formData.get('email'),
-    password: formData.get('password'),
+    email: formData.get("email"),
+    password: formData.get("password"),
   });
-  const errorMessage = { message: 'Invalid login credentials.' };
-  console.log(validatedFields,"validatedFields")
- 
+  const errorMessage = { message: "Invalid login credentials." };
+  console.log(validatedFields, "validatedFields");
+
   // If any form fields are invalid, return early
   if (!validatedFields.success) {
     return {
@@ -36,39 +33,29 @@ export async function login(
 
   // If user is not found, return early
   if (!user) {
-    console.error("user not found")
+    console.error("user not found");
     return errorMessage;
   }
   // 3. Compare the user's password with the hashed password in the database
   const passwordMatch = await bcrypt.compare(
     validatedFields.data.password,
-    user.password,
+    user.password
   );
   // 3. Compare the user's password with the plaintext password in the database (not recommended for production)
   // const passwordMatch = validatedFields.data.password === user.password;
 
   // If the password does not match, return early
   if (!passwordMatch) {
-    console.error("password not match")
+    console.error("password not match");
     return errorMessage;
   }
 
   // 4. If login successful, create a session for the user and redirect
   const userId = user.id.toString(); // Dokumentaatiossa esimerkki stateless-session mukaan jossa vaadittini string
   await createSession(user.id);
-  redirect('/alya');
+  redirect("/alya");
 }
 
-  export async function logout() {
-    deleteSession();
-  }
-
-
-  // Simulate user lookup function
-async function findUserByEmailAndPassword(email: string, password: string) {
-  // Replace this with your actual user lookup logic
-  if (email === 'test@example.com' && password === 'password') {
-    return { id: 1, name: 'Test User' };
-  }
-  return null;
+export async function logout() {
+  deleteSession();
 }
