@@ -2,7 +2,7 @@ import 'server-only';
 
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
-import type { SessionPayload } from '@/app/auth/definitions';
+import type { SessionPayload } from '@/app/_auth/definitions';
 import { sessions } from '@/db/drizzle/schema';
 import { db } from '@/db/drizzle/db'; 
 import { redirect } from 'next/navigation';

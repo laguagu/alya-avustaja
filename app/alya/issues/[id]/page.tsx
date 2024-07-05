@@ -1,4 +1,4 @@
-import ClientForm from "@/components/issues/ClientForm";
+import IssueForm from "@/components/issues/ClientForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import InformationCard from "@/components/issues/information-card";
@@ -35,7 +35,7 @@ const AsyncDataComponent = async ({ issueId, deviceId }: { issueId: string, devi
       </TabsContent>
 
       <TabsContent value="edit">
-        <ClientForm
+        <IssueForm
           data={issueData}
           locationName={locationData}
           deviceData={deviceData}

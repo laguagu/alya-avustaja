@@ -1,6 +1,6 @@
 // CustomButton.tsx
 import React, { useState, useTransition } from "react";
-import { Button } from "../ui/button";
+import { Button } from "./ui/button";
 import { Bot } from "lucide-react";
 import {
   Dialog,
@@ -17,8 +17,9 @@ import { Label } from "@/components/ui/label";
 import { generateAIinstruction } from "@/lib/langchainActions";
 import { FurnitureInfo } from "@/data/types";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import AiButtonSkeleton from "../skeletons";
-import { Skeleton } from "../ui/skeleton";
+import AiButtonSkeleton from "./skeletons";
+import { Skeleton } from "./ui/skeleton";
+import { useFormStatus } from "react-dom";
 
 interface CustomButtonProps {
   isEditing: boolean;
@@ -203,3 +204,13 @@ export const AiPartsButton: React.FC<CustomButtonProps> = ({ isEditing }) => {
     </Dialog>
   );
 };
+
+export function LoginButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button aria-disabled={pending} type="submit" className="mt-4 w-full">
+      {pending ? 'Submitting...' : 'Login'}
+    </Button>
+  );
+}

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { decrypt } from './app/auth/sessions'; 
+import { decrypt } from './app/_auth/sessions'; 
 import { cookies } from 'next/headers';
 
 // 1. Specify protected and public routes
-const protectedRoutes = ['/dashboard', "/tietokanta"];
+const protectedRoutes = ['/alya', "/tietokanta"];
 const publicRoutes = ['/login', '/signup', '/'];
 
 export default async function middleware(req: NextRequest) {
@@ -20,7 +20,7 @@ export default async function middleware(req: NextRequest) {
     console.log("redirecting to login")
     return NextResponse.redirect(new URL('/', req.nextUrl));
   }
-  // 5. Redirect to /dashboard if the user is authenticated
+  // 5. Redirect to /alya if the user is authenticated
   if (
     isPublicRoute &&
     session?.userId &&
