@@ -58,7 +58,19 @@ export async function createSession(id: number) {
   });
 }
 
+export async function verifySession() {
+  const cookie = cookies().get('session')?.value;
+  const session = await decrypt(cookie);
+
+  if (!session?.userId) {
+    redirect('/');
+  }
+
+  return { isAuth: true, userId: Number(session.userId) };
+}
+
+
 export function deleteSession() {
   cookies().delete('session');
-  redirect('/login');
+  redirect('/');
 }

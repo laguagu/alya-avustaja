@@ -3,7 +3,7 @@ import { decrypt } from './app/auth/sessions';
 import { cookies } from 'next/headers';
 
 // 1. Specify protected and public routes
-const protectedRoutes = ['/dashboard'];
+const protectedRoutes = ['/dashboard', "/tietokanta"];
 const publicRoutes = ['/login', '/signup', '/'];
 
 export default async function middleware(req: NextRequest) {
@@ -15,25 +15,24 @@ export default async function middleware(req: NextRequest) {
   // 3. Decrypt the session from the cookie
   const cookie = cookies().get('session')?.value;
   const session = await decrypt(cookie);
-
-  // 4. Redirect
+  // 4. Redirect to /login if the user is not authenticated
   if (isProtectedRoute && !session?.userId) {
-    return NextResponse.redirect(new URL('/login', req.nextUrl));
+    console.log("redirecting to login")
+    return NextResponse.redirect(new URL('/', req.nextUrl));
   }
-
+  // 5. Redirect to /dashboard if the user is authenticated
   if (
     isPublicRoute &&
     session?.userId &&
-    !req.nextUrl.pathname.startsWith('/dashboard')
+    !req.nextUrl.pathname.startsWith('/alya')
   ) {
-    return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
+    return NextResponse.redirect(new URL('/alya', req.nextUrl));
   }
 
   return NextResponse.next();
 }
 
+// Routes Middleware should not run on
 export const config = {
-    matcher: [
-      '/((?!_next/static|_next/image|favicon.ico).*)', // Exclude static files and images
-    ],
-  };
+  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+}

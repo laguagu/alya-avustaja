@@ -1,5 +1,5 @@
 "use server"
-
+// Server action tekee näistä kaikista public API endpointteja, joten tarkista käyttöoikeudet ennen tiedon päivittämistä tai poistamista.
 import { IssueFormValues } from "@/data/types";
 import { actionClient } from "@/lib/safe-actions";
 import { FormSchema } from "@/lib/schemas";

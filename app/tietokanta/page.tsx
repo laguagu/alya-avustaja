@@ -8,9 +8,8 @@ type User = {
 };
 
 
-export default async function Home() {
+export default async function Page() {
   const users: User[] = await fetchUsers();
-  console.log(users);
   return (
     <div>
       <h1>Users</h1>

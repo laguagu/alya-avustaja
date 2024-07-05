@@ -9,7 +9,10 @@
     "lint": "next lint",
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",
-    "seed": "npx tsx db/drizzle/seed.ts"
+    "seed": "npx tsx db/drizzle/seed.ts",
+    "push": "npx drizzle-kit push",
+    "pull": "npx drizzle-kit introspect",
+    "studio": "npx drizzle-kit studio"
   },
   "dependencies": {
     "@ai-sdk/openai": "^0.0.31",
