@@ -2,8 +2,12 @@ import { FilteredServiceItem, ServiceTask, issuesData } from "@/data/types";
 import { BentoGridDemo } from "@/components/BentoGridDemo";
 import { Suspense } from "react";
 import { fetchIssuesData } from "@/lib/dataFetching";
+import { NewIssue } from "@/components/issues/newissue-button";
+import { Separator } from "@/components/ui/separator";
 
-const extractFilteredServiceItems = (issuesData: ServiceTask[]): FilteredServiceItem[] => {
+const extractFilteredServiceItems = (
+  issuesData: ServiceTask[]
+): FilteredServiceItem[] => {
   return issuesData.map((item: ServiceTask) => ({
     id: item.id,
     name: item.name,
@@ -25,15 +29,21 @@ const extractFilteredServiceItems = (issuesData: ServiceTask[]): FilteredService
 
 export default async function Page() {
   // Hae data apista
-  // const issuesData = await fetchIssuesData();
+  const issuesData = await fetchIssuesData();
   // Suodatetaan data
   const filteredData = extractFilteredServiceItems(issuesData);
 
   return (
     <div>
-      <h1 className="text-center text-2xl ">Vikailmoitukset</h1>
+      <div className="flex flex-col md:flex-row justify-between items-center w-full mb-4">
+        <h1 className="text-3xl text-center md:flex-grow mb-4 md:mb-0">Vikailmoitukset</h1>
+        <div className="md:ml-4">
+          <NewIssue />
+        </div>
+      </div>
+        <Separator />
       {/* Tämä suspense toimii oikein kun annat BentoGrid elementille TimeOut function */}
-      <Suspense fallback={<div>Ladataaan vikailmoituksia...</div>}>
+      <Suspense fallback={<div>Ladataan vikailmoituksia...</div>}>
         <BentoGridDemo issues={filteredData} />
       </Suspense>
     </div>

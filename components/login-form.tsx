@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useFormState, useFormStatus } from "react-dom";
 import { login } from "@/app/_auth/auth";
-import { LoginButton } from "@/components/Buttons";
+import { LoginButton } from "@/components/Client-Buttons";
 
 function LoginForm() {
   const [state, action] = useFormState(login, undefined);

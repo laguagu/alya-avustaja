@@ -1,6 +1,6 @@
 import React, { useState, useTransition } from "react";
 import { Button } from "./ui/button";
-import { Bot, LogOut } from "lucide-react";
+import { Bot } from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -213,6 +213,3 @@ export function LoginButton() {
     </Button>
   );
 }
-
-
-

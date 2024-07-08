@@ -26,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { DeviceItemCard, FurnitureInfo, IssueFormValues } from "@/data/types";
 import { useState } from "react";
 import { updateIssueAction } from "@/app/actions";
-import { AiInstructionButton, AiPartsButton } from "../Buttons";
+import { AiInstructionButton, AiPartsButton } from "../Client-Buttons";
 import { FormSchema } from "@/lib/schemas";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
