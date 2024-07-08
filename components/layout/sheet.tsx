@@ -2,7 +2,6 @@
 import Link from "next/link";
 import {
   Home,
-  LineChart,
   Package,
   TriangleAlert,
   Users,
@@ -10,13 +9,6 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
