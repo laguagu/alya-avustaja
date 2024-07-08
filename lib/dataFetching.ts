@@ -14,7 +14,7 @@ export async function getIssuesNumber(): Promise<number> {
   }
 
   try {
-    const response = await fetch(`${process.env.LUNNI_SERVICES}`, {
+    const response = await fetch(`${process.env.LUNNI_SERVICES}?fields=id`, {
       method: "GET",
       // cache: "no-store",
       headers: {

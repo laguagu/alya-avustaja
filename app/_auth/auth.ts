@@ -18,7 +18,6 @@ export async function login(
     password: formData.get("password"),
   });
   const errorMessage = { message: "Invalid login credentials." };
-  console.log(validatedFields, "validatedFields");
 
   // If any form fields are invalid, return early
   if (!validatedFields.success) {

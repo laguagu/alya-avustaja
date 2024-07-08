@@ -1,7 +1,6 @@
-// CustomButton.tsx
 import React, { useState, useTransition } from "react";
 import { Button } from "./ui/button";
-import { Bot } from "lucide-react";
+import { Bot, LogOut } from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -210,7 +209,10 @@ export function LoginButton() {
 
   return (
     <Button aria-disabled={pending} type="submit" className="mt-4 w-full">
-      {pending ? 'Submitting...' : 'Login'}
+      {pending ? "Submitting..." : "Login"}
     </Button>
   );
 }
+
+
+

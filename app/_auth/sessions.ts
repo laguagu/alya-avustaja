@@ -69,6 +69,10 @@ export async function verifySession() {
 }
 
 
+// export async function deleteSession() {
+//   cookies().delete('session');
+// }
+
 export function deleteSession() {
   cookies().delete('session');
   redirect('/');

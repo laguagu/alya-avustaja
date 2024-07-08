@@ -20,6 +20,7 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import LogoutButton from "./logout-button";
 
 export default function SheetNav({ issues }: { issues: number }) {
   const pathName = usePathname();
@@ -70,55 +71,9 @@ export default function SheetNav({ issues }: { issues: number }) {
                 )}
               </Link>
             ))}
-            {/* <Link
-              href="/alya"
-              className="flex items-center gap-2 text-lg font-semibold"
-            >
-              <Package2 className="h-6 w-6" />
-              <span className="sr-only">Älyä-avustaja</span>
-            </Link>
-            <Link href="/alya" className="sheet-link">
-              <Home className="h-5 w-5" />
-              Hallintapaneli
-            </Link>
-            <Link
-              href="/alya/issues"
-              className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
-            >
-              <TriangleAlert className="h-5 w-5" />
-              Vikalista
-              <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                {issues}
-              </Badge>
-            </Link>
-            <Link href="/alya/furnitures" className="sheet-link">
-              <Package className="h-5 w-5" />
-              Huonekalut
-            </Link>
-            <Link href="/alya/chat" className="sheet-link">
-              <Users className="h-5 w-5" />
-              Chat
-            </Link>
-            <Link href="#" className="sheet-link">
-              <LineChart className="h-5 w-5" />
-              Analytiikka
-            </Link> */}
           </nav>
           <div className="mt-auto">
-            <Card>
-              <CardHeader>
-                <CardTitle>Upgrade to Pro</CardTitle>
-                <CardDescription>
-                  Unlock all features and get unlimited access to our support
-                  team.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button size="sm" className="w-full">
-                  Upgrade
-                </Button>
-              </CardContent>
-            </Card>
+          <LogoutButton />
           </div>
         </SheetContent>
       </Sheet>

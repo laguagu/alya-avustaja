@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/card";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import LogoutButton from "./logout-button";
 
 export default function SimpleSidenav({ issues }: { issues: number }) {
   const pathName = usePathname();
@@ -75,23 +76,8 @@ export default function SimpleSidenav({ issues }: { issues: number }) {
           ))}
         </nav>
       </div>
-      <div className="mt-auto p-4">
-        <Card x-chunk="dashboard-02-chunk-0">
-          <CardHeader className="p-2 pt-0 md:p-4">
-            <CardTitle>Template</CardTitle>
-            <CardDescription>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas
-              repudiandae, incidunt molestiae nisi animi corporis ea impedit qui
-              illum natus in at, cumque veniam, inventore quod commodi neque.
-              Porro, sit!
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-2 pt-0 md:p-4 md:pt-0">
-            <Button size="sm" className="w-full">
-              Upgrade
-            </Button>
-          </CardContent>
-        </Card>
+      <div className="mt-auto p-4 border-t">
+          <LogoutButton />
       </div>
     </div>
   );
