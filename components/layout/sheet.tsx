@@ -45,7 +45,7 @@ export default function SheetNav({ issues }: { issues: number }) {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col">
-          <nav className="grid gap-2 text-lg font-medium">
+          <nav className="grid gap-2 mt-4 text-lg font-medium">
             {navLinks.map((link, index) => (
               <Link
                 key={index}

@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 export function NewIssue() {
   return (
     <Button asChild className="w-full" variant={"destructive"}>
-      <Link href="#">Uusi vikailmoitus</Link>
+      <Link href="/alya/issues/new-issue">Uusi vikailmoitus</Link>
     </Button>
   );
 }
