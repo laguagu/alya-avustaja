@@ -1,4 +1,4 @@
-import IssueForm from "@/components/issues/ClientForm";
+import IssueForm from "@/components/issues/Issueform";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import InformationCard from "@/components/issues/information-card";

@@ -25,7 +25,7 @@ import { toast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { DeviceItemCard, FurnitureInfo, IssueFormValues } from "@/data/types";
 import { useState } from "react";
-import { updateIssueAction } from "@/app/actions";
+import { postNewIssue } from "@/app/actions";
 import { AiInstructionButton, AiPartsButton } from "../Client-Buttons";
 import { FormSchema } from "@/lib/schemas";
 import { useAction } from "next-safe-action/hooks";
@@ -45,7 +45,7 @@ export default function IssueForm({
 }: IssueFormProps) {
   const router = useRouter()
   const [isEditing, setIsEditing] = useState(false);
-  const { execute, result, isExecuting } = useAction(updateIssueAction, {
+  const { execute, result, isExecuting } = useAction(postNewIssue, {
     onSuccess: ({ data }) => {
       console.log("onSuccess", data);
       toast({

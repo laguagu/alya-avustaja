@@ -49,6 +49,24 @@ export const updateIssueAction = actionClient
     return { message: "Vikailmoitus Päivitetty! 🎉" }
   });
 
+export const postNewIssue = actionClient
+  .schema(FormSchema, {
+    handleValidationErrorsShape: (ve) => flattenValidationErrors(ve).fieldErrors,
+  })
+  .action(async ({ parsedInput: {locationName, priority, problem_description, type, instruction, missing_equipments } }) => {
+    console.log("postNewIssue",locationName, priority, problem_description, type, instruction, missing_equipments);  
+    throw new Error("not implemented");
+      await fetch(`https://6549f6b1e182221f8d523a44.mockapi.io/api/issues/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ locationName, priority, problem_description, type, instruction, missing_equipments }),
+    });
+    
+    return { message: "Vikailmoitus Päivitetty! 🎉" }
+  });
+
 
 export const fetchUsers = async () => {
   const users = await getAllUsers();
