@@ -253,7 +253,7 @@ export default function IssueForm({
                 <FormLabel>Puuttuvat tarvikkeet</FormLabel>
                 <div>
                   <Input
-                    placeholder="Tarvittavat varaosat"
+                    placeholder="Mahdollisesti tarvittavat varaosat"
                     {...field}
                     disabled={!isEditing}
                   />

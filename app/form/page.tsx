@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { getNotifications, getRecipe } from "../../lib/ai-actions";
+import { getNotifications } from "../../lib/ai-actions";
 import { useForm } from "react-hook-form";
 import React from "react";
 

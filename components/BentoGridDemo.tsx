@@ -35,23 +35,24 @@ export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
     icon:
       issue.is_completed === 1 ? (
         <div className="flex items-center">
-        <IconSquareRoundedCheck className="h-4 w-4 text-neutral-500 " />
-        <span className="ml-2">Valmis</span>
+          <IconSquareRoundedCheck className="h-4 w-4 text-neutral-500 " />
+          <span className="ml-2 text-green-500">Valmis</span>
         </div>
       ) : (
         <div className="flex items-center">
-        <IconAlertSquare className="h-4 w-4 text-neutral-500" />
-        <span className="ml-2">Avoin</span>
-      </div>
+          <IconAlertSquare className="h-4 w-4 text-neutral-500" />
+          <span className="ml-2 text-red-500">Avoin</span>
+        </div>
       ),
     className: i === 3 || i === 6 ? "md:col-span-2" : "",
   }));
 
   return (
     <div>
-      <Button onClick={toggleShowCompleted}
-      className="absolute top-0 right-0 mt-2 mr-4"
-      variant={"outline"}
+      <Button
+        onClick={toggleShowCompleted}
+        className="absolute top-0 right-0 mt-2 mr-4"
+        variant={"outline"}
       >
         {showCompleted
           ? "Näytä avoimet vikailmoitukset"

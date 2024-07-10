@@ -37,7 +37,7 @@ export default function ChatBot() {
     isLoading,
     stop,
   } = useChat({
-    api: `${API_URL}example2`,
+    api: `${API_URL}supabase`,
     onError: (e) => {
       console.log(e);
     },
@@ -171,7 +171,7 @@ export default function ChatBot() {
 
     await sendMessageToAPI(
       messagesWithUserReply,
-      "http://localhost:3000/api/example2"
+      "http://localhost:3000/api/supabase"
     );
   };
 

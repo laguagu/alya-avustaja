@@ -42,60 +42,6 @@ export async function getNotifications(input: string): Promise<{
   return notifications;
 }
 
-export async function getRecipe(input: string) {
-  "use server";
-  console.log("getRecipe called");
-  const { object: recipe } = await generateObject({
-    model: openai("gpt-4-turbo"),
-    prompt: input,
-    schema: z.object({
-      recipe: z.object({
-        name: z.string().describe("name of recipe"),
-        ingredients: z.array(
-          z.object({
-            name: z.string().describe("ingredient name"),
-            amount: z.string().describe("amount of ingredient"),
-          })
-        ),
-        steps: z.array(z.string()).describe("steps to prepare recipe"),
-      }),
-    }),
-  });
-  console.log("getRecipe called 2");
-  return { steps: recipe.recipe.steps };
-}
-
-export async function generate(input: string) {
-  "use server";
-
-  const stream = createStreamableValue();
-
-  (async () => {
-    const { partialObjectStream } = await streamObject({
-      model: openai("gpt-4-turbo"),
-      system: "You generate three notifications for a messages app.",
-      prompt: input,
-      schema: z.object({
-        notifications: z.array(
-          z.object({
-            name: z.string().describe("Name of a fictional person."),
-            message: z.string().describe("Do not use emojis or links."),
-            minutesAgo: z.number(),
-          })
-        ),
-      }),
-    });
-
-    for await (const partialObject of partialObjectStream) {
-      stream.update(partialObject);
-    }
-
-    stream.done();
-  })();
-
-  return { object: stream.value };
-}
-
 export async function getWhisperTranscription(formData: FormData) {
   "use server";
   const openai = new OpenAI({
@@ -103,7 +49,7 @@ export async function getWhisperTranscription(formData: FormData) {
   });
 
   const file = formData.get("file") as File;
-  console.log("getWhisperTranscription called with file: ", file.name);
+  console.log("getWhisperTranscription called with file: ", file.name, );
   if (!file) {
     console.error("No file found in formData");
     return "No file found";
@@ -127,7 +73,7 @@ export async function getWhisperTranscription(formData: FormData) {
 
   // Poistetaan väliaikainen tiedosto
   fs.unlinkSync(tempFilePath);
-
+  
   return response.text;
 }
 
@@ -162,26 +108,6 @@ export async function getSpeechFromText(text: string) {
   return { audioURL, tempFilePath };
 }
 
-// Lintti virheitä kuulema vanhentunut fs.existsSync sitä ei enää suositella käytettäväksi
-// export async function deleteTempFile(filePath: string) {
-//   if (fs.existsSync(filePath)) {
-//     fs.unlinkSync(filePath);
-//     console.log(`Deleted file: ${filePath}`);
-//   } else {
-//     console.log(`File ${filePath} does not exist`);
-//   }
-// }
-
-export async function deleteTempFile(filePath: string) {
-  try {
-    await fsPromises.access(filePath);
-    await fsPromises.unlink(filePath);
-    console.log(`Deleted file: ${filePath}`);
-  } catch (error) {
-    console.log(`File ${filePath} does not exist or cannot be accessed`);
-  }
-}
-
 export async function continueConversation(history: Message[]) {
   "use server";
 
@@ -208,3 +134,12 @@ export async function continueConversation(history: Message[]) {
   };
 }
 
+export async function deleteTempFile(filePath: string) {
+  try {
+    await fsPromises.access(filePath);
+    await fsPromises.unlink(filePath);
+    console.log(`Deleted file: ${filePath}`);
+  } catch (error) {
+    console.log(`File ${filePath} does not exist or cannot be accessed`);
+  }
+}

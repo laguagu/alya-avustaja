@@ -3,9 +3,8 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useChat } from "@ai-sdk/react";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { Message } from "ai";
-import { nanoid } from "nanoid";
 import { Send, Mic } from "lucide-react";
 import {
   deleteTempFile,
@@ -13,10 +12,11 @@ import {
   getWhisperTranscription,
 } from "@/lib/ai-actions";
 import { TailSpin, Rings } from "react-loader-spinner";
-import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
-import piiroinenHuoltoOhjeet from "@/data/piiroinen-huolto-ohjeet";
+import clsx from "clsx";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const MAX_STORAGE_SIZE = 4 * 1024 * 1024; // 4 MB
+const MESSAGE_EXPIRATION_TIME = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
 interface TTSResponse {
   audioURL: string;
@@ -27,9 +27,11 @@ export default function Chat() {
   const [lastAssistantMessage, setLastAssistantMessage] = useState<
     string | null
   >(null);
+  const [savedMessages, setSavedMessages] = useState<Message[]>([]);
   const [recording, setRecording] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const [audioURL, setAudioURL] = useState<string | null>(null);
+  const audioChunksRef = useRef<BlobPart[]>([]);
+  const [isProcessingAudio, setIsProcessingAudio] = useState(false);
   const {
     messages: primaryMessages,
     input,
@@ -41,10 +43,15 @@ export default function Chat() {
     isLoading,
     stop,
   } = useChat({
-    api: `${API_URL}example2`,
+    api: `${API_URL}simple`,
+    initialMessages: savedMessages,
     onError: (e) => {
       console.log(e);
     },
+    onFinish: async (message) => {
+      console.log("Assistant message received:", message.content);
+    },
+
     // onFinish: async (message) => {
     //   if (message.role === "assistant") {
     //     console.log("Assistant message received:", message.content);
@@ -67,118 +74,161 @@ export default function Chat() {
     // },
   });
 
-  const handleAudioData = (data: BlobPart) => {
-    const audioBlob = new Blob([data], { type: "audio/webm" });
-    const audioURL = URL.createObjectURL(audioBlob);
-    return { audioBlob, audioURL };
+  const trimMessages = useCallback((messages: Message[], maxSize: number) => {
+    let size = JSON.stringify(messages).length;
+    while (size > maxSize && messages.length > 0) {
+      messages.shift();
+      size = JSON.stringify(messages).length;
+    }
+    return messages;
+  }, []);
+
+  const checkAndClearExpiredMessages = useCallback((messages: Message[]) => {
+    if (messages.length > 0) {
+      const firstAssistantMessage = messages.find(
+        (message) => message.role === "assistant"
+      );
+      if (firstAssistantMessage && firstAssistantMessage.createdAt) {
+        const firstMessageTime = new Date(
+          firstAssistantMessage.createdAt
+        ).getTime();
+        const now = Date.now();
+        console.log("firstMessageTime", firstMessageTime);
+        if (now - firstMessageTime > MESSAGE_EXPIRATION_TIME) {
+          console.warn(
+            "Ensimmäinen assistant-viesti on vanhentunut. Tyhjennetään koko viestihistoria."
+          );
+          return [];
+        }
+      }
+    }
+    return messages;
+  }, []);
+
+  // Karsi viestejä, jos ne ylittävät tallennuskoon rajan
+  useEffect(() => {
+    if (typeof window !== "undefined" && primaryMessages.length > 0) {
+      let updatedMessages = checkAndClearExpiredMessages([...primaryMessages]);
+      updatedMessages = trimMessages(updatedMessages, MAX_STORAGE_SIZE);
+      localStorage.setItem("chatMessages", JSON.stringify(updatedMessages));
+      if (updatedMessages.length < primaryMessages.length) {
+        setMessages(updatedMessages);
+        if (updatedMessages.length === 0) {
+          console.warn(
+            "Ensimmäinen assistant-viesti oli vanhentunut, joten koko viestihistoria tyhjennettiin."
+          );
+        } else {
+          console.warn("Vanhimpia viestejä poistettiin tilan säästämiseksi.");
+        }
+      }
+    }
+  }, [
+    primaryMessages,
+    setMessages,
+    trimMessages,
+    checkAndClearExpiredMessages,
+  ]);
+
+  // Lataa viestit localStorage:sta komponentin alustuksen yhteydessä
+  const loadedRef = useRef(false);
+
+  useEffect(() => {
+    if (loadedRef.current) return;
+
+    const loadMessages = () => {
+      if (typeof window !== "undefined") {
+        const savedMessages = localStorage.getItem("chatMessages");
+        if (savedMessages) {
+          const parsedMessages = JSON.parse(savedMessages);
+          setSavedMessages(parsedMessages);
+          setMessages(parsedMessages);
+        }
+      }
+    };
+
+    loadMessages();
+    loadedRef.current = true;
+  }, [setMessages]);
+
+  const clearChatHistory = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("chatMessages");
+      setMessages([]); // Tyhjennä myös nykyinen viestihistoria
+      setSavedMessages([]);
+    }
   };
 
   const handleStartRecording = () => {
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      if (mediaRecorderRef.current) {
-        mediaRecorderRef.current.stop();
-        mediaRecorderRef.current = null;
-      }
+    try {
+      audioChunksRef.current = []; // Tyhjennä audioChunks uutta nauhoitusta varten
 
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: "audio/webm",
+      navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+        if (mediaRecorderRef.current) {
+          mediaRecorderRef.current.stop();
+          mediaRecorderRef.current = null;
+        }
+
+        const mediaRecorder = new MediaRecorder(stream, {
+          mimeType: "audio/webm",
+        });
+
+        mediaRecorderRef.current = mediaRecorder;
+
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            audioChunksRef.current.push(event.data);
+          }
+        };
+
+        mediaRecorder.start();
+        setRecording(true);
+      });
+    } catch (error) {
+      console.error("Error starting recording:", error);
+    }
+  };
+
+  const handleStopRecording = async () => {
+    if (!mediaRecorderRef.current) {
+      console.error("MediaRecorder not initialized");
+      return;
+    }
+
+    mediaRecorderRef.current.stop();
+    setRecording(false);
+
+    // Odota hetki, jotta kaikki audioChunks on varmasti lisätty
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    try {
+      const audioBlob = new Blob(audioChunksRef.current, {
+        type: "audio/webm",
       });
 
-      mediaRecorderRef.current = mediaRecorder;
-      const uniqueId = nanoid();
-
-      mediaRecorder.ondataavailable = async (event) => {
-        if (event.data.size > 0) {
-          const { audioBlob, audioURL } = handleAudioData(event.data);
-
-          // setAudioURL(audioURL); // For debuging if you want to play audio record
-
-          if (audioBlob.size > 25415) {
-            const formData = new FormData();
-            formData.append("file", audioBlob, "audio.webm");
-            const transcriptionText = await getWhisperTranscription(formData);
-            console.log(transcriptionText, "Käännös");
-            return;
-            append({
-              role: "user",
-              content: transcriptionText,
-            });
-
-            setLastAssistantMessage(null); // Reset last assistant message
-          }
+      if (audioBlob.size > 25415) {
+        setIsProcessingAudio(true);
+        console.log("Processing audio");
+        const formData = new FormData();
+        formData.append("file", audioBlob, "audio.webm");
+        const transcriptionText = await getWhisperTranscription(formData);
+        setIsProcessingAudio(false);
+        if (transcriptionText) {
+          console.log("Transcription:", transcriptionText);
+          append({
+            role: "user",
+            content: transcriptionText,
+          });
         }
-      };
-      mediaRecorder.start();
-      setRecording(true);
-    });
-  };
-
-  const handleStopRecording = () => {
-    mediaRecorderRef.current?.stop();
-    setRecording(false);
-  };
-
-  const addUserMessage = (messages: Message[], id: string, content: string) => {
-    return messages.concat({
-      id,
-      content,
-      role: "user",
-    });
-  };
-
-  async function sendMessageToAPI(messages: Message[], API_URL: string) {
-    const response = await fetch(`${API_URL}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        messages: messages,
-      }),
-    });
-
-    if (!response.ok) {
-      console.error("Failed to send message", response);
-      return null;
+      } else {
+        console.log("Audio too short, not processing");
+      }
+    } catch (error) {
+      console.error("Error processing audio:", error);
     }
 
-    const responseText = await response.text();
-    const uniqueId = nanoid();
-    // const gptAnswer = responseText;
-
-    if (responseText !== null) {
-      setMessages([
-        ...messages,
-        {
-          id: uniqueId,
-          role: "assistant",
-          content: responseText,
-        },
-      ]);
-    }
-    return responseText;
-  }
-
-  const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!input.trim()) return; // Prevent sending empty messages or multiple messages while loading
-    const uniqueId = nanoid();
-
-    let messagesWithUserReply: Message[] = addUserMessage(
-      primaryMessages,
-      uniqueId,
-      input
-    );
-
-    setMessages(messagesWithUserReply);
-    setInput("");
-
-    await sendMessageToAPI(
-      messagesWithUserReply,
-      "http://localhost:3000/api/example2"
-    );
+    // Tyhjennä audioChunks seuraavaa nauhoitusta varten
+    audioChunksRef.current = [];
   };
-
   const chatParent = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
@@ -195,7 +245,6 @@ export default function Chat() {
           Chatbot - Älyä-avustaja
         </h1>
       </div>
-
       <section className="container px-0 pb-10 flex flex-col flex-grow gap-4 mx-auto max-w-3xl">
         <ul
           ref={chatParent}
@@ -218,9 +267,9 @@ export default function Chat() {
               )}
             </div>
           ))}
-          {isLoading && (
-            <li className="flex flex-row-reverse">
-              <div className="">
+          {(isProcessingAudio || isLoading) && (
+            <li className={clsx("flex", { "flex-row-reverse": isLoading })}>
+              <div>
                 <TailSpin
                   height="28"
                   width="28"
@@ -245,14 +294,16 @@ export default function Chat() {
             value={input}
             onChange={handleInputChange}
           />
-          <div className="flex ">
+          <div className="flex gap-2">
             <Button className="ml-2" type="submit" disabled={isLoading}>
               <Send className="h-5 w-5 mr-2" />
               Lähetä
             </Button>
 
             <Button
-              className="ml-2"
+              aria-label={recording ? "Lopeta nauhoitus" : "Aloita nauhoitus"}
+              type="button"
+              className=""
               onClick={recording ? handleStopRecording : handleStartRecording}
               disabled={isLoading}
             >
@@ -266,24 +317,15 @@ export default function Chat() {
           </div>
         </form>
       </section>
-      <div>
+      <div className="flex flex-col items-center justify-center">
         <p className="text-center sm:text-base text-sm tracking-tight sm:mb-5">
           Älyä-avustaja voi tehdä virheitä. Suosittelemme tarkastamaan tärkeät
           tiedot.
         </p>
+        <Button onClick={clearChatHistory} className="hidden md:block">
+          Tyhjennä viestihistoria
+        </Button>
       </div>
     </div>
   );
-}
-
-async function testSplitter() {
-  const text = piiroinenHuoltoOhjeet;
-
-  const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 1600,
-    chunkOverlap: 0,
-  });
-
-  const output = await splitter.createDocuments([text]);
-  console.log(output);
 }

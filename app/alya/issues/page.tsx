@@ -36,7 +36,7 @@ export default async function Page() {
   return (
     <div>
       <div className="flex flex-col md:flex-row justify-between items-center w-full mb-4">
-        <h1 className="text-3xl text-center md:flex-grow mb-4 md:mb-0">Vikailmoitukset</h1>
+        <h1 className="text-3xl text-center md:flex-grow mb-4 md:mb-0 mt-2">Vikailmoitukset</h1>
         <div className="md:ml-4">
           <NewIssue />
         </div>

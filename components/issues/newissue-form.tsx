@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
   FormControl,
@@ -26,10 +27,11 @@ import { postNewIssue } from "@/app/actions";
 import { FormSchema } from "@/lib/schemas";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
-
+import AudioRecorder from "./audio-recorder";
 
 export default function NewIssueForm() {
   const router = useRouter();
+
   const { execute, result, isExecuting } = useAction(postNewIssue, {
     onSuccess: ({ data }) => {
       console.log("onSuccess", data);
@@ -74,7 +76,7 @@ export default function NewIssueForm() {
 
   function handleCancel() {
     reset({
-      locationName:"Arabian peruskoulu",
+      locationName: "Arabian peruskoulu",
       priority: "",
       type: "",
       problem_description: "",
@@ -83,8 +85,24 @@ export default function NewIssueForm() {
     });
   }
 
+  const handleRecordingComplete = (audioUrl: string) => {
+    // Voit käyttää tätä funktiota käsittelemään nauhoituksen URL-osoitetta
+    console.log("Nauhoitus valmis: ", audioUrl);
+  };
+
   return (
     <div className="max-w-2xl">
+      <div className="mb-4 p-4 border rounded-md bg-gray-50">
+        <h2 className="text-lg font-bold">
+          Täydennä vikailmoitus huonekalusta
+        </h2>
+        <p className="text-sm text-gray-600 ">
+          Täytä alla olevat tiedot huonekalun viasta. Voit myös sanella vian
+          kuvauksen painamalla alla olevaa nappia. Jolloin tekoäly täydentää
+          lomakkeen puolestasi.
+        </p>
+        <AudioRecorder onRecordingComplete={handleRecordingComplete} />
+      </div>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -136,11 +154,15 @@ export default function NewIssueForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Huoltotarpeen kuvaus</FormLabel>
-                <Input
+                <Textarea
                   placeholder="Huoltotarpeen kuvaus"
                   {...field}
                   disabled={isExecuting}
                 />
+                <p className="text-sm text-muted-foreground">
+                  Vian kuvaus on tärkeä, jotta huoltohenkilöstö osaa
+                  valmistautua oikein huoltoon.
+                </p>
                 <FormMessage>{errors.problem_description?.message}</FormMessage>
               </FormItem>
             )}
@@ -194,11 +216,12 @@ export default function NewIssueForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Tekoälyn huolto-ohje ehdotus</FormLabel>
-                <Input
+                <Textarea
                   placeholder="Ehdotettu huolto-ohje"
                   {...field}
                   disabled={isExecuting}
                 />
+
                 <FormMessage>{errors.instruction?.message}</FormMessage>
               </FormItem>
             )}
@@ -211,7 +234,7 @@ export default function NewIssueForm() {
                 <FormLabel>Puuttuvat tarvikkeet</FormLabel>
                 <div>
                   <Input
-                    placeholder="Tarvittavat varaosat"
+                    placeholder="Mahdollisesti tarvittavat varaosat"
                     {...field}
                     disabled={isExecuting}
                   />
@@ -228,9 +251,9 @@ export default function NewIssueForm() {
             )}
           />
           <div className="flex space-x-4">
-            <Button type="submit">Tallenna</Button>
+            <Button type="submit">Lähetä</Button>
             <Button type="button" variant={"outline"} onClick={handleCancel}>
-              Peruuta
+              Tyhjennä
             </Button>
           </div>
         </form>

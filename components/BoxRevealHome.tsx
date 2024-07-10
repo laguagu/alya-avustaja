@@ -1,6 +1,6 @@
 import BoxReveal from "@/components/magicui/box-reveal";
 
-export async function BoxRevealDemo() {
+export async function BoxRevealHome() {
   return (
     <div className="p-2 md:p-0 h-full max-w-[20rem] md:max-w-[32rem] items-start justify-start overflow-hidden pt-8 mx-auto">
       <BoxReveal boxColor={"#b6cfff"} duration={0.5}>
