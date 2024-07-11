@@ -74,6 +74,25 @@ export default function Chat() {
     // },
   });
 
+  
+  useEffect(() => {
+    if (loadedRef.current) return;
+    const loadMessages = () => {
+      if (typeof window !== "undefined") {
+        const savedMessages = localStorage.getItem("chatMessages");
+        if (savedMessages) {
+          const parsedMessages = JSON.parse(savedMessages);
+          setSavedMessages(parsedMessages);
+          setMessages(parsedMessages);
+        }
+      }
+    };
+
+    loadMessages();
+    loadedRef.current = true;
+  }, [setMessages]);
+
+  // Poista vanhimpia viestejä, jos viestihistoria ylittää tallennuskoon rajan
   const trimMessages = useCallback((messages: Message[], maxSize: number) => {
     let size = JSON.stringify(messages).length;
     while (size > maxSize && messages.length > 0) {
@@ -83,6 +102,7 @@ export default function Chat() {
     return messages;
   }, []);
 
+  // Tarkista ja poista vanhentuneet viestit
   const checkAndClearExpiredMessages = useCallback((messages: Message[]) => {
     if (messages.length > 0) {
       const firstAssistantMessage = messages.find(
@@ -93,7 +113,6 @@ export default function Chat() {
           firstAssistantMessage.createdAt
         ).getTime();
         const now = Date.now();
-        console.log("firstMessageTime", firstMessageTime);
         if (now - firstMessageTime > MESSAGE_EXPIRATION_TIME) {
           console.warn(
             "Ensimmäinen assistant-viesti on vanhentunut. Tyhjennetään koko viestihistoria."
@@ -105,12 +124,16 @@ export default function Chat() {
     return messages;
   }, []);
 
-  // Karsi viestejä, jos ne ylittävät tallennuskoon rajan
+  // Karsi viestejä, jos ne ylittävät tallennuskoon rajan tai ovat vanhentuneita
   useEffect(() => {
     if (typeof window !== "undefined" && primaryMessages.length > 0) {
       let updatedMessages = checkAndClearExpiredMessages([...primaryMessages]);
       updatedMessages = trimMessages(updatedMessages, MAX_STORAGE_SIZE);
-      localStorage.setItem("chatMessages", JSON.stringify(updatedMessages));
+      try {
+        localStorage.setItem("chatMessages", JSON.stringify(updatedMessages));
+      } catch (error) {
+        console.error("Failed to save messages to localStorage:", error);
+      }
       if (updatedMessages.length < primaryMessages.length) {
         setMessages(updatedMessages);
         if (updatedMessages.length === 0) {
@@ -132,23 +155,6 @@ export default function Chat() {
   // Lataa viestit localStorage:sta komponentin alustuksen yhteydessä
   const loadedRef = useRef(false);
 
-  useEffect(() => {
-    if (loadedRef.current) return;
-
-    const loadMessages = () => {
-      if (typeof window !== "undefined") {
-        const savedMessages = localStorage.getItem("chatMessages");
-        if (savedMessages) {
-          const parsedMessages = JSON.parse(savedMessages);
-          setSavedMessages(parsedMessages);
-          setMessages(parsedMessages);
-        }
-      }
-    };
-
-    loadMessages();
-    loadedRef.current = true;
-  }, [setMessages]);
 
   const clearChatHistory = () => {
     if (typeof window !== "undefined") {
