@@ -33,6 +33,7 @@ export default function Chat() {
   const loadedRef = useRef(false);
   const chatParent = useRef<HTMLUListElement>(null);
   const [isProcessingAudio, setIsProcessingAudio] = useState(false);
+  const [isPreparingAudio, setIsPreparingAudio] = useState(false);
 
   const {
     messages: primaryMessages,
@@ -53,22 +54,27 @@ export default function Chat() {
     onFinish: async (message) => {
       if (message.role === "assistant" && ttsEnabled) {
         console.log("Assistant message received:", message.content);
-        setIsPlaying(true);
-        const ttsResponse: TTSResponse = await getSpeechFromText(
-          message.content
-        );
+        setIsPreparingAudio(true);
+        try {
+          const ttsResponse: TTSResponse = await getSpeechFromText(
+            message.content
+          );
 
-        const audio = new Audio(ttsResponse.audioURL);
-        audio.oncanplaythrough = () => {
-          console.log("Playing audio");
-          audio.play();
-        };
+          const audio = new Audio(ttsResponse.audioURL);
+          audio.oncanplaythrough = () => {
+            setIsPreparingAudio(false);
+            setIsPlaying(true);
+            audio.play();
+          };
 
-        audio.onended = async () => {
-          console.log("Deleting temporary audio file");
-          await deleteTempFile(ttsResponse.tempFilePath);
-          setIsPlaying(false);
-        };
+          audio.onended = async () => {
+            await deleteTempFile(ttsResponse.tempFilePath);
+            setIsPlaying(false);
+          };
+        } catch (error) {
+          console.error("Error preparing audio:", error);
+          setIsPreparingAudio(false);
+        }
       }
     },
   });
@@ -215,13 +221,11 @@ export default function Chat() {
 
       if (audioBlob.size > 25415) {
         setIsProcessingAudio(true);
-        console.log("Processing audio");
         const formData = new FormData();
         formData.append("file", audioBlob, "audio.webm");
         const transcriptionText = await getWhisperTranscription(formData);
         setIsProcessingAudio(false);
         if (transcriptionText) {
-          console.log("Transcription:", transcriptionText);
           append({
             role: "user",
             content: transcriptionText,
@@ -242,7 +246,8 @@ export default function Chat() {
     setTTSEnabled(!ttsEnabled);
   };
 
-    const isDisabled = isLoading || isPlaying || isProcessingAudio;
+  const isDisabled =
+    isLoading || isPlaying || isProcessingAudio || isPreparingAudio;
 
   return (
     <div className="flex flex-col w-full flex-grow max-h-dvh ">
@@ -251,7 +256,13 @@ export default function Chat() {
           <h1 className="text-md text-nowrap sm:text-2xl lg:text-3xl font-bold text-center flex-1">
             Chatbot - Älyä-avustaja
           </h1>
-          <Button onClick={toggleTTS} type="button" className="ml-auto" variant={"outline"} disabled={isDisabled || recording}>
+          <Button
+            onClick={toggleTTS}
+            type="button"
+            className="ml-auto"
+            variant={"outline"}
+            disabled={isDisabled || recording}
+          >
             {ttsEnabled ? (
               <Volume2 className="h-5 w-5" />
             ) : (
@@ -266,30 +277,25 @@ export default function Chat() {
           className="h-1 p-4 flex-grow bg-muted/50 rounded-lg overflow-y-auto flex flex-col gap-4"
         >
           {primaryMessages.map((m) => (
-            <li
-              key={m.id}
-              className={`flex ${
-                m.role === "user" ? "flex-row" : "flex-row-reverse"
-              }`}
-            >
-              <div
-                className={`rounded-xl p-4 bg-background shadow-md flex ${
-                  m.role === "assistant" ? "w-3/4" : ""
-                }`}
-              >
+            <li key={m.id} className={`flex ${m.role === "user" ? "flex-row" : "flex-row-reverse"}`}>
+              <div className={`rounded-xl p-4 bg-background shadow-md flex ${m.role === "assistant" ? "w-3/4" : ""}`}>
                 <p className="text-primary">{m.content}</p>
               </div>
             </li>
           ))}
-          {(isProcessingAudio || isLoading) && (
-            <li className={clsx("flex", { "flex-row-reverse": isLoading })}>
-              <div>
+          
+          {(isProcessingAudio || isLoading || isPreparingAudio) && (
+            <li className={clsx("flex", { "flex-row-reverse": isLoading || isPreparingAudio })}>
+              <div className="flex items-center">
                 <TailSpin
                   height="28"
                   width="28"
                   color="black"
                   ariaLabel="loading"
                 />
+                {isPreparingAudio && (
+                  <span className="ml-2 text-sm text-gray-600">Valmistellaan ääntä...</span>
+                )}
               </div>
             </li>
           )}
@@ -310,7 +316,12 @@ export default function Chat() {
             onChange={handleInputChange}
           />
           <div className="flex gap-2 items-center">
-            <Button className="ml-2" type="submit" disabled={isDisabled || recording} variant={"secondary"} >
+            <Button
+              className="ml-2"
+              type="submit"
+              disabled={isDisabled || recording}
+              variant={"secondary"}
+            >
               <Send className="h-5 w-5 mr-2" />
               Lähetä
             </Button>
@@ -318,7 +329,7 @@ export default function Chat() {
             <Button
               aria-label={recording ? "Lopeta nauhoitus" : "Aloita nauhoitus"}
               type="button"
-              variant={"secondary"} 
+              variant={"secondary"}
               onClick={recording ? handleStopRecording : handleStartRecording}
               disabled={isDisabled && !recording}
             >
@@ -337,7 +348,11 @@ export default function Chat() {
           Älyä-avustaja voi tehdä virheitä. Suosittelemme tarkastamaan tärkeät
           tiedot.
         </p>
-        <Button onClick={clearChatHistory} className="absolute top-0 right-0 mt-2 mr-4 md:static md:mt-0 md:mr-0" variant={"secondary"} >
+        <Button
+          onClick={clearChatHistory}
+          className="absolute top-0 right-0 mt-2 mr-4 md:static md:mt-0 md:mr-0"
+          variant={"secondary"}
+        >
           Tyhjennä viestihistoria
         </Button>
       </div>
