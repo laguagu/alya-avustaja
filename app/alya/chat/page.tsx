@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useChat } from "@ai-sdk/react";
 import { useRef, useEffect, useState, useCallback } from "react";
 import { Message } from "ai";
-import { Send, Mic } from "lucide-react";
+import { Send, Mic, VolumeX, Volume2 } from "lucide-react";
 import {
   deleteTempFile,
   getSpeechFromText,
@@ -24,14 +24,16 @@ interface TTSResponse {
 }
 
 export default function Chat() {
-  const [lastAssistantMessage, setLastAssistantMessage] = useState<
-    string | null
-  >(null);
+  const [ttsEnabled, setTTSEnabled] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [savedMessages, setSavedMessages] = useState<Message[]>([]);
   const [recording, setRecording] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<BlobPart[]>([]);
+  const loadedRef = useRef(false);
+  const chatParent = useRef<HTMLUListElement>(null);
   const [isProcessingAudio, setIsProcessingAudio] = useState(false);
+
   const {
     messages: primaryMessages,
     input,
@@ -49,32 +51,28 @@ export default function Chat() {
       console.log(e);
     },
     onFinish: async (message) => {
-      console.log("Assistant message received:", message.content);
+      if (message.role === "assistant" && ttsEnabled) {
+        console.log("Assistant message received:", message.content);
+        setIsPlaying(true);
+        const ttsResponse: TTSResponse = await getSpeechFromText(
+          message.content
+        );
+
+        const audio = new Audio(ttsResponse.audioURL);
+        audio.oncanplaythrough = () => {
+          console.log("Playing audio");
+          audio.play();
+        };
+
+        audio.onended = async () => {
+          console.log("Deleting temporary audio file");
+          await deleteTempFile(ttsResponse.tempFilePath);
+          setIsPlaying(false);
+        };
+      }
     },
-
-    // onFinish: async (message) => {
-    //   if (message.role === "assistant") {
-    //     console.log("Assistant message received:", message.content);
-    //     setLastAssistantMessage(message.content);
-    //     const ttsResponse: TTSResponse = await getSpeechFromText(
-    //       message.content
-    //     );
-
-    //     const audio = new Audio(ttsResponse.audioURL);
-    //     audio.oncanplaythrough = () => {
-    //       console.log("Playing audio");
-    //       audio.play();
-    //     };
-
-    //     audio.onended = async () => {
-    //       console.log("Deleting temporary audio file");
-    //       await deleteTempFile(ttsResponse.tempFilePath);
-    //     };
-    //   }
-    // },
   });
 
-  
   useEffect(() => {
     if (loadedRef.current) return;
     const loadMessages = () => {
@@ -152,10 +150,14 @@ export default function Chat() {
     checkAndClearExpiredMessages,
   ]);
 
+  useEffect(() => {
+    const domNode = chatParent.current;
+    if (domNode) {
+      domNode.scrollTop = domNode.scrollHeight;
+    }
+  });
+
   // Lataa viestit localStorage:sta komponentin alustuksen yhteydessä
-  const loadedRef = useRef(false);
-
-
   const clearChatHistory = () => {
     if (typeof window !== "undefined") {
       localStorage.removeItem("chatMessages");
@@ -235,43 +237,50 @@ export default function Chat() {
     // Tyhjennä audioChunks seuraavaa nauhoitusta varten
     audioChunksRef.current = [];
   };
-  const chatParent = useRef<HTMLUListElement>(null);
 
-  useEffect(() => {
-    const domNode = chatParent.current;
-    if (domNode) {
-      domNode.scrollTop = domNode.scrollHeight;
-    }
-  });
+  const toggleTTS = () => {
+    setTTSEnabled(!ttsEnabled);
+  };
+
+  const isInputDisabled =
+    isLoading || isPlaying || recording || isProcessingAudio;
 
   return (
-    <div className="flex flex-col w-full flex-grow max-h-dvh">
-      <div className="p-4 border-b w-full max-w-3xl mx-auto">
-        <h1 className="text-xl md:text-2xl font-bold text-center pl-4 md:pl-0">
-          Chatbot - Älyä-avustaja
-        </h1>
+    <div className="flex flex-col w-full flex-grow max-h-dvh ">
+      <div className="p-4 w-full max-w-3xl mx-auto">
+        <div className="flex items-center">
+          <h1 className="text-md sm:text-2xl lg:text-3xl font-bold text-center pl-4 md:pl-0 flex-1">
+            Chatbot - Älyä-avustaja
+          </h1>
+          <Button onClick={toggleTTS} type="button" className="ml-auto" variant={"outline"}>
+            {ttsEnabled ? (
+              <Volume2 className="h-5 w-5" />
+            ) : (
+              <VolumeX className="h-5 w-5" />
+            )}
+          </Button>
+        </div>
       </div>
-      <section className="container px-0 pb-10 flex flex-col flex-grow gap-4 mx-auto max-w-3xl">
+      <section className="container px-0 pb-10 flex flex-col flex-grow gap-4 mx-auto max-w-3xl shadow-sm border rounded-b-lg">
         <ul
           ref={chatParent}
           className="h-1 p-4 flex-grow bg-muted/50 rounded-lg overflow-y-auto flex flex-col gap-4"
         >
-          {primaryMessages.map((m, index) => (
-            <div key={index}>
-              {m.role === "user" ? (
-                <li key={m.id} className="flex flex-row">
-                  <div className="rounded-xl p-4 bg-background shadow-md flex">
-                    <p className="text-primary">{m.content}</p>
-                  </div>
-                </li>
-              ) : (
-                <li key={m.id} className="flex flex-row-reverse">
-                  <div className="rounded-xl p-4 bg-background shadow-md flex w-3/4">
-                    <p className="text-primary">{m.content}</p>
-                  </div>
-                </li>
-              )}
-            </div>
+          {primaryMessages.map((m) => (
+            <li
+              key={m.id}
+              className={`flex ${
+                m.role === "user" ? "flex-row" : "flex-row-reverse"
+              }`}
+            >
+              <div
+                className={`rounded-xl p-4 bg-background shadow-md flex ${
+                  m.role === "assistant" ? "w-3/4" : ""
+                }`}
+              >
+                <p className="text-primary">{m.content}</p>
+              </div>
+            </li>
           ))}
           {(isProcessingAudio || isLoading) && (
             <li className={clsx("flex", { "flex-row-reverse": isLoading })}>
@@ -301,7 +310,7 @@ export default function Chat() {
             onChange={handleInputChange}
           />
           <div className="flex gap-2">
-            <Button className="ml-2" type="submit" disabled={isLoading}>
+            <Button className="ml-2" type="submit" disabled={isInputDisabled}>
               <Send className="h-5 w-5 mr-2" />
               Lähetä
             </Button>
@@ -311,7 +320,7 @@ export default function Chat() {
               type="button"
               className=""
               onClick={recording ? handleStopRecording : handleStartRecording}
-              disabled={isLoading}
+              disabled={isInputDisabled}
             >
               {recording ? (
                 <Rings color="white" height={100} width={20} />
