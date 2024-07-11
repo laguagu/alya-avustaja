@@ -249,7 +249,7 @@ export default function Chat() {
     <div className="flex flex-col w-full flex-grow max-h-dvh ">
       <div className="p-4 w-full max-w-3xl mx-auto">
         <div className="flex items-center">
-          <h1 className="text-md sm:text-2xl lg:text-3xl font-bold text-center pl-4 md:pl-0 flex-1">
+          <h1 className="text-md text-nowrap sm:text-2xl lg:text-3xl font-bold text-center flex-1">
             Chatbot - Älyä-avustaja
           </h1>
           <Button onClick={toggleTTS} type="button" className="ml-auto" variant={"outline"}>
@@ -309,8 +309,8 @@ export default function Chat() {
             value={input}
             onChange={handleInputChange}
           />
-          <div className="flex gap-2">
-            <Button className="ml-2" type="submit" disabled={isInputDisabled} variant={"secondary"}>
+          <div className="flex gap-2 items-center">
+            <Button className="ml-2" type="submit" disabled={isInputDisabled} variant={"secondary"} >
               <Send className="h-5 w-5 mr-2" />
               Lähetä
             </Button>
@@ -318,7 +318,7 @@ export default function Chat() {
             <Button
               aria-label={recording ? "Lopeta nauhoitus" : "Aloita nauhoitus"}
               type="button"
-              variant={"secondary"}
+              variant={"secondary"} 
               onClick={recording ? handleStopRecording : handleStartRecording}
               disabled={isInputDisabled}
             >
@@ -337,7 +337,7 @@ export default function Chat() {
           Älyä-avustaja voi tehdä virheitä. Suosittelemme tarkastamaan tärkeät
           tiedot.
         </p>
-        <Button onClick={clearChatHistory} className="hidden md:block">
+        <Button onClick={clearChatHistory} className="absolute top-0 right-0 mt-2 mr-4 md:static md:mt-0 md:mr-0" variant={"secondary"} >
           Tyhjennä viestihistoria
         </Button>
       </div>

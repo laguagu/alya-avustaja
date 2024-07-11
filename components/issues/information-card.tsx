@@ -28,7 +28,7 @@ export default function InformationCard({
   }
 
   return (
-    <div className="flex flex-wrap gap-6 max-w-full ">
+    <div className="flex flex-wrap gap-6 max-w-full">
       <Card className="flex-1 min-w-[300px] bg-white shadow-lg rounded-lg border-gray-200 border-4">
         <CardHeader className="bg-gray-50 p-4 rounded-t-lg">
           <CardTitle className="text-2xl font-semibold">

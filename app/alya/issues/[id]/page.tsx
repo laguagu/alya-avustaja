@@ -13,7 +13,7 @@ const AsyncDataComponent = async ({ issueId, deviceId }: { issueId: string, devi
 
   return (
     <Tabs defaultValue="info">
-      <TabsList className="md:mb-2 ">
+      <TabsList className="mb-2">
         <TabsTrigger value="info" className="hover:font-semibold">
           Tiedot
         </TabsTrigger>
