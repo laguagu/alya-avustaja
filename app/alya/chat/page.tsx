@@ -24,7 +24,7 @@ interface TTSResponse {
 }
 
 export default function Chat() {
-  const [ttsEnabled, setTTSEnabled] = useState(true);
+  const [ttsEnabled, setTTSEnabled] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [savedMessages, setSavedMessages] = useState<Message[]>([]);
   const [recording, setRecording] = useState(false);
@@ -310,7 +310,7 @@ export default function Chat() {
             onChange={handleInputChange}
           />
           <div className="flex gap-2">
-            <Button className="ml-2" type="submit" disabled={isInputDisabled}>
+            <Button className="ml-2" type="submit" disabled={isInputDisabled} variant={"secondary"}>
               <Send className="h-5 w-5 mr-2" />
               Lähetä
             </Button>
@@ -318,7 +318,7 @@ export default function Chat() {
             <Button
               aria-label={recording ? "Lopeta nauhoitus" : "Aloita nauhoitus"}
               type="button"
-              className=""
+              variant={"secondary"}
               onClick={recording ? handleStopRecording : handleStartRecording}
               disabled={isInputDisabled}
             >
