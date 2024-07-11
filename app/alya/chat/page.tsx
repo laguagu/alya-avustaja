@@ -3,7 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useChat } from "@ai-sdk/react";
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { Message } from "ai";
 import { Send, Mic, VolumeX, Volume2 } from "lucide-react";
 import {
@@ -13,6 +13,7 @@ import {
 } from "@/lib/ai-actions";
 import { TailSpin, Rings } from "react-loader-spinner";
 import clsx from "clsx";
+import ChatMessage from "@/components/chat-message";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const MAX_STORAGE_SIZE = 4 * 1024 * 1024; // 4 MB
@@ -28,12 +29,13 @@ export default function Chat() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [savedMessages, setSavedMessages] = useState<Message[]>([]);
   const [recording, setRecording] = useState(false);
+  const [isProcessingAudio, setIsProcessingAudio] = useState(false);
+  const [isPreparingAudio, setIsPreparingAudio] = useState(false);
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<BlobPart[]>([]);
   const loadedRef = useRef(false);
   const chatParent = useRef<HTMLUListElement>(null);
-  const [isProcessingAudio, setIsProcessingAudio] = useState(false);
-  const [isPreparingAudio, setIsPreparingAudio] = useState(false);
 
   const {
     messages: primaryMessages,
@@ -46,7 +48,7 @@ export default function Chat() {
     isLoading,
     stop,
   } = useChat({
-    api: `${API_URL}supabase`,
+    api: `${API_URL}simple`,
     initialMessages: savedMessages,
     onError: (e) => {
       console.log(e);
@@ -80,20 +82,15 @@ export default function Chat() {
   });
 
   useEffect(() => {
-    if (loadedRef.current) return;
-    const loadMessages = () => {
-      if (typeof window !== "undefined") {
-        const savedMessages = localStorage.getItem("chatMessages");
-        if (savedMessages) {
-          const parsedMessages = JSON.parse(savedMessages);
-          setSavedMessages(parsedMessages);
-          setMessages(parsedMessages);
-        }
+    if (!loadedRef.current) {
+      const savedMessages = localStorage.getItem("chatMessages");
+      if (savedMessages) {
+        const parsedMessages = JSON.parse(savedMessages);
+        setSavedMessages(parsedMessages);
+        setMessages(parsedMessages);
       }
-    };
-
-    loadMessages();
-    loadedRef.current = true;
+      loadedRef.current = true;
+    }
   }, [setMessages]);
 
   // Poista vanhimpia viestejä, jos viestihistoria ylittää tallennuskoon rajan
@@ -116,8 +113,7 @@ export default function Chat() {
         const firstMessageTime = new Date(
           firstAssistantMessage.createdAt
         ).getTime();
-        const now = Date.now();
-        if (now - firstMessageTime > MESSAGE_EXPIRATION_TIME) {
+        if (Date.now() - firstMessageTime > MESSAGE_EXPIRATION_TIME) {
           console.warn(
             "Ensimmäinen assistant-viesti on vanhentunut. Tyhjennetään koko viestihistoria."
           );
@@ -130,7 +126,7 @@ export default function Chat() {
 
   // Karsi viestejä, jos ne ylittävät tallennuskoon rajan tai ovat vanhentuneita
   useEffect(() => {
-    if (typeof window !== "undefined" && primaryMessages.length > 0) {
+    if (primaryMessages.length > 0) {
       let updatedMessages = checkAndClearExpiredMessages([...primaryMessages]);
       updatedMessages = trimMessages(updatedMessages, MAX_STORAGE_SIZE);
       try {
@@ -164,53 +160,40 @@ export default function Chat() {
   });
 
   // Lataa viestit localStorage:sta komponentin alustuksen yhteydessä
-  const clearChatHistory = () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("chatMessages");
-      setMessages([]); // Tyhjennä myös nykyinen viestihistoria
-      setSavedMessages([]);
-    }
-  };
+  const clearChatHistory = useCallback(() => {
+    localStorage.removeItem("chatMessages");
+    setMessages([]);
+    setSavedMessages([]);
+  }, [setMessages]);
 
-  const handleStartRecording = () => {
-    try {
-      audioChunksRef.current = []; // Tyhjennä audioChunks uutta nauhoitusta varten
-
-      navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-        if (mediaRecorderRef.current) {
-          mediaRecorderRef.current.stop();
-          mediaRecorderRef.current = null;
+  const handleStartRecording = useCallback(() => {
+    audioChunksRef.current = [];
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      if (mediaRecorderRef.current) {
+        mediaRecorderRef.current.stop();
+      }
+      const mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+      mediaRecorderRef.current = mediaRecorder;
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
         }
-
-        const mediaRecorder = new MediaRecorder(stream, {
-          mimeType: "audio/webm",
-        });
-
-        mediaRecorderRef.current = mediaRecorder;
-
-        mediaRecorder.ondataavailable = (event) => {
-          if (event.data.size > 0) {
-            audioChunksRef.current.push(event.data);
-          }
-        };
-
-        mediaRecorder.start();
-        setRecording(true);
-      });
-    } catch (error) {
+      };
+      mediaRecorder.start();
+      setRecording(true);
+    }).catch((error) => {
       console.error("Error starting recording:", error);
-    }
-  };
+    });
+  }, []);
+  
 
-  const handleStopRecording = async () => {
+  const handleStopRecording = useCallback(async () => {
     if (!mediaRecorderRef.current) {
       console.error("MediaRecorder not initialized");
       return;
     }
-
     mediaRecorderRef.current.stop();
     setRecording(false);
-
     // Odota hetki, jotta kaikki audioChunks on varmasti lisätty
     await new Promise((resolve) => setTimeout(resolve, 100));
 
@@ -240,14 +223,20 @@ export default function Chat() {
 
     // Tyhjennä audioChunks seuraavaa nauhoitusta varten
     audioChunksRef.current = [];
-  };
+  }, [append]);
+  ;
 
-  const toggleTTS = () => {
-    setTTSEnabled(!ttsEnabled);
-  };
+  const toggleTTS = useCallback(() => {
+    setTTSEnabled((prev) => !prev);
+  }, []);
 
   const isDisabled =
     isLoading || isPlaying || isProcessingAudio || isPreparingAudio;
+
+    const chatMessages = useMemo(() => 
+      primaryMessages.map((m) => <ChatMessage key={m.id} message={m} />),
+      [primaryMessages]
+    );
 
   return (
     <div className="flex flex-col w-full flex-grow max-h-dvh ">
@@ -276,16 +265,16 @@ export default function Chat() {
           ref={chatParent}
           className="h-1 p-4 flex-grow bg-muted/50 rounded-lg overflow-y-auto flex flex-col gap-4"
         >
-          {primaryMessages.map((m) => (
-            <li key={m.id} className={`flex ${m.role === "user" ? "flex-row" : "flex-row-reverse"}`}>
-              <div className={`rounded-xl p-4 bg-background shadow-md flex ${m.role === "assistant" ? "w-3/4" : ""}`}>
-                <p className="text-primary">{m.content}</p>
-              </div>
-            </li>
-          ))}
-          
+          {/* {primaryMessages.map((m) => (
+            <ChatMessage key={m.id} message={m} />
+          ))} */}
+          {chatMessages}
           {(isProcessingAudio || isLoading || isPreparingAudio) && (
-            <li className={clsx("flex", { "flex-row-reverse": isLoading || isPreparingAudio })}>
+            <li
+              className={clsx("flex", {
+                "flex-row-reverse": isLoading || isPreparingAudio,
+              })}
+            >
               <div className="flex items-center">
                 <TailSpin
                   height="28"
@@ -294,7 +283,9 @@ export default function Chat() {
                   ariaLabel="loading"
                 />
                 {isPreparingAudio && (
-                  <span className="ml-2 text-sm text-gray-600">Valmistellaan ääntä...</span>
+                  <span className="ml-2 text-sm text-gray-600">
+                    Valmistellaan ääntä...
+                  </span>
                 )}
               </div>
             </li>
