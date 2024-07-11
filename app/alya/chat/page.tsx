@@ -45,7 +45,7 @@ export default function Chat() {
     isLoading,
     stop,
   } = useChat({
-    api: `${API_URL}simple`,
+    api: `${API_URL}supabase`,
     initialMessages: savedMessages,
     onError: (e) => {
       console.log(e);
@@ -242,8 +242,7 @@ export default function Chat() {
     setTTSEnabled(!ttsEnabled);
   };
 
-  const isInputDisabled =
-    isLoading || isPlaying || recording || isProcessingAudio;
+    const isDisabled = isLoading || isPlaying || isProcessingAudio;
 
   return (
     <div className="flex flex-col w-full flex-grow max-h-dvh ">
@@ -252,7 +251,7 @@ export default function Chat() {
           <h1 className="text-md text-nowrap sm:text-2xl lg:text-3xl font-bold text-center flex-1">
             Chatbot - Älyä-avustaja
           </h1>
-          <Button onClick={toggleTTS} type="button" className="ml-auto" variant={"outline"}>
+          <Button onClick={toggleTTS} type="button" className="ml-auto" variant={"outline"} disabled={isDisabled || recording}>
             {ttsEnabled ? (
               <Volume2 className="h-5 w-5" />
             ) : (
@@ -307,10 +306,11 @@ export default function Chat() {
             placeholder="Kirjoita kysymyksesi tänne..."
             type="text"
             value={input}
+            disabled={isDisabled || recording}
             onChange={handleInputChange}
           />
           <div className="flex gap-2 items-center">
-            <Button className="ml-2" type="submit" disabled={isInputDisabled} variant={"secondary"} >
+            <Button className="ml-2" type="submit" disabled={isDisabled || recording} variant={"secondary"} >
               <Send className="h-5 w-5 mr-2" />
               Lähetä
             </Button>
@@ -320,7 +320,7 @@ export default function Chat() {
               type="button"
               variant={"secondary"} 
               onClick={recording ? handleStopRecording : handleStartRecording}
-              disabled={isInputDisabled}
+              disabled={isDisabled && !recording}
             >
               {recording ? (
                 <Rings color="white" height={100} width={20} />
