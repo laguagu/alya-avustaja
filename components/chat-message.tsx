@@ -6,23 +6,26 @@ type ChatMessageProps = {
 };
 
 function ChatMessage({ message }: ChatMessageProps) {
+  const isUser = message.role === "user";
+
   return (
-    <div>
-      <li
-        className={clsx("flex", {
-          "flex-row": message.role === "user",
-          "flex-row-reverse": message.role !== "user",
-        })}
+    <li
+      className={clsx("flex", {
+        "justify-end": !isUser,
+      })}
+    >
+      <div
+        className={clsx(
+          "rounded-xl p-4 bg-background shadow-md",
+          "max-w-[75%] break-words", // Lisätty maksimileveys ja sanojen rivitys
+          {
+            "ml-auto": !isUser, // Siirtää viestin oikealle, jos ei ole käyttäjä
+          }
+        )}
       >
-        <div
-          className={clsx("rounded-xl p-4 bg-background shadow-md flex", {
-            "w-3/4": message.role === "assistant",
-          })}
-        >
-          <p className="text-primary">{message.content}</p>
-        </div>
-      </li>
-    </div>
+        <p className="text-primary">{message.content}</p>
+      </div>
+    </li>
   );
 }
 
