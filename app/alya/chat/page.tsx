@@ -48,12 +48,12 @@ export default function Chat() {
     isLoading,
     stop,
   } = useChat({
-    api: `${API_URL}simple`,
+    api: `${API_URL}supabase`,
     initialMessages: savedMessages,
-    onError: (e) => {
+    onError: (e: any) => {
       console.log(e);
     },
-    onFinish: async (message) => {
+    onFinish: async (message: { role: string; content: string; }) => {
       if (message.role === "assistant" && ttsEnabled) {
         console.log("Assistant message received:", message.content);
         setIsPreparingAudio(true);
@@ -234,7 +234,7 @@ export default function Chat() {
     isLoading || isPlaying || isProcessingAudio || isPreparingAudio;
 
     const chatMessages = useMemo(() => 
-      primaryMessages.map((m) => <ChatMessage key={m.id} message={m} />),
+      primaryMessages.map((m: Message) => <ChatMessage key={m.id} message={m} />),
       [primaryMessages]
     );
 
