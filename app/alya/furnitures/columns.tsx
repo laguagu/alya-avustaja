@@ -52,26 +52,14 @@ export const columns: ColumnDef<DeviceItemExample>[] = [
     },
   },
   {
-    accessorKey: "status",
-    header: "Status",
-  },
-  // {
-  //   accessorKey: "owner",
-  //   header: "Owner",
-  // },
-  {
-    accessorKey: "location",
-    header: "Location",
-  },
-  {
     accessorKey: "serial",
     header: "Serial Number",
   },
-  {
-    accessorKey: "issue",
-    header: "Issue",
-    cell: ({ row }) => (row.getValue("issue") ? "Yes" : "No"),
-  },
+  // {
+  //   accessorKey: "issue",
+  //   header: "Issue",
+  //   cell: ({ row }) => (row.getValue("issue") ? "Yes" : "No"),
+  // },
   {
     accessorKey: "brand", // Lisätty vastaamaan dataavain "brand"
     header: "Brand",

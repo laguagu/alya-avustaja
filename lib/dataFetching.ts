@@ -21,7 +21,7 @@ export async function getIssuesNumber(): Promise<number> {
         Authorization: `Bearer ${process.env.LUNNI_API}`,
         "Content-Type": "application/json",
       },
-      next: { revalidate: 600 },
+      cache: "no-store",
     });
 
     if (!response.ok) {

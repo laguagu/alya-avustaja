@@ -4,6 +4,7 @@ import { getIssuesNumber } from "@/lib/dataFetching";
 import { Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 
+
 export default async function DashboardLayout({
   children,
 }: {

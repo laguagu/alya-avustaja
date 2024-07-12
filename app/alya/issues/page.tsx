@@ -36,12 +36,14 @@ export default async function Page() {
   return (
     <div>
       <div className="flex flex-col md:flex-row justify-between items-center w-full mb-4">
-        <h1 className="text-3xl text-center md:flex-grow mb-4 md:mb-0 mt-2">Vikailmoitukset</h1>
+        <h1 className="text-3xl lg:text-4xl text-center md:flex-grow mb-4 md:my-2">
+          Vikailmoitukset
+        </h1>
         <div className="md:ml-4">
           <NewIssue />
         </div>
       </div>
-        <Separator />
+      <Separator />
       {/* Tämä suspense toimii oikein kun annat BentoGrid elementille TimeOut function */}
       <Suspense fallback={<div>Ladataan vikailmoituksia...</div>}>
         <BentoGridDemo issues={filteredData} />
