@@ -169,6 +169,7 @@ export type DeviceItemExample = {
   issue: boolean;
   updateTime: Date;
   parts: Array<string>;
+  model: string;
 };
 
 // Huom tarvitaan vielä image

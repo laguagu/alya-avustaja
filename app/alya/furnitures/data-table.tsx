@@ -188,12 +188,11 @@ export function DataTable<TData, TValue>({
           </Button>
         </div>
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {table.getFilteredSelectedRowModel().rows.length}/
+          {table.getFilteredRowModel().rows.length} rivi(ä) valittu.
           <br />
           <button onClick={() => console.log(table.getSelectedRowModel().rows)}>
-            {" "}
-            Log selected valuess{" "}
+            Kirjaa valitut arvot
           </button>
         </div>
       </div>

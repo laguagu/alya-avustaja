@@ -12,6 +12,45 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DeviceItemExample } from "@/data/types";
+import { retrieveFurnitureParts } from "@/lib/dataFetching";
+import { useState } from "react";
+
+const PartsDropdown = ({ item }: { item: DeviceItemExample }) => {
+  const [parts, setParts] = useState<string[] | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleOpenChange = async (open: boolean) => {
+    if (open && !parts && !isLoading) {
+      setIsLoading(true);
+      const fetchedParts = await retrieveFurnitureParts(item.name);
+      setParts(fetchedParts);
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <DropdownMenu onOpenChange={handleOpenChange}>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <span className="sr-only">Open menu</span>
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Osat</DropdownMenuLabel>
+        {isLoading && <DropdownMenuItem disabled>Ladataan...</DropdownMenuItem>}
+        {!isLoading && parts && parts.length > 0 && (
+          parts.map((part, index) => (
+            <DropdownMenuItem key={index}>{part}</DropdownMenuItem>
+          ))
+        )}
+        {!isLoading && parts && parts.length === 0 && (
+          <DropdownMenuItem disabled>Ei osia saatavilla</DropdownMenuItem>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
 
 // Use zod schema to define the shape of the data later
 export const columns: ColumnDef<DeviceItemExample>[] = [
@@ -53,7 +92,7 @@ export const columns: ColumnDef<DeviceItemExample>[] = [
   },
   {
     accessorKey: "serial",
-    header: "Serial Number",
+    header: "Sarja numero",
   },
   // {
   //   accessorKey: "issue",
@@ -61,38 +100,21 @@ export const columns: ColumnDef<DeviceItemExample>[] = [
   //   cell: ({ row }) => (row.getValue("issue") ? "Yes" : "No"),
   // },
   {
-    accessorKey: "brand", // Lisätty vastaamaan dataavain "brand"
+    accessorKey: "brand",
     header: "Brand",
   },
   {
-    accessorKey: "model", // Lisätty vastaamaan dataavain "model"
+    accessorKey: "model",
     header: "Model",
+    cell({ row }) {
+      return <div>{row.original.model}</div>;
+    },
   },
   {
+    header: "Osat",
     id: "actions",
     cell: ({ row }) => {
-      const item = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(item.id)}
-            >
-              Copy item ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+      return <PartsDropdown item={row.original} />;
+    }
   },
 ];
