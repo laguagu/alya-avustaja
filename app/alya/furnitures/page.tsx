@@ -1,15 +1,15 @@
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 import { Suspense } from "react";
-import { DeviceItemExample } from "@/data/types";
-import { fetchAllFurnitures, fetchFurnitures } from "@/lib/dataFetching";
+import { DevicesTableColums,  } from "@/data/types";
+import { fetchFurnitures } from "@/lib/dataFetching";
 
 export default async function Page() {
-  let data: DeviceItemExample[] | null = null;
+  let data: DevicesTableColums[] | null = null;
   let error: string | null = null;
 
   try {
-    data = await fetchAllFurnitures();
+    data = await fetchFurnitures();
   } catch (err) {
     error = (err as Error).message;
   }

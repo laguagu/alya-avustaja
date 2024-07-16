@@ -233,7 +233,7 @@ export default function IssueForm({
                   disabled={!isEditing}
                 />
                 <div className="mt-2 tracking-tight md:tracking-normal flex items-center">
-                  Kysy AI suositusta kalusteen huollosta
+                  Kysy AI:n suositusta kalusteen huollosta
                   <AiInstructionButton
                     isEditing={isEditing}
                     instruction={field.value}
@@ -258,8 +258,8 @@ export default function IssueForm({
                     disabled={!isEditing}
                   />
                   <div className="mt-2 tracking-tight md:tracking-normal flex items-center">
-                    Kysy AI ehdotusta varaosista
-                    {/* <AiPartsButton
+                    {/* Kysy AI ehdotusta varaosista
+                    <AiPartsButton
                       isEditing={isEditing}
                       problem_description="Rikki"
                     /> */}

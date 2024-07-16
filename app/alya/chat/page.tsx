@@ -24,7 +24,7 @@ interface TTSResponse {
   tempFilePath: string;
 }
 
-export default function Chat() {
+export default function Page() {
   const [ttsEnabled, setTTSEnabled] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [savedMessages, setSavedMessages] = useState<Message[]>([]);
@@ -53,32 +53,32 @@ export default function Chat() {
     onError: (e: any) => {
       console.log(e);
     },
-    onFinish: async (message: { role: string; content: string; }) => {
-      if (message.role === "assistant" && ttsEnabled) {
-        console.log("Assistant message received:", message.content);
-        setIsPreparingAudio(true);
-        try {
-          const ttsResponse: TTSResponse = await getSpeechFromText(
-            message.content
-          );
+    // onFinish: async (message: { role: string; content: string; }) => {
+    //   if (message.role === "assistant" && ttsEnabled) {
+    //     console.log("Assistant message received:", message.content);
+    //     setIsPreparingAudio(true);
+    //     try {
+    //       const ttsResponse: TTSResponse = await getSpeechFromText(
+    //         message.content
+    //       );
 
-          const audio = new Audio(ttsResponse.audioURL);
-          audio.oncanplaythrough = () => {
-            setIsPreparingAudio(false);
-            setIsPlaying(true);
-            audio.play();
-          };
+    //       const audio = new Audio(ttsResponse.audioURL);
+    //       audio.oncanplaythrough = () => {
+    //         setIsPreparingAudio(false);
+    //         setIsPlaying(true);
+    //         audio.play();
+    //       };
 
-          audio.onended = async () => {
-            await deleteTempFile(ttsResponse.tempFilePath);
-            setIsPlaying(false);
-          };
-        } catch (error) {
-          console.error("Error preparing audio:", error);
-          setIsPreparingAudio(false);
-        }
-      }
-    },
+    //       audio.onended = async () => {
+    //         await deleteTempFile(ttsResponse.tempFilePath);
+    //         setIsPlaying(false);
+    //       };
+    //     } catch (error) {
+    //       console.error("Error preparing audio:", error);
+    //       setIsPreparingAudio(false);
+    //     }
+    //   }
+    // },
   });
 
   useEffect(() => {
@@ -245,7 +245,7 @@ export default function Chat() {
           <h1 className="text-md text-nowrap sm:text-2xl lg:text-3xl font-bold text-center flex-1">
             Chatbot - Älyä-avustaja
           </h1>
-          <Button
+          {/* <Button
             onClick={toggleTTS}
             type="button"
             className="ml-auto"
@@ -257,7 +257,7 @@ export default function Chat() {
             ) : (
               <VolumeX className="h-5 w-5" />
             )}
-          </Button>
+          </Button> */}
         </div>
       </div>
       <section className="container px-0 pb-10 flex flex-col flex-grow gap-4 mx-auto max-w-3xl shadow-sm border rounded-b-lg">

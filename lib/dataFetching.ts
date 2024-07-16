@@ -126,7 +126,7 @@ export async function fetchFurnitures(): Promise<DevicesTableColums[]> {
   }
 
   try {
-    const response = await fetch(url, {
+    const response = await fetch(`${url}?&fields=name,serial,brand,model`, {
       headers: {
         Authorization: `Bearer ${process.env.LUNNI_API}`,
         "Content-Type": "application/json",

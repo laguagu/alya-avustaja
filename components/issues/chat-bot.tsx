@@ -3,14 +3,18 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useChat } from "@ai-sdk/react";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { Message } from "ai";
-import { nanoid } from "nanoid";
-import { Send, Mic } from "lucide-react";
+import { Send, Mic, VolumeX, Volume2 } from "lucide-react";
 import {
+  deleteTempFile,
+  getSpeechFromText,
   getWhisperTranscription,
 } from "@/lib/ai-actions";
 import { TailSpin, Rings } from "react-loader-spinner";
+import ChatMessage from "../chat-message";
+import clsx from "clsx";
+import { generateAIinstruction } from "@/lib/langchainActions";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -20,12 +24,18 @@ interface TTSResponse {
 }
 
 export default function ChatBot() {
-  const [lastAssistantMessage, setLastAssistantMessage] = useState<
-    string | null
-  >(null);
+  const [ttsEnabled, setTTSEnabled] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [savedMessages, setSavedMessages] = useState<Message[]>([]);
   const [recording, setRecording] = useState(false);
+  const [isProcessingAudio, setIsProcessingAudio] = useState(false);
+  const [isPreparingAudio, setIsPreparingAudio] = useState(false);
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const [audioURL, setAudioURL] = useState<string | null>(null);
+  const audioChunksRef = useRef<BlobPart[]>([]);
+  const loadedRef = useRef(false);
+  const chatParent = useRef<HTMLUListElement>(null);
+
   const {
     messages: primaryMessages,
     input,
@@ -38,144 +48,44 @@ export default function ChatBot() {
     stop,
   } = useChat({
     api: `${API_URL}supabase`,
-    onError: (e) => {
+    initialMessages: savedMessages,
+    onError: (e: any) => {
       console.log(e);
     },
-    // onFinish: async (message) => {
-    //   if (message.role === "assistant") {
+    // onFinish: async (message: { role: string; content: string }) => {
+    //   if (message.role === "assistant" && ttsEnabled) {
     //     console.log("Assistant message received:", message.content);
-    //     setLastAssistantMessage(message.content);
-    //     const ttsResponse: TTSResponse = await getSpeechFromText(
-    //       message.content
-    //     );
+    //     setIsPreparingAudio(true);
+    //     try {
+    //       const ttsResponse: TTSResponse = await getSpeechFromText(
+    //         message.content
+    //       );
 
-    //     const audio = new Audio(ttsResponse.audioURL);
-    //     audio.oncanplaythrough = () => {
-    //       console.log("Playing audio");
-    //       audio.play();
-    //     };
+    //       const audio = new Audio(ttsResponse.audioURL);
+    //       audio.oncanplaythrough = () => {
+    //         setIsPreparingAudio(false);
+    //         setIsPlaying(true);
+    //         audio.play();
+    //       };
 
-    //     audio.onended = async () => {
-    //       console.log("Deleting temporary audio file");
-    //       await deleteTempFile(ttsResponse.tempFilePath);
-    //     };
+    //       audio.onended = async () => {
+    //         await deleteTempFile(ttsResponse.tempFilePath);
+    //         setIsPlaying(false);
+    //       };
+
+    //       audio.onerror = (e) => {
+    //         console.error("Error playing audio:", e);
+    //         setIsPreparingAudio(false);
+    //         setIsPlaying(false);
+    //       };
+
+    //     } catch (error) {
+    //       console.error("Error preparing audio:", error);
+    //       setIsPreparingAudio(false);
+    //     }
     //   }
     // },
   });
-
-  const handleAudioData = (data: BlobPart) => {
-    const audioBlob = new Blob([data], { type: "audio/webm" });
-    const audioURL = URL.createObjectURL(audioBlob);
-    return { audioBlob, audioURL };
-  };
-
-  const handleStartRecording = () => {
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      if (mediaRecorderRef.current) {
-        mediaRecorderRef.current.stop();
-        mediaRecorderRef.current = null;
-      }
-
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: "audio/webm",
-      });
-
-      mediaRecorderRef.current = mediaRecorder;
-      const uniqueId = nanoid();
-
-      mediaRecorder.ondataavailable = async (event) => {
-        if (event.data.size > 0) {
-          const { audioBlob, audioURL } = handleAudioData(event.data);
-
-          // setAudioURL(audioURL); // For debuging if you want to play audio record
-
-          if (audioBlob.size > 25415) {
-            const formData = new FormData();
-            formData.append("file", audioBlob, "audio.webm");
-            const transcriptionText = await getWhisperTranscription(formData);
-            console.log(transcriptionText, "Käännös");
-            return;
-            append({
-              role: "user",
-              content: transcriptionText,
-            });
-
-            setLastAssistantMessage(null); // Reset last assistant message
-          }
-        }
-      };
-      mediaRecorder.start();
-      setRecording(true);
-    });
-  };
-
-  const handleStopRecording = () => {
-    mediaRecorderRef.current?.stop();
-    setRecording(false);
-  };
-
-  const addUserMessage = (messages: Message[], id: string, content: string) => {
-    return messages.concat({
-      id,
-      content,
-      role: "user",
-    });
-  };
-
-  async function sendMessageToAPI(messages: Message[], API_URL: string) {
-    const response = await fetch(`${API_URL}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        messages: messages,
-      }),
-    });
-
-    if (!response.ok) {
-      console.error("Failed to send message", response);
-      return null;
-    }
-
-    const responseText = await response.text();
-    const uniqueId = nanoid();
-    // const gptAnswer = responseText;
-
-    if (responseText !== null) {
-      setMessages([
-        ...messages,
-        {
-          id: uniqueId,
-          role: "assistant",
-          content: responseText,
-        },
-      ]);
-    }
-    return responseText;
-  }
-
-  const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!input.trim()) return; // Prevent sending empty messages or multiple messages while loading
-    const uniqueId = nanoid();
-
-    let messagesWithUserReply: Message[] = addUserMessage(
-      primaryMessages,
-      uniqueId,
-      input
-    );
-
-    setMessages(messagesWithUserReply);
-    setInput("");
-
-    await sendMessageToAPI(
-      messagesWithUserReply,
-      "http://localhost:3000/api/supabase"
-    );
-  };
-
-  const chatParent = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
     const domNode = chatParent.current;
@@ -184,44 +94,133 @@ export default function ChatBot() {
     }
   });
 
+  const handleStartRecording = useCallback(() => {
+    audioChunksRef.current = [];
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        if (mediaRecorderRef.current) {
+          mediaRecorderRef.current.stop();
+        }
+        const mediaRecorder = new MediaRecorder(stream, {
+          mimeType: "audio/webm",
+        });
+        mediaRecorderRef.current = mediaRecorder;
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            audioChunksRef.current.push(event.data);
+          }
+        };
+        mediaRecorder.start();
+        setRecording(true);
+      })
+      .catch((error) => {
+        console.error("Error starting recording:", error);
+      });
+  }, []);
+
+
+
+  const handleStopRecording = useCallback(async () => {
+    if (!mediaRecorderRef.current) {
+      console.error("MediaRecorder not initialized");
+      return;
+    }
+    mediaRecorderRef.current.stop();
+    setRecording(false);
+    // Odota hetki, jotta kaikki audioChunks on varmasti lisätty
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    try {
+      const audioBlob = new Blob(audioChunksRef.current, {
+        type: "audio/webm",
+      });
+
+      if (audioBlob.size > 25415) {
+        setIsProcessingAudio(true);
+        const formData = new FormData();
+        formData.append("file", audioBlob, "audio.webm");
+        const transcriptionText = await getWhisperTranscription(formData);
+        setIsProcessingAudio(false);
+        if (transcriptionText) {
+          append({
+            role: "user",
+            content: transcriptionText,
+          });
+        }
+      } else {
+        console.log("Audio too short, not processing");
+      }
+    } catch (error) {
+      console.error("Error processing audio:", error);
+    }
+
+    // Tyhjennä audioChunks seuraavaa nauhoitusta varten
+    audioChunksRef.current = [];
+  }, [append]);
+  const toggleTTS = useCallback(() => {
+    setTTSEnabled((prev) => !prev);
+  }, []);
+
+  const isDisabled =
+    isLoading || isPlaying || isProcessingAudio || isPreparingAudio;
+
+  const chatMessages = useMemo(
+    () =>
+      primaryMessages.map((m: Message) => (
+        <ChatMessage key={m.id} message={m} />
+      )),
+    [primaryMessages]
+  );
+  
+
   return (
-    <div className="flex flex-col w-full xl:max-w-[1200px] h-full max-h-[calc(62vh-4rem)]">
-      <div className="p-4 border-b w-full">
-        <h1 className="text-xl md:text-2xl font-bold text-center pl-4 md:pl-0">
-          Chatbot - Älyä-avustaja
-        </h1>
+    <div className="flex flex-col w-full xl:max-w-[1200px] h-[calc(62vh-4rem)] md:h-full">
+      <div className="p-4 w-full max-w-3xl mx-auto">
+        <div className="flex items-center">
+          <h1 className="text-md text-nowrap sm:text-xl lg:text-2xl font-bold text-center flex-1">
+            Chatbot - Älyä-avustaja
+          </h1>
+            {/* <Button
+              onClick={toggleTTS}
+              type="button"
+              className="ml-auto"
+              variant={"outline"}
+              disabled={isDisabled || recording}
+            >
+              {ttsEnabled ? (
+                <Volume2 className="h-5 w-5" />
+              ) : (
+                <VolumeX className="h-5 w-5" />
+              )}
+            </Button> */}
+        </div>
       </div>
       <section className="container flex flex-col flex-grow px-0 pb-10 gap-4 mx-auto w-full max-h-[calc(62vh-4rem)]">
         <ul
           ref={chatParent}
           className="p-4 flex-grow bg-muted/50 rounded-lg overflow-y-auto flex flex-col gap-4"
         >
-          {primaryMessages.map((m, index) => (
-            <div key={index}>
-              {m.role === "user" ? (
-                <li key={m.id} className="flex flex-row">
-                  <div className="rounded-xl p-4 bg-background shadow-md flex">
-                    <p className="text-primary">{m.content}</p>
-                  </div>
-                </li>
-              ) : (
-                <li key={m.id} className="flex flex-row-reverse">
-                  <div className="rounded-xl p-4 bg-background shadow-md flex w-3/4">
-                    <p className="text-primary">{m.content}</p>
-                  </div>
-                </li>
-              )}
-            </div>
-          ))}
-          {isLoading && (
-            <li className="flex flex-row-reverse">
-              <div className="">
+          {chatMessages}
+
+          {(isProcessingAudio || isLoading || isPreparingAudio) && (
+            <li
+              className={clsx("flex", {
+                "flex-row-reverse": isLoading || isPreparingAudio,
+              })}
+            >
+              <div className="flex items-center">
                 <TailSpin
                   height="28"
                   width="28"
                   color="black"
                   ariaLabel="loading"
                 />
+                {isPreparingAudio && (
+                  <span className="ml-2 text-sm text-gray-600">
+                    Valmistellaan ääntä...
+                  </span>
+                )}
               </div>
             </li>
           )}
@@ -231,25 +230,33 @@ export default function ChatBot() {
       <section className="p-4">
         <form
           onSubmit={handleSubmit}
-          className="flex w-full flex-col sm:flex-row mx-auto items-center space-y-2 sm:space-y-0"
+          className="flex w-full flex-col sm:flex-row max-w-3xl mx-auto items-center space-y-2 sm:space-y-0"
         >
           <Input
             className="flex-1 min-h-[40px]"
             placeholder="Kirjoita kysymyksesi tänne..."
             type="text"
             value={input}
+            disabled={isDisabled || recording}
             onChange={handleInputChange}
           />
-          <div className="flex ">
-            <Button className="ml-2" type="submit" disabled={isLoading}>
+          <div className="flex gap-2 items-center">
+            <Button
+              className="ml-2"
+              type="submit"
+              disabled={isDisabled || recording}
+              variant={"secondary"}
+            >
               <Send className="h-5 w-5 mr-2" />
               Lähetä
             </Button>
 
             <Button
-              className="ml-2"
+              aria-label={recording ? "Lopeta nauhoitus" : "Aloita nauhoitus"}
+              type="button"
+              variant={"secondary"}
               onClick={recording ? handleStopRecording : handleStartRecording}
-              disabled={isLoading}
+              disabled={isDisabled && !recording}
             >
               {recording ? (
                 <Rings color="white" height={100} width={20} />
@@ -261,7 +268,7 @@ export default function ChatBot() {
           </div>
         </form>
       </section>
-      <div>
+      <div className="flex flex-col items-center justify-center">
         <p className="text-center sm:text-base text-sm tracking-tight sm:mb-5">
           Älyä-avustaja voi tehdä virheitä. Suosittelemme tarkastamaan tärkeät
           tiedot.
@@ -270,4 +277,3 @@ export default function ChatBot() {
     </div>
   );
 }
-
