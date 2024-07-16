@@ -11,14 +11,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
-import { DeviceItemExample } from "@/data/types";
+import {  DevicesTableColums } from "@/data/types";
 import { retrieveFurnitureParts } from "@/lib/dataFetching";
 import { useState } from "react";
 
-const PartsDropdown = ({ item }: { item: DeviceItemExample }) => {
+const PartsDropdown = ({ item }: { item: DevicesTableColums }) => {
   const [parts, setParts] = useState<string[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
   const handleOpenChange = async (open: boolean) => {
     if (open && !parts && !isLoading) {
       setIsLoading(true);
@@ -44,7 +43,7 @@ const PartsDropdown = ({ item }: { item: DeviceItemExample }) => {
             <DropdownMenuItem key={index}>{part}</DropdownMenuItem>
           ))
         )}
-        {!isLoading && parts && parts.length === 0 && (
+        {!isLoading && parts === null && (
           <DropdownMenuItem disabled>Ei osia saatavilla</DropdownMenuItem>
         )}
       </DropdownMenuContent>
@@ -53,7 +52,7 @@ const PartsDropdown = ({ item }: { item: DeviceItemExample }) => {
 };
 
 // Use zod schema to define the shape of the data later
-export const columns: ColumnDef<DeviceItemExample>[] = [
+export const columns: ColumnDef<DevicesTableColums>[] = [
   {
     id: "select",
     header: ({ table }) => (

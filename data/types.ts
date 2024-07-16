@@ -160,6 +160,7 @@ export type DeviceItemCard = {
 export type DeviceItemExample = {
   id: string;
   name: string;
+  brand: string;
   devicecategory_id: number;
   status: string;
   owner: string;
@@ -169,6 +170,14 @@ export type DeviceItemExample = {
   issue: boolean;
   updateTime: Date;
   parts: Array<string>;
+  model: string;
+};
+
+export type DevicesTableColums = {
+  id: string;
+  name: string;
+  serialNumber: string;
+  brand: string;
   model: string;
 };
 
