@@ -88,6 +88,12 @@ export default function NewIssueForm() {
 
   const handleRecordingComplete = (audioUrl: string) => {
     // Voit käyttää tätä funktiota käsittelemään nauhoituksen URL-osoitetta
+    // Käytä tähän vercelin aiSDK ja objektin striimausta. 
+    // 1. Nauhoita ääni
+    // 2. Muuta ääni tekstiksi
+    // 3. Näytä modal ikkuna jossa on teksti ja mahdollisuus muokata sitä
+    // 4. Lähetä teksti Vercelin aiSDK:lle
+    // 5. Vastaanota vastaus striimattuna ja täytä lomake
     console.log("Nauhoitus valmis: ", audioUrl);
   };
 

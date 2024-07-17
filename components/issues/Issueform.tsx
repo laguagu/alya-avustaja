@@ -1,10 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FieldErrors, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Bot } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -26,7 +25,7 @@ import { Input } from "@/components/ui/input";
 import { DeviceItemCard, FurnitureInfo, IssueFormValues } from "@/data/types";
 import { useState } from "react";
 import { postNewIssue } from "@/app/actions";
-import { AiInstructionButton, AiPartsButton } from "../Client-Buttons";
+import { AiInstructionButton } from "../Client-Buttons";
 import { FormSchema } from "@/lib/schemas";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";

@@ -6,8 +6,6 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import {
-  Bell,
-  Home,
   Package,
   ClipboardPlus,
   TriangleAlert,

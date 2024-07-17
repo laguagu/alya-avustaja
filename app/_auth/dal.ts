@@ -5,7 +5,7 @@ import { cache } from 'react';
 import { users } from '@/db/drizzle/schema'; 
 import { verifySession } from './sessions'; 
 
-export const getUser = cache (async () => {
+export const getUser = cache(async () => {
   const session = await verifySession();
   if (!session) return null;
 

@@ -59,7 +59,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onRecordingComplete }) =>
       ) : (
         <Button className="mt-2" onClick={handleStartRecording}>
           <Mic className="h-5 w-5 mr-2" />
-          Sanele vian kuvaus
+          Aloita nauhoitus
         </Button>
       )}
       {audioURL && (

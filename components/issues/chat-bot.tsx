@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useChat } from "@ai-sdk/react";
 import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { Message } from "ai";
-import { Send, Mic, VolumeX, Volume2 } from "lucide-react";
+import { Send, Mic, } from "lucide-react";
 import {
   deleteTempFile,
   getSpeechFromText,
@@ -14,7 +14,6 @@ import {
 import { TailSpin, Rings } from "react-loader-spinner";
 import ChatMessage from "../chat-message";
 import clsx from "clsx";
-import { generateAIinstruction } from "@/lib/langchainActions";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
