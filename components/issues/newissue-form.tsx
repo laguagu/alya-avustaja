@@ -38,6 +38,8 @@ import { getWhisperTranscription } from "@/lib/ai-actions";
 import { useEffect, useState } from "react";
 import { readStreamableValue } from "ai/rsc";
 import { processAudioTranscription } from "@/lib/ai-actions";
+import { TailSpin } from "react-loader-spinner";
+import ModalSpinner from "./modal-spinner";
 
 export default function NewIssueForm() {
   const router = useRouter();
@@ -118,7 +120,7 @@ export default function NewIssueForm() {
 
   const handleDescriptionSubmit = async (description: string) => {
     setIsProcessing(true);
-
+    setIsModalOpen(false);
     const { object } = await processAudioTranscription(description);
 
     for await (const partialObject of readStreamableValue(object)) {
@@ -133,7 +135,6 @@ export default function NewIssueForm() {
     setIsProcessing(false);
     setInputMethod("audio");
     setManualDescription("");
-    setIsModalOpen(false);
   };
 
   const handleRecordingComplete = async (audioBlob: Blob) => {
@@ -165,6 +166,7 @@ export default function NewIssueForm() {
         <p className="text-sm text-gray-600 mb-2">
           Voit joko sanella vian kuvauksen tai kirjoittaa sen itse.
         </p>
+        {isProcessing && <ModalSpinner />}
         <div className="flex space-x-2 mb-2">
           <Button
             onClick={() => setInputMethod("audio")}
@@ -379,8 +381,15 @@ export default function NewIssueForm() {
             )}
           />
           <div className="flex space-x-4">
-            <Button type="submit">Lähetä</Button>
-            <Button type="button" variant={"outline"} onClick={handleCancel}>
+            <Button type="submit" disabled={isExecuting || isProcessing}>
+              Lähetä
+            </Button>
+            <Button
+              type="button"
+              variant={"outline"}
+              onClick={handleCancel}
+              disabled={isProcessing}
+            >
               Tyhjennä
             </Button>
           </div>
