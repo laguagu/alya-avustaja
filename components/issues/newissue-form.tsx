@@ -368,13 +368,6 @@ export default function NewIssueForm() {
                     {...field}
                     disabled={isExecuting}
                   />
-                  <div className="mt-2 tracking-tight md:tracking-normal flex items-center">
-                    Kysy AI ehdotusta varaosista
-                    {/* <AiPartsButton
-                      isEditing={isEditing}
-                      problem_description="Rikki"
-                    /> */}
-                  </div>
                 </div>
                 <FormMessage>{errors.missing_equipments?.message}</FormMessage>
               </FormItem>
