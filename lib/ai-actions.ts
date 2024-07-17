@@ -1,6 +1,7 @@
 "use server";
 
-import { generateObject,  } from "ai";
+import { generateObject, streamObject  } from "ai";
+import { createStreamableValue } from 'ai/rsc';
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
 import { ReactNode } from "react";
@@ -16,28 +17,41 @@ export interface Message {
   display?: ReactNode; // [!code highlight]
 }
 
-export async function getNotifications(input: string): Promise<{
-  notifications: { name: string; message: string; minutesAgo: number }[];
-}> {
-  "use server";
-  console.log("getNotifications called");
+export async function processAudioTranscription(transcription: string) {
+  const stream = createStreamableValue();
+  
+  (async () => {
+    const { partialObjectStream } = await streamObject({
+      model: openai('gpt-4-turbo'),
+      system: 'You are an AI assistant helping to fill out a maintenance request form based on an audio transcription.',
+      prompt: `Based on the following transcription, generate appropriate values for a maintenance request form: "${transcription}"`,
+      schema: z.object({
+        priority: z.enum(["Ei kiireellinen", "Huomioitava", "Kiireellinen"]),
+        type: z.enum([
+          "Puuttuu liukunasta (t)",
+          "Kiristysruuvi löysällä",
+          "Kiristysruuvi puuttuu",
+          "Runko heiluu",
+          "Selkänoja heiluu",
+          "Istuin heiluu",
+          "Materiaali vioittunut",
+          "Ilkivalta",
+          "Vaatii puhdistuksen",
+          "Muu vika"
+        ]),
+        problem_description: z.string(),
+        instruction: z.string(),
+        missing_equipments: z.string(),
+      }),
+    });
 
-  const { object: notifications } = await generateObject({
-    model: openai("gpt-4-turbo"),
-    system: "You generate one notifications for a messages app.",
-    prompt: input,
-    schema: z.object({
-      notifications: z.array(
-        z.object({
-          name: z.string().describe("Name of a fictional person."),
-          message: z.string().describe("Do not use emojis or links."),
-          minutesAgo: z.number(),
-        })
-      ),
-    }),
-  });
-  console.log(notifications);
-  return notifications;
+    for await (const partialObject of partialObjectStream) {
+      stream.update(partialObject);
+    }
+    stream.done();
+  })();
+
+  return { object: stream.value };
 }
 
 export async function getWhisperTranscription(formData: FormData) {

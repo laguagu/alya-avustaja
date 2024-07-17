@@ -1,10 +1,16 @@
 "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -28,10 +34,21 @@ import { FormSchema } from "@/lib/schemas";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
 import AudioRecorder from "./audio-recorder";
-
+import { getWhisperTranscription } from "@/lib/ai-actions";
+import { useEffect, useState } from "react";
+import { readStreamableValue } from "ai/rsc";
+import { processAudioTranscription } from "@/lib/ai-actions";
 
 export default function NewIssueForm() {
   const router = useRouter();
+  const [transcription, setTranscription] = useState("");
+  const [inputMethod, setInputMethod] = useState<"audio" | "text">("audio");
+  const [manualDescription, setManualDescription] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [aiSuggestions, setAiSuggestions] = useState<
+    Partial<z.infer<typeof FormSchema>>
+  >({});
 
   const { execute, result, isExecuting } = useAction(postNewIssue, {
     onSuccess: ({ data }) => {
@@ -42,6 +59,9 @@ export default function NewIssueForm() {
         duration: 5000,
         description: data?.message,
       });
+      router.refresh();
+      form.reset();
+      setAiSuggestions({});
     },
     onError: ({ error }) => {
       console.log("error", error);
@@ -86,15 +106,54 @@ export default function NewIssueForm() {
     });
   }
 
-  const handleRecordingComplete = (audioUrl: string) => {
-    // Voit käyttää tätä funktiota käsittelemään nauhoituksen URL-osoitetta
-    // Käytä tähän vercelin aiSDK ja objektin striimausta. 
+  useEffect(() => {
+    if (Object.keys(aiSuggestions).length > 0) {
+      Object.entries(aiSuggestions).forEach(([key, value]) => {
+        if (value) {
+          form.setValue(key as keyof z.infer<typeof FormSchema>, value);
+        }
+      });
+    }
+  }, [aiSuggestions, form]);
+
+  const handleDescriptionSubmit = async (description: string) => {
+    setIsProcessing(true);
+
+    const { object } = await processAudioTranscription(description);
+
+    for await (const partialObject of readStreamableValue(object)) {
+      if (partialObject) {
+        setAiSuggestions((prevSuggestions) => ({
+          ...prevSuggestions,
+          ...partialObject,
+        }));
+      }
+    }
+
+    setIsProcessing(false);
+    setInputMethod("audio");
+    setManualDescription("");
+    setIsModalOpen(false);
+  };
+
+  const handleRecordingComplete = async (audioBlob: Blob) => {
+    console.log("Nauhoitus valmis: ", audioBlob);
     // 1. Nauhoita ääni
+    const formData = new FormData();
+    formData.append("file", audioBlob, "audio.wav");
     // 2. Muuta ääni tekstiksi
-    // 3. Näytä modal ikkuna jossa on teksti ja mahdollisuus muokata sitä
+    try {
+      const text = await getWhisperTranscription(formData);
+      console.log("Transcription: ", text); // Logataan teksti heti kun se saadaan
+      setTranscription(text);
+      setIsModalOpen(true);
+      // Avaa modali jossa on teksti ja mahdollisuus muokata sitä
+    } catch (error) {
+      console.error("Error transcribing audio:", error);
+    }
+    // 3. Näytä Dialog ikkuna jossa on teksti ja mahdollisuus muokata sitä
     // 4. Lähetä teksti Vercelin aiSDK:lle
     // 5. Vastaanota vastaus striimattuna ja täytä lomake
-    console.log("Nauhoitus valmis: ", audioUrl);
   };
 
   return (
@@ -103,12 +162,74 @@ export default function NewIssueForm() {
         <h2 className="text-lg font-bold">
           Täydennä vikailmoitus huonekalusta
         </h2>
-        <p className="text-sm text-gray-600 ">
-          Täytä alla olevat tiedot huonekalun viasta. Voit myös sanella vian
-          kuvauksen painamalla alla olevaa nappia. Jolloin tekoäly täydentää
-          lomakkeen puolestasi.
+        <p className="text-sm text-gray-600 mb-2">
+          Voit joko sanella vian kuvauksen tai kirjoittaa sen itse.
         </p>
-        <AudioRecorder onRecordingComplete={handleRecordingComplete} />
+        <div className="flex space-x-2 mb-2">
+          <Button
+            onClick={() => setInputMethod("audio")}
+            variant={inputMethod === "audio" ? "default" : "outline"}
+          >
+            Sanele
+          </Button>
+          <Button
+            onClick={() => setInputMethod("text")}
+            variant={inputMethod === "text" ? "default" : "outline"}
+          >
+            Kirjoita
+          </Button>
+        </div>
+        {inputMethod === "audio" ? (
+          <AudioRecorder
+            onRecordingComplete={(audioBlob) => {
+              // Käsittele äänitys ja avaa Dialog
+              handleRecordingComplete(audioBlob);
+              setIsModalOpen(true);
+            }}
+          />
+        ) : (
+          <>
+            <Textarea
+              value={manualDescription}
+              onChange={(e) => setManualDescription(e.target.value)}
+              placeholder="Kirjoita vian kuvaus tähän..."
+              rows={4}
+            />
+            <Button
+              onClick={() => handleDescriptionSubmit(manualDescription)}
+              className="mt-2"
+              disabled={isProcessing || manualDescription.trim().length === 0}
+            >
+              {isProcessing ? "Käsitellään..." : "Lähetä kuvaus"}
+            </Button>
+          </>
+        )}
+
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Tarkista sanelemasi kuvaus</DialogTitle>
+              <DialogDescription>
+                Tarkista sanelemasi vian kuvaus ja tee tarvittavat muutokset
+                ennen lomakkeen täyttämistä.
+              </DialogDescription>
+            </DialogHeader>
+            <Textarea
+              value={transcription}
+              onChange={(e) => setTranscription(e.target.value)}
+              rows={5}
+            />
+            <div className="flex justify-between">
+              <Button onClick={() => setIsModalOpen(false)}>Peruuta</Button>
+              <Button
+                onClick={() => handleDescriptionSubmit(transcription)}
+                disabled={isProcessing}
+              >
+                {isProcessing ? "Käsitellään..." : "Vahvista ja täytä lomake"}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
       <Form {...form}>
         <form
@@ -134,12 +255,12 @@ export default function NewIssueForm() {
                 <FormLabel>Prioriteetti</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value}
                   disabled={isExecuting}
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Valitse priority" />
+                      <SelectValue placeholder="Valitse prioriteetti" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -147,7 +268,7 @@ export default function NewIssueForm() {
                       Ei kiireellinen
                     </SelectItem>
                     <SelectItem value="Huomioitava">Huomioitava</SelectItem>
-                    <SelectItem value="Kiireelinen">Kiireelinen</SelectItem>
+                    <SelectItem value="Kiireellinen">Kiireellinen</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormDescription>Vian priority </FormDescription>
@@ -183,7 +304,7 @@ export default function NewIssueForm() {
                 <Select
                   disabled={isExecuting}
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Valitse vikatyyppi" />

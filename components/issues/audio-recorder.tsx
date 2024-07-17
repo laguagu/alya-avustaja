@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Mic, CirclePause } from 'lucide-react';
 
 interface AudioRecorderProps {
-  onRecordingComplete: (audioUrl: string) => void;
+  onRecordingComplete: (audioBlob: Blob) => void;
 }
 
 const AudioRecorder: React.FC<AudioRecorderProps> = ({ onRecordingComplete }) => {
@@ -11,7 +11,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onRecordingComplete }) =>
   const [audioURL, setAudioURL] = useState<string | null>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<Blob[]>([] as Blob[]);
+  const audioChunksRef = useRef<Blob[]>([]);
   const streamRef = useRef<MediaStream | null>(null);
 
   const handleStartRecording = useCallback(async () => {
@@ -19,6 +19,8 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onRecordingComplete }) =>
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
       mediaRecorderRef.current = new MediaRecorder(stream);
+
+      audioChunksRef.current = [];
 
       mediaRecorderRef.current.ondataavailable = event => {
         audioChunksRef.current.push(event.data);
@@ -28,8 +30,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onRecordingComplete }) =>
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
         const audioUrl = URL.createObjectURL(audioBlob);
         setAudioURL(audioUrl);
-        audioChunksRef.current = [];
-        onRecordingComplete(audioUrl);
+        onRecordingComplete(audioBlob);
       };
 
       mediaRecorderRef.current.start();
@@ -61,14 +62,6 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onRecordingComplete }) =>
           <Mic className="h-5 w-5 mr-2" />
           Aloita nauhoitus
         </Button>
-      )}
-      {audioURL && (
-        <div className="mt-4">
-          <audio controls src={audioURL} />
-          <a href={audioURL} download="recording.wav">
-            Lataa nauhoitus
-          </a>
-        </div>
       )}
     </div>
   );
