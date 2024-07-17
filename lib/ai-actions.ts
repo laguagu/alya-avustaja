@@ -1,11 +1,9 @@
 "use server";
 
-import { generateObject, streamObject, streamText, generateText } from "ai";
+import { generateObject,  } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
-import { createStreamableValue, createStreamableUI } from "ai/rsc";
 import { ReactNode } from "react";
-import { DefaultValues } from "../app/form/page";
 import { OpenAI } from "openai";
 import fs from "fs";
 import { promises as fsPromises } from "fs";
@@ -49,32 +47,25 @@ export async function getWhisperTranscription(formData: FormData) {
   });
 
   const file = formData.get("file") as File;
-  console.log("getWhisperTranscription called with file: ", file.name, );
   if (!file) {
     console.error("No file found in formData");
     return "No file found";
   }
-  // Luodaan väliaikainen tiedosto
-  const tempDir = path.join(process.cwd(), "public", "temp");
-  if (!fs.existsSync(tempDir)) {
-    fs.mkdirSync(tempDir);
+
+  try {
+    const response = await openai.audio.transcriptions.create({
+      file: file,
+      model: "whisper-1",
+      language: "fi",
+      prompt: "Tämä on suomenkielinen äänitys. Kirjoita teksti suomeksi käyttäen oikeaa kielioppia ja välimerkkejä.",
+      response_format: "json",
+    });
+
+    return response.text;
+  } catch (error) {
+    console.error("Error transcribing audio:", error);
+    return "Error transcribing audio";
   }
-  const uniqueId = nanoid();
-  const tempFilePath = path.join(tempDir, `Temp_${uniqueId}.webm`);
-
-  const buffer = Buffer.from(await file.arrayBuffer());
-  fs.writeFileSync(tempFilePath, buffer);
-
-  // Lähetä tiedosto Whisper API:lle
-  const response = await openai.audio.transcriptions.create({
-    file: fs.createReadStream(tempFilePath),
-    model: "whisper-1",
-  });
-
-  // Poistetaan väliaikainen tiedosto
-  fs.unlinkSync(tempFilePath);
-  
-  return response.text;
 }
 
 export async function getSpeechFromText(text: string) {
@@ -106,32 +97,6 @@ export async function getSpeechFromText(text: string) {
   // Return the path to the audio file
   const audioURL = `/temp/tts_output_${uniqueId}.mp3`;
   return { audioURL, tempFilePath };
-}
-
-export async function continueConversation(history: Message[]) {
-  "use server";
-
-  const stream = createStreamableValue();
-
-  (async () => {
-    const { textStream } = await streamText({
-      model: openai("gpt-3.5-turbo"),
-      system:
-        "You are a dude that doesn't drop character until the DVD commentary.",
-      messages: history,
-    });
-
-    for await (const text of textStream) {
-      stream.update(text);
-    }
-
-    stream.done();
-  })();
-
-  return {
-    messages: history,
-    newMessage: stream.value,
-  };
 }
 
 export async function deleteTempFile(filePath: string) {
