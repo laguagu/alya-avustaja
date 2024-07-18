@@ -38,7 +38,6 @@ import { getWhisperTranscription } from "@/lib/ai-actions";
 import { useEffect, useState } from "react";
 import { readStreamableValue } from "ai/rsc";
 import { processAudioTranscription } from "@/lib/ai-actions";
-import { TailSpin } from "react-loader-spinner";
 import ModalSpinner from "./modal-spinner";
 
 export default function NewIssueForm() {
@@ -161,11 +160,12 @@ export default function NewIssueForm() {
     <div className="max-w-2xl">
       <div className="mb-4 p-4 border rounded-md bg-gray-50">
         <h2 className="text-lg font-bold">
-          Täydennä vikailmoitus huonekalusta
+          Täydennä vikailmoitus huonekalusta AI:n avulla
         </h2>
         <p className="text-sm text-gray-600 mb-2">
           Voit joko sanella vian kuvauksen tai kirjoittaa sen itse.
         </p>
+
         {isProcessing && <ModalSpinner />}
         <div className="flex space-x-2 mb-2">
           <Button
@@ -232,7 +232,11 @@ export default function NewIssueForm() {
             </div>
           </DialogContent>
         </Dialog>
+        
       </div>
+      <p className="text-sm text-red-500 mb-2">
+      * Pakolliset kentät on merkitty tähdellä
+    </p>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -254,7 +258,7 @@ export default function NewIssueForm() {
             name="priority"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Prioriteetti</FormLabel>
+                <FormLabel>Prioriteetti*</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   value={field.value}
@@ -283,7 +287,7 @@ export default function NewIssueForm() {
             name="problem_description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Huoltotarpeen kuvaus</FormLabel>
+                <FormLabel>Huoltotarpeen kuvaus*</FormLabel>
                 <Textarea
                   placeholder="Huoltotarpeen kuvaus"
                   {...field}
@@ -302,7 +306,7 @@ export default function NewIssueForm() {
             name="type"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Vikatyyppi</FormLabel>
+                <FormLabel>Vikatyyppi*</FormLabel>
                 <Select
                   disabled={isExecuting}
                   onValueChange={field.onChange}
@@ -373,9 +377,12 @@ export default function NewIssueForm() {
               </FormItem>
             )}
           />
+                      
+
           <div className="flex space-x-4">
             <Button type="submit" disabled={isExecuting || isProcessing}>
               Lähetä
+              
             </Button>
             <Button
               type="button"

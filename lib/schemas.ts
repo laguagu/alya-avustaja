@@ -9,7 +9,7 @@ export const FormSchema = z.object({
     .string({
       required_error: "priority vaaditaan",
     })
-    .min(1, { message: "priority ei voi olla tyhjä" }),
+    .min(1, { message: "Prioriteetti ei voi olla tyhjä" }),
   problem_description: z
     .string({
       required_error: "Huoltotarpeen kuvaus vaaditaan",
@@ -19,9 +19,9 @@ export const FormSchema = z.object({
     }),
   type: z
     .string({
-      required_error: "type vaaditaan",
+      required_error: "tyyppi vaaditaan",
     })
-    .min(1, { message: "type ei voi olla tyhjä" }),
+    .min(1, { message: "Vikatyyppi ei voi olla tyhjä" }),
   instruction: z.string().optional(),
   missing_equipments: z.string().optional(),
 });

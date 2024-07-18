@@ -10,8 +10,8 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // const issues = await getIssuesNumber(); // Hae API kutsulla issues määrä
-  const issues: number = 2; // Mock data
+  const issues = await getIssuesNumber(); // Hae API kutsulla issues määrä
+  // const issues: number = 2; // Mock data
 
   return (
     <div className="grid h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] overflow-hidden">

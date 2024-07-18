@@ -17,12 +17,11 @@ export async function getIssuesNumber(): Promise<number> {
   try {
     const response = await fetch(`${process.env.LUNNI_SERVICES}?fields=id`, {
       method: "GET",
-      // cache: "no-store",
       headers: {
         Authorization: `Bearer ${process.env.LUNNI_API}`,
         "Content-Type": "application/json",
       },
-      cache: "no-store",
+      next: { revalidate: 100 },
     });
 
     if (!response.ok) {
@@ -187,7 +186,7 @@ export async function fetchIssuesData(): Promise<ServiceTask[]> {
         Authorization: `Bearer ${process.env.LUNNI_API}`,
         "Content-Type": "application/json",
       },
-      cache: "no-store",
+      // cache: "no-store",
     });
 
     if (!response.ok) {

@@ -3,19 +3,19 @@ import { decrypt } from './app/_auth/sessions';
 import { cookies } from 'next/headers';
 
 // 1. Specify protected and public routes
-const protectedRoutes = ['/alya', "/tietokanta"];
+const protectedRoutes = ['/alya', "/tietokanta",'/api'];
 const publicRoutes = ['/login', '/signup', '/'];
 
 export default async function middleware(req: NextRequest) {
   // 1. Skip middleware in development
-  const development = process.env.NODE_ENV === 'development';
-  if (development) {
-    return NextResponse.next();
-  }
+  // const development = process.env.NODE_ENV === 'development';
+  // if (development) {
+  //   return NextResponse.next();
+  // }
 
   // 2. Check if the current route is protected or public
   const path = req.nextUrl.pathname;
-  const isProtectedRoute = protectedRoutes.includes(path);
+  const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route));
   const isPublicRoute = publicRoutes.includes(path);
 
   // 3. Decrypt the session from the cookie
@@ -24,8 +24,22 @@ export default async function middleware(req: NextRequest) {
 
   // 4. Redirect to /login if the user is not authenticated
   if (isProtectedRoute && !session?.userId) {
+    if (path.startsWith('/api/')) {
+      return new NextResponse(
+        JSON.stringify({ message: 'Unauthorized' }),
+        { status: 401, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
     return NextResponse.redirect(new URL('/', req.nextUrl));
   }
+      // API-reittien suojaus
+      // Jos kyseessä on POST-pyyntö, varmista että käyttäjä on kirjautunut
+      // if (req.method === 'POST' && !session?.userId) {
+      //   return new NextResponse(
+      //     JSON.stringify({ message: 'Unauthorized for POST requests' }),
+      //     { status: 401, headers: { 'Content-Type': 'application/json' } }
+      //   );
+      // }
   
   // 5. Redirect to /alya if the user is authenticated
   if (
@@ -41,5 +55,5 @@ export default async function middleware(req: NextRequest) {
 
 // Routes Middleware should not run on
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+  matcher: ['/((?!_next/static|_next/image|.*\\.png$).*)'],
 }
