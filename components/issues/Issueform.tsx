@@ -325,7 +325,7 @@ export default function IssueForm({
           />
           {isEditing ? (
             <div className="flex space-x-4">
-              <Button type="submit">Tallenna</Button>
+              <Button type="submit" disabled={isExecuting}>Tallenna</Button>
               <Button type="button" variant={"outline"} onClick={handleCancel}>
                 Peruuta
               </Button>

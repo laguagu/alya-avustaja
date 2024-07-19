@@ -174,7 +174,7 @@ export default function ChatBot() {
   
 
   return (
-    <div className="flex flex-col w-full xl:max-w-[1200px] h-[calc(62vh-4rem)] md:h-full">
+    <div className="flex flex-col w-full xl:max-w-[900px] h-[calc(62vh-4rem)] md:h-full">
       <div className="p-4 w-full max-w-3xl mx-auto">
         <div className="flex items-center">
           <h1 className="text-md text-nowrap sm:text-xl lg:text-2xl font-bold text-center flex-1">
@@ -195,7 +195,7 @@ export default function ChatBot() {
             </Button> */}
         </div>
       </div>
-      <section className="container flex flex-col flex-grow px-0 pb-10 gap-4 mx-auto w-full max-h-[calc(62vh-4rem)]">
+      <section className="container flex flex-col flex-grow px-0 pb-10 gap-4 mx-auto w-full max-h-[calc(62vh-4rem)] h-[800px]">
         <ul
           ref={chatParent}
           className="p-4 flex-grow bg-muted/50 rounded-lg overflow-y-auto flex flex-col gap-4"

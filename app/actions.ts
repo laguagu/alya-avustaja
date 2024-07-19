@@ -149,7 +149,6 @@ export const openIssueAction = actionClient
       flattenValidationErrors(ve).fieldErrors,
   })
   .action(async ({ parsedInput }) => {
-    console.log("openIssueAction", parsedInput);
     const { issueId } = parsedInput;
     const response = await fetch(
       `https://6549f6b1e182221f8d523a44.mockapi.io/api/issues/${issueId}`,
