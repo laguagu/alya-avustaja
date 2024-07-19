@@ -20,11 +20,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { toast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { DeviceItemCard, FurnitureInfo, IssueFormValues } from "@/data/types";
 import { useState } from "react";
-import { postNewIssue } from "@/app/actions";
+import { closeIssueAction, openIssueAction, postNewIssue } from "@/app/actions";
 import { AiInstructionButton } from "../Client-Buttons";
 import { FormSchema } from "@/lib/schemas";
 import { useAction } from "next-safe-action/hooks";
@@ -42,8 +53,36 @@ export default function IssueForm({
   locationName,
   deviceData,
 }: IssueFormProps) {
-  const router = useRouter()
+  const router = useRouter();
+  const issueId = data?.id;
   const [isEditing, setIsEditing] = useState(false);
+  const isCompleted = data?.is_completed ?? false;
+
+  const { execute: executeStatusChange, isExecuting: isChangingStatus } =
+    useAction(isCompleted ? openIssueAction : closeIssueAction, {
+      onSuccess: ({ data }) => {
+        toast({
+          variant: "default",
+          title: isCompleted
+            ? "Vikailmoitus avattu uudelleen!"
+            : "Vikailmoitus suljettu!",
+          duration: 5000,
+          description: data?.message,
+        });
+        router.refresh();
+      },
+      onError: ({ error }) => {
+        toast({
+          variant: "destructive",
+          title: "Virhe",
+          duration: 5000,
+          description: isCompleted
+            ? "Vikailmoituksen avaaminen epäonnistui"
+            : "Vikailmoituksen sulkeminen epäonnistui",
+        });
+      },
+    });
+
   const { execute, result, isExecuting } = useAction(postNewIssue, {
     onSuccess: ({ data }) => {
       console.log("onSuccess", data);
@@ -53,6 +92,7 @@ export default function IssueForm({
         duration: 5000,
         description: data?.message,
       });
+      router.refresh();
     },
     onError: ({ error }) => {
       console.log("error", error);
@@ -60,10 +100,10 @@ export default function IssueForm({
         variant: "destructive",
         title: "Virhe",
         duration: 5000,
-        description: "Vikailmoitus ei päivittynyt onnistuneesti"});
+        description: "Vikailmoitus ei päivittynyt onnistuneesti",
+      });
     },
   });
-  const issueId = data?.id;
 
   const furnitureInfo: FurnitureInfo = {
     name: deviceData?.name || "",
@@ -91,7 +131,7 @@ export default function IssueForm({
     setIsEditing(false);
     const completeFormData = { id: issueId, ...form.getValues() };
     await execute(completeFormData);
-    router.refresh()
+    router.refresh();
   }
 
   function handleEdit() {
@@ -114,8 +154,24 @@ export default function IssueForm({
     setValue("instruction", instruction);
   };
 
+  const handleStatusChange = async () => {
+    const numericIssueId = Number(issueId);
+    if (issueId) {
+      await executeStatusChange({ issueId: numericIssueId });
+    }
+  };
+
   return (
     <div className="max-w-2xl">
+      <div className="mb-4">
+        <p
+          className={`text-lg font-semibold ${
+            isCompleted ? "text-green-600" : "text-red-600"
+          }`}
+        >
+          {isCompleted ? "Vikailmoitus on suljettu" : "Vikailmoitus on avoinna"}
+        </p>
+      </div>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -166,8 +222,7 @@ export default function IssueForm({
             name="problem_description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Huoltotarpeen kuvaus
-                </FormLabel>
+                <FormLabel>Huoltotarpeen kuvaus</FormLabel>
                 <Input
                   placeholder="Huoltotarpeen kuvaus"
                   {...field}
@@ -276,9 +331,39 @@ export default function IssueForm({
               </Button>
             </div>
           ) : (
-            <Button type="button" onClick={handleEdit}>
-              Muokkaa
-            </Button>
+            <>
+              <Button type="button" onClick={handleEdit}>
+                Muokkaa
+              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    type="button"
+                    className="ml-2"
+                    variant={isCompleted ? "default" : "destructive"}
+                    disabled={isChangingStatus}
+                  >
+                    {isCompleted ? "Avaa vikailmoitus" : "Sulje vikailmoitus"}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Oletko varma?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {isCompleted
+                        ? "Tämä toiminto avaa vikailmoituksen uudelleen. Haluatko jatkaa?"
+                        : "Tämä toiminto sulkee vikailmoituksen. Haluatko jatkaa?"}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Peruuta</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleStatusChange}>
+                      {isCompleted ? "Avaa" : "Sulje"}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </>
           )}
         </form>
       </Form>

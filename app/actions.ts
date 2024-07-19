@@ -1,10 +1,11 @@
-"use server"
+"use server";
 // Server action tekee näistä kaikista public API endpointteja, joten tarkista käyttöoikeudet ennen tiedon päivittämistä tai poistamista.
 import { IssueFormValues } from "@/data/types";
 import { actionClient } from "@/lib/safe-actions";
 import { FormSchema } from "@/lib/schemas";
 import { flattenValidationErrors } from "next-safe-action";
-import { getAllUsers } from '@/db/drizzle/db';
+import { getAllUsers } from "@/db/drizzle/db";
+import { z } from "zod";
 
 export async function updateIssueData(
   issueId: number | undefined,
@@ -35,38 +36,139 @@ export async function updateIssueData(
 
 export const updateIssueAction = actionClient
   .schema(FormSchema, {
-    handleValidationErrorsShape: (ve) => flattenValidationErrors(ve).fieldErrors,
+    handleValidationErrorsShape: (ve) =>
+      flattenValidationErrors(ve).fieldErrors,
   })
-  .action(async ({ parsedInput: { id, locationName, priority, problem_description, type, instruction, missing_equipments } }) => {
-      await fetch(`https://6549f6b1e182221f8d523a44.mockapi.io/api/issues/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
+  .action(
+    async ({
+      parsedInput: {
+        id,
+        locationName,
+        priority,
+        problem_description,
+        type,
+        instruction,
+        missing_equipments,
       },
-      body: JSON.stringify({ locationName, priority, problem_description, type, instruction, missing_equipments }),
-    });
-    
-    return { message: "Vikailmoitus Päivitetty! 🎉" }
-  });
+    }) => {
+      await fetch(
+        `https://6549f6b1e182221f8d523a44.mockapi.io/api/issues/${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            locationName,
+            priority,
+            problem_description,
+            type,
+            instruction,
+            missing_equipments,
+          }),
+        }
+      );
+
+      return { message: "Vikailmoitus Päivitetty! 🎉" };
+    }
+  );
 
 export const postNewIssue = actionClient
   .schema(FormSchema, {
-    handleValidationErrorsShape: (ve) => flattenValidationErrors(ve).fieldErrors,
+    handleValidationErrorsShape: (ve) =>
+      flattenValidationErrors(ve).fieldErrors,
   })
-  .action(async ({ parsedInput: {locationName, priority, problem_description, type, instruction, missing_equipments } }) => {
-    console.log("postNewIssue",locationName, priority, problem_description, type, instruction, missing_equipments);  
-    throw new Error("not implemented");
-      await fetch(`https://6549f6b1e182221f8d523a44.mockapi.io/api/issues/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+  .action(
+    async ({
+      parsedInput: {
+        locationName,
+        priority,
+        problem_description,
+        type,
+        instruction,
+        missing_equipments,
       },
-      body: JSON.stringify({ locationName, priority, problem_description, type, instruction, missing_equipments }),
-    });
-    
-    return { message: "Vikailmoitus Päivitetty! 🎉" }
+    }) => {
+      console.log(
+        "postNewIssue",
+        locationName,
+        priority,
+        problem_description,
+        type,
+        instruction,
+        missing_equipments
+      );
+      throw new Error("not implemented");
+      await fetch(`https://6549f6b1e182221f8d523a44.mockapi.io/api/issues/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          locationName,
+          priority,
+          problem_description,
+          type,
+          instruction,
+          missing_equipments,
+        }),
+      });
+
+      return { message: "Vikailmoitus Päivitetty! 🎉" };
+    }
+  );
+
+export const closeIssueAction = actionClient
+  .schema(z.object({ issueId: z.number() }), {
+    handleValidationErrorsShape: (ve) =>
+      flattenValidationErrors(ve).fieldErrors,
+  })
+  .action(async ({ parsedInput }) => {
+    const { issueId } = parsedInput;
+    const response = await fetch(
+      `https://6549f6b1e182221f8d523a44.mockapi.io/api/issues/${issueId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ is_completed: true }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Vikailmoituksen sulkeminen epäonnistui");
+    }
+
+    return { message: "Vikailmoitus suljettu onnistuneesti" };
   });
 
+export const openIssueAction = actionClient
+  .schema(z.object({ issueId: z.number() }), {
+    handleValidationErrorsShape: (ve) =>
+      flattenValidationErrors(ve).fieldErrors,
+  })
+  .action(async ({ parsedInput }) => {
+    console.log("openIssueAction", parsedInput);
+    const { issueId } = parsedInput;
+    const response = await fetch(
+      `https://6549f6b1e182221f8d523a44.mockapi.io/api/issues/${issueId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ is_completed: false }),
+      }
+    );
+
+    if (!response.ok) {
+      console.log("response", response);
+      throw new Error("Vikailmoituksen avaaminen epäonnistui");
+    }
+
+    return { message: "Vikailmoitus avattu onnistuneesti" };
+  });
 
 export const fetchUsers = async () => {
   const users = await getAllUsers();

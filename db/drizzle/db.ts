@@ -8,7 +8,6 @@ import { Pool } from "@neondatabase/serverless";
 // import postgres from 'postgres'
 
 const connectionString = process.env.DATABASE_URL;
-console.log("Loaded connectionString:", connectionString); // Lisää tämä rivi
 
 if (!connectionString) {
   throw new Error("DATABASE_URL environment variable is not set");

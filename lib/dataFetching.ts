@@ -15,7 +15,7 @@ export async function getIssuesNumber(): Promise<number> {
   }
 
   try {
-    const response = await fetch(`${process.env.LUNNI_SERVICES}?fields=id`, {
+    const response = await fetch(`${process.env.LUNNI_SERVICES}?fields=is_completed`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${process.env.LUNNI_API}`,
@@ -29,7 +29,9 @@ export async function getIssuesNumber(): Promise<number> {
       return 0;
     }
     const data = await response.json();
-    return Array.isArray(data) ? data.length : 0; // Varmista, että data on taulukko
+    // Suodatetaan data niin, että lasketaan vain aktiiviset (is_active === 1) vikailmoitukset
+    const activeIssuesCount = data.filter((issue: { is_completed: number }) => issue.is_completed === 0).length;
+    return activeIssuesCount;
   } catch (error) {
     console.error("Error fetching issues:", error);
     return 0;
@@ -40,7 +42,7 @@ export async function getIssueFormDataById(
   id: string
 ): Promise<IssueFormValues | null> {
   const response = await fetch(
-    `https://apiv3.lunni.io/services/${id}?fields=location_id,priority,problem_description,type,instruction,missing_equipments`,
+    `https://apiv3.lunni.io/services/${id}?fields=location_id,priority,problem_description,type,instruction,missing_equipments,is_completed`,
     {
       headers: {
         Authorization: `Bearer ${process.env.LUNNI_API}`,
@@ -63,6 +65,7 @@ export async function getIssueFormDataById(
     type: data.type ?? "",
     instruction: data.instruction ?? "",
     missing_equipments: data.missing_equipments ?? "",
+    is_completed: data.is_completed ?? 0,
   };
 }
 

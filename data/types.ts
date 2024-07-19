@@ -287,6 +287,7 @@ export interface IssueFormValues {
   type: string | null; // type
   instruction: string | null; // AI:n Ehdotettu huolto-ohje
   missing_equipments: string | null; // Tarvittavat työkalut
+  is_completed: number | boolean | null; // Onko vikailmoitus avoinna
 };
 
 export interface FurnitureInfo {

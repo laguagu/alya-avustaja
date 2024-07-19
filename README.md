@@ -1,36 +1,29 @@
-# LangChain Chat Application
+# Furniture Fault Reporting and Maintenance Application
 
-This project demonstrates a chat application built with Next.js, utilizing the LangChain library for document processing, OpenAI's Whisper API for speech-to-text transcription, and Vercel AI SDK for integrating AI capabilities. The application supports various features including streaming text and objects, conversational retrieval with RAG (Retrieval-Augmented Generation) models, and more.
+This application provides a comprehensive solution for viewing, reporting, and updating furniture faults. It leverages advanced AI chatbot technology to offer maintenance instructions, making it easier for users to manage and repair their furniture. Built with Next.js and utilizing the LangChain library, this application integrates seamlessly with OpenAI's models for generating conversational AI responses.
 
 ## Features
 
-- **Audio Recording and Transcription**
-  - Record audio directly from the browser.
-  - Transcribe audio to text using OpenAI's Whisper API.
+- **Fault Reporting and Viewing**
+  - Users can report new furniture faults.
+  - View existing faults along with detailed descriptions.
 
-- **Chat Interface**
-  - Interactive chat interface built with Next.js.
-  - Supports streaming text responses using Vercel AI SDK.
+- **Maintenance Instructions**
+  - Get detailed maintenance and repair instructions from an AI chatbot.
+  - The chatbot provides responses in Finnish, focusing on precision and clarity.
 
-- **Document Processing with LangChain**
-  - Load and split documents.
-  - Create embeddings and vector stores.
-  - Implement conversational retrieval with History-Aware Retriever.
+- **AI-Powered Solutions**
+  - Utilizes LangChain for processing and managing conversational contexts.
+  - Integrates with OpenAI for generating AI responses.
 
-- **Generative AI Features**
-  - Generate text and objects using OpenAI models.
-  - Stream text and object responses.
+### Installation
 
-## Getting Started
+1. Clone the repository to your local machine.
+2. Install the dependencies by running `npm install`.
+3. Set up your `.env` file with your OpenAI API Key.
 
-### Prerequisites
+### Running the Application
 
-- OpenAI API Key
-
-### Document Processing
-
-The application uses LangChain for document processing, including loading, splitting, and creating vector stores from documents. It also supports conversational retrieval with history-aware retrievers.
-
-### Generative AI Features
-
-The application includes various generative AI features, such as generating notifications, recipes, and handling conversational history.
+- To start the development server, run `npm run dev`.
+- For building the application for production, use `npm run build`.
+- Start the production server with `npm start`.
