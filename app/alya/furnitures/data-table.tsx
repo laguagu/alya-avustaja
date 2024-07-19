@@ -188,12 +188,8 @@ export function DataTable<TData, TValue>({
           </Button>
         </div>
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length}/
-          {table.getFilteredRowModel().rows.length} rivi(ä) valittu.
-          <br />
-          <button onClick={() => console.log(table.getSelectedRowModel().rows)}>
-            Kirjaa valitut arvot
-          </button>
+          {/* {table.getFilteredSelectedRowModel().rows.length}/ */}
+          Huonekalujen lukamäärä: {table.getFilteredRowModel().rows.length}
         </div>
       </div>
     </Suspense>
