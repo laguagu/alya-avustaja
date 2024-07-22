@@ -4,10 +4,10 @@ import { NewUser } from "@/db/drizzle/schema";
 import bcrypt from "bcrypt";
 
 async function main() {
-  // const plainPassword = process.env.SEED_PLAIN_PASSWORD;
-  // const userEmail = process.env.SEED_USER_EMAIL;
-  const plainPassword = "12";
-  const userEmail = "t@t.com";
+  const plainPassword = process.env.ADMIN_PASSWORD;
+  const userEmail = process.env.ADMIN_EMAIL;
+  // const plainPassword = process.env.USER_PASSWORD;
+  // const userEmail = process.env.USER_EMAIL;
 
   if (!plainPassword || !userEmail) {
     console.error("SEED_USER_PASSWORD and SEED_USER_EMAIL environment variables are required.");
@@ -17,9 +17,10 @@ async function main() {
   const hashedPassword = await bcrypt.hash(plainPassword, 10); // Hash the password
 
   const newUser: NewUser = {
-    name: "dev-user",
+    name: "user",
     email: userEmail,
     password: hashedPassword,
+    role: "user",
   };
 
   try {

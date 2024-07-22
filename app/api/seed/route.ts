@@ -5,6 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import piiroinenHuoltoOhjeet from "@/data/piiroinen-huolto-ohjeet";
+import { getUser } from "@/app/_auth/dal";
 
 export const dynamic = "force-dynamic";
 
@@ -21,9 +22,15 @@ export const dynamic = "force-dynamic";
 // Helper function to preprocess data
 function preprocessText(text: string): string {
   // Remove extra whitespace, special characters, etc.
-  return text.replace(/\s+/g, ' ').trim();
+  return text.replace(/\s+/g, " ").trim();
 }
+
 export async function POST(req: NextRequest) {
+  const user = await getUser();
+
+  if (!user || user.role !== "admin") {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
   //   function replaceMarkdownLinks(careInstructionsText: string) {
   //     // This will replace markdown links with the format "Link Text (URL)"
   //     return careInstructionsText.replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1 ($2)");

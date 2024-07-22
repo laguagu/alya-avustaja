@@ -10,6 +10,7 @@ import fs from "fs";
 import { promises as fsPromises } from "fs";
 import { nanoid } from "nanoid";
 import path from "path";
+import { repairRequestSchema } from "./schemas";
 
 export interface Message {
   role: "user" | "assistant";
@@ -25,24 +26,7 @@ export async function processAudioTranscription(transcription: string) {
       model: openai('gpt-4o'),
       system: 'You are an AI assistant helping to fill out a maintenance request form based on an audio transcription.',
       prompt: `Based on the following transcription, generate appropriate values for a maintenance request form: "${transcription}"`,
-      schema: z.object({
-        priority: z.enum(["Ei kiireellinen", "Huomioitava", "Kiireellinen"]),
-        type: z.enum([
-          "Puuttuu liukunasta (t)",
-          "Kiristysruuvi löysällä",
-          "Kiristysruuvi puuttuu",
-          "Runko heiluu",
-          "Selkänoja heiluu",
-          "Istuin heiluu",
-          "Materiaali vioittunut",
-          "Ilkivalta",
-          "Vaatii puhdistuksen",
-          "Muu vika"
-        ]),
-        problem_description: z.string(),
-        instruction: z.string(),
-        missing_equipments: z.string(),
-      }),
+      schema: repairRequestSchema,
     });
 
     for await (const partialObject of partialObjectStream) {
@@ -106,7 +90,7 @@ export async function getSpeechFromText(text: string) {
   const tempFilePath = path.join(tempDir, `tts_output_${uniqueId}.mp3`);
 
   const buffer = Buffer.from(await response.arrayBuffer());
-  fs.writeFileSync(tempFilePath, buffer);
+  fs.writeFileSync(tempFilePath, new Uint8Array(buffer));
 
   // Return the path to the audio file
   const audioURL = `/temp/tts_output_${uniqueId}.mp3`;

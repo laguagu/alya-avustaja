@@ -20,6 +20,7 @@ export async function getIssueFormDataById(
       type: data.type ?? "",
       instruction: data.instruction ?? "",
       missing_equipments: data.missing_equipments ?? "",
+      is_completed: data.is_completed ?? false,
     };
   } catch (error) {
     console.error("Error fetching Lunni form data:", error);

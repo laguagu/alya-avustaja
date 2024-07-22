@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+// SingUpFormSchema is a zod schema that defines the shape of the data that can be submitted to the signup form. Not implemented in the code.
 export const SignupFormSchema = z.object({
   name: z
     .string()
@@ -36,4 +37,6 @@ export type FormState =
 export type SessionPayload = {
   userId: string | number;
   expiresAt: Date;
+  role: string;
+  sessionId: number;
 };

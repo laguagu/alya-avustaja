@@ -25,3 +25,22 @@ export const FormSchema = z.object({
   instruction: z.string().optional(),
   missing_equipments: z.string().optional(),
 });
+
+export const repairRequestSchema = z.object({
+  priority: z.enum(["Ei kiireellinen", "Huomioitava", "Kiireellinen"]),
+  type: z.enum([
+    "Puuttuu liukunasta (t)",
+    "Kiristysruuvi löysällä",
+    "Kiristysruuvi puuttuu",
+    "Runko heiluu",
+    "Selkänoja heiluu",
+    "Istuin heiluu",
+    "Materiaali vioittunut",
+    "Ilkivalta",
+    "Vaatii puhdistuksen",
+    "Muu vika"
+  ]),
+  problem_description: z.string(),
+  instruction: z.string(),
+  missing_equipments: z.string(),
+});

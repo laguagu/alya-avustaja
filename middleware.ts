@@ -3,15 +3,15 @@ import { decrypt } from './app/_auth/sessions';
 import { cookies } from 'next/headers';
 
 // 1. Specify protected and public routes
-const protectedRoutes = ['/alya', "/tietokanta",'/api'];
+const protectedRoutes = ['/alya','/api'];
 const publicRoutes = ['/login', '/signup', '/'];
 
 export default async function middleware(req: NextRequest) {
   // 1. Skip middleware in development
-  const development = process.env.NODE_ENV === 'development';
-  if (development) {
-    return NextResponse.next();
-  }
+  // const development = process.env.NODE_ENV === 'development';
+  // if (development) {
+  //   return NextResponse.next();
+  // }
 
   // 2. Check if the current route is protected or public
   const path = req.nextUrl.pathname;

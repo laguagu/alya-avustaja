@@ -351,7 +351,7 @@ export default function NewIssueForm() {
               <FormItem>
                 <FormLabel>Tekoälyn huolto-ohje ehdotus</FormLabel>
                 <Textarea
-                  placeholder="Ehdotettu huolto-ohje"
+                  placeholder="Älyä avustajan huolto-ohje ehdotus"
                   {...field}
                   disabled={isExecuting}
                 />

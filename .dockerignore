@@ -5,3 +5,5 @@ npm-debug.log
 README.md
 .next
 .git
+db/drizzle/seed.ts
+.env

@@ -29,8 +29,8 @@ export async function decrypt(session: string | undefined = '') {
   }
 }
 
-export async function createSession(id: number) {
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+export async function createSession(id: number, role: string): Promise<void> {
+  const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
   // 1. Create a session in the database
   const data = await db
@@ -43,18 +43,21 @@ export async function createSession(id: number) {
     .returning({ id: sessions.id });
 
   const sessionId = data[0].id;
+  console.log('sessionId', sessionId);
 
   // 2. Encrypt the session ID
-  const session = await encrypt({ userId: id, expiresAt });
+  const sessionPayload: SessionPayload = { userId: id, role, expiresAt, sessionId };
+  const encryptedSession = await encrypt(sessionPayload);
 
   // 3. Store the session in cookies for optimistic auth checks
-  cookies().set('session', session, {
+  cookies().set('session', encryptedSession , {
     httpOnly: true,
     secure: true,
     expires: expiresAt,
     sameSite: 'lax',
     path: '/',
   });
+
 }
 
 export async function verifySession() {
@@ -65,12 +68,45 @@ export async function verifySession() {
     redirect('/');
   }
 
-  return { isAuth: true, userId: Number(session.userId) };
+  return { isAuth: true, userId: Number(session.userId), role: session.role };
 }
 
 
-// export async function deleteSession() {
-//   cookies().delete('session');
+// export async function refreshSession(sessionId: number) {
+//   const newExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+//   await db
+//     .update(sessions)
+//     .set({ expiresAt: newExpiresAt })
+//     .where(eq(sessions.id, sessionId));
+
+//   const user = await db.query.users.findFirst({
+//     where: eq(users.id, (await db.query.sessions.findFirst({
+//       where: eq(sessions.id, sessionId)
+//     }))?.userId),
+//     columns: {
+//       id: true,
+//       role: true,
+//     },
+//   });
+
+//   if (user) {
+//     const sessionPayload: SessionPayload = { 
+//       userId: user.id, 
+//       role: user.role, 
+//       expiresAt: newExpiresAt, 
+//       sessionId 
+//     };
+//     const encryptedSession = await encrypt(sessionPayload);
+
+//     cookies().set('session', encryptedSession, {
+//       httpOnly: true,
+//       secure: true,
+//       expires: newExpiresAt,
+//       sameSite: 'lax',
+//       path: '/',
+//     });
+//   }
 // }
 
 export function deleteSession() {

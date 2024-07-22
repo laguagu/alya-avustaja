@@ -51,7 +51,7 @@ export async function login(
 
   // 4. If login successful, create a session for the user and redirect
   const userId = user.id.toString(); // Dokumentaatiossa esimerkki stateless-session mukaan jossa vaadittini string
-  await createSession(user.id);
+  await createSession(user.id, user.role);
   redirect("/alya");
 }
 

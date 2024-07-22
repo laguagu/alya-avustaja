@@ -282,7 +282,7 @@ export default function IssueForm({
               <FormItem>
                 <FormLabel>Tekoälyn huolto-ohje ehdotus</FormLabel>
                 <Input
-                  placeholder="Ehdotettu huolto-ohje"
+                  placeholder="Älyä avustajan huolto-ohje ehdotus"
                   {...field}
                   disabled={!isEditing}
                 />
