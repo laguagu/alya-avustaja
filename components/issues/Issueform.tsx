@@ -35,7 +35,7 @@ import { toast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { DeviceItemCard, FurnitureInfo, IssueFormValues } from "@/data/types";
 import { useState } from "react";
-import { closeIssueAction, openIssueAction, postNewIssue } from "@/app/actions";
+import { closeIssueAction, openIssueAction, postNewIssueAction } from "@/lib/actions";
 import { AiInstructionButton } from "../Client-Buttons";
 import { FormSchema } from "@/lib/schemas";
 import { useAction } from "next-safe-action/hooks";
@@ -83,7 +83,7 @@ export default function IssueForm({
       },
     });
 
-  const { execute, result, isExecuting } = useAction(postNewIssue, {
+  const { execute, result, isExecuting } = useAction(postNewIssueAction, {
     onSuccess: ({ data }) => {
       console.log("onSuccess", data);
       toast({
@@ -339,7 +339,7 @@ export default function IssueForm({
                 <AlertDialogTrigger asChild>
                   <Button
                     type="button"
-                    className="ml-2"
+                    className="md:ml-4 ml-6"
                     variant={isCompleted ? "default" : "destructive"}
                     disabled={isChangingStatus}
                   >

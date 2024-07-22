@@ -17,7 +17,7 @@ import ChatMessage from "@/components/chat-message";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const MAX_STORAGE_SIZE = 4 * 1024 * 1024; // 4 MB
-const MESSAGE_EXPIRATION_TIME = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+const MESSAGE_EXPIRATION_TIME = 2 * 24 * 60 * 60 * 1000; // 2 days in milliseconds
 
 interface TTSResponse {
   audioURL: string;

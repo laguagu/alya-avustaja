@@ -1,13 +1,13 @@
 "use server";
-// Server action tekee näistä kaikista public API endpointteja, joten tarkista käyttöoikeudet ennen tiedon päivittämistä tai poistamista.
 import { IssueFormValues } from "@/data/types";
 import { actionClient } from "@/lib/safe-actions";
 import { FormSchema } from "@/lib/schemas";
 import { flattenValidationErrors } from "next-safe-action";
 import { getAllUsers } from "@/db/drizzle/db";
 import { z } from "zod";
+import { revalidateTag } from "next/cache";
 
-export async function updateIssueData(
+export async function updateIssueDataAction(
   issueId: number | undefined,
   formData: IssueFormValues
 ) {
@@ -68,12 +68,11 @@ export const updateIssueAction = actionClient
           }),
         }
       );
-
       return { message: "Vikailmoitus Päivitetty! 🎉" };
     }
   );
 
-export const postNewIssue = actionClient
+export const postNewIssueAction = actionClient
   .schema(FormSchema, {
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
@@ -113,7 +112,7 @@ export const postNewIssue = actionClient
           missing_equipments,
         }),
       });
-
+      revalidateTag("issues");
       return { message: "Vikailmoitus Päivitetty! 🎉" };
     }
   );
@@ -139,7 +138,7 @@ export const closeIssueAction = actionClient
     if (!response.ok) {
       throw new Error("Vikailmoituksen sulkeminen epäonnistui");
     }
-
+    revalidateTag("issues");
     return { message: "Vikailmoitus suljettu onnistuneesti" };
   });
 
@@ -165,7 +164,7 @@ export const openIssueAction = actionClient
       console.log("response", response);
       throw new Error("Vikailmoituksen avaaminen epäonnistui");
     }
-
+    revalidateTag("issues");
     return { message: "Vikailmoitus avattu onnistuneesti" };
   });
 

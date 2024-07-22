@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
-import { postNewIssue } from "@/app/actions";
+import { postNewIssueAction } from "@/lib/actions";
 import { FormSchema } from "@/lib/schemas";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
@@ -51,7 +51,7 @@ export default function NewIssueForm() {
     Partial<z.infer<typeof FormSchema>>
   >({});
 
-  const { execute, result, isExecuting } = useAction(postNewIssue, {
+  const { execute, result, isExecuting } = useAction(postNewIssueAction, {
     onSuccess: ({ data }) => {
       console.log("onSuccess", data);
       toast({
