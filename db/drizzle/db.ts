@@ -38,6 +38,7 @@ export const getAllUsers = async () => {
 // Uusi funktio chat-viestin lisäämiseksi
 export const insertChatMessage = async (message: ChatMessage) => {
   const newMessage: NewChatMessage = {
+    userId: message.userId,
     role: message.role,
     content: message.content,
     created_at: new Date(message.createdAt || new Date()),

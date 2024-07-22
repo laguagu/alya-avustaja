@@ -6,6 +6,7 @@ import { flattenValidationErrors } from "next-safe-action";
 import { getAllUsers, insertChatMessage } from "@/db/drizzle/db";
 import { z } from "zod";
 import { revalidateTag } from "next/cache";
+import { verifySession } from "@/app/_auth/sessions";
 
 export async function updateIssueDataAction(
   issueId: number | undefined,
@@ -175,4 +176,13 @@ export const fetchUsers = async () => {
 
 export async function insertChatMessageAction(message: ChatMessage) {
   return await insertChatMessage(message);
+}
+
+export async function getSessionAction() {
+  try {
+    const session = await verifySession();
+    return session;
+  } catch (error) {
+    return null;
+  }
 }

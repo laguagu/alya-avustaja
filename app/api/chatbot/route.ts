@@ -101,6 +101,8 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const messages = body.messages ?? []; // Ottaa viestit pyynnön rungosta tai tyhjän taulukon, jos viestejä ei ole
+    const furnitureName = body.furnitureName; // Ottaa viestit pyynnön rungosta tai tyhjän taulukon, jos viestejä ei ole
+    console.log(furnitureName, "furnitureName");
     const previousMessages = messages.slice(0, -1); // Ottaa kaikki viestit paitsi viimeisen
     const currentMessageContent = messages[messages.length - 1].content; // Ottaa viimeisen viestin sisällön
 
@@ -121,7 +123,6 @@ export async function POST(req: NextRequest) {
       client,
       tableName: "piiroinen_chairs", // Tietokantataulun nimi
       queryName: "matching_documents", // Kysely funktion nimi
-      
     });
 
     // Muodostaa LangChain-ketjuja tiedonhaulle ja vastausten generoinnille.

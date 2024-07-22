@@ -298,6 +298,7 @@ export interface FurnitureInfo {
 }
 
 export interface ChatMessage {
+  userId: number;
   role: string;
   content: string;
   createdAt: Date;

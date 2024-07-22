@@ -11,6 +11,7 @@ export const fetchCache = 'force-no-store';
 
 const AsyncDataComponent = async ({ issueId, deviceId }: { issueId: string, deviceId: string }) => {
   const { issueData, deviceData, locationData, partsList } = await fetchIssuePageData(issueId, deviceId);
+  const furnitureName = deviceData?.name || "";
 
   return (
     <Tabs defaultValue="info">
@@ -43,7 +44,7 @@ const AsyncDataComponent = async ({ issueId, deviceId }: { issueId: string, devi
         />
       </TabsContent>
 
-      <TabsContent value="chat"><ChatBot/></TabsContent>
+      <TabsContent value="chat"><ChatBot furnitureName={furnitureName}/></TabsContent>
     </Tabs>
   );
 };

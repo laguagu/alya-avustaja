@@ -157,7 +157,7 @@ export default function NewIssueForm() {
   };
 
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-2xl pb-2 md:pb-10 ">
       <div className="mb-4 p-4 border rounded-md bg-gray-50">
         <h2 className="text-lg font-bold">
           Täydennä vikailmoitus huonekalusta AI:n avulla

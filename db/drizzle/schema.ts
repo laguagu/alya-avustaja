@@ -39,6 +39,9 @@ export const sessions = pgTable("sessions", {
 
 export const chatMessages = pgTable("chat_messages", {
   id: serial("id").primaryKey().notNull(), // Lisää tämä rivi
+  userId: integer("user_id")
+  .references(() => users.id)
+  .notNull(),  // Lisää tämä rivi
   role: text("role").notNull(),
   content: text("content").notNull(),
   created_at: timestamp("created_at", { withTimezone: true })

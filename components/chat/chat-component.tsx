@@ -5,22 +5,54 @@ import { Button } from "@/components/ui/button";
 import { useChat } from "@ai-sdk/react";
 import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { Message } from "ai";
-import { Send, Mic, } from "lucide-react";
+import { Send, Mic, VolumeX, Volume2 } from "lucide-react";
 import {
   getWhisperTranscription,
 } from "@/lib/ai-actions";
 import { TailSpin, Rings } from "react-loader-spinner";
-import ChatMessage from "../chat-message";
 import clsx from "clsx";
+import ChatMessage from "@/components/chat-message";
+import { insertChatMessageAction, getSessionAction } from "@/lib/actions";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const MAX_STORAGE_SIZE = 4 * 1024 * 1024; // 4 MB
+const MESSAGE_EXPIRATION_TIME = 2 * 24 * 60 * 60 * 1000; // 2 days in milliseconds
 
 interface TTSResponse {
   audioURL: string;
   tempFilePath: string;
 }
 
-export default function ChatBot({ furnitureName }: { furnitureName: string }) {
+// Text to speech -ominaisuuksien käsittely
+// onFinish: async (message: { role: string; content: string; }) => {
+//   if (message.role === "assistant" && ttsEnabled) {
+//     console.log("Assistant message received:", message.content);
+//     setIsPreparingAudio(true);
+//     try {
+//       const ttsResponse: TTSResponse = await getSpeechFromText(
+//         message.content
+//       );
+
+//       const audio = new Audio(ttsResponse.audioURL);
+//       audio.oncanplaythrough = () => {
+//         setIsPreparingAudio(false);
+//         setIsPlaying(true);
+//         audio.play();
+//       };
+
+//       audio.onended = async () => {
+//         await deleteTempFile(ttsResponse.tempFilePath);
+//         setIsPlaying(false);
+//       };
+//     } catch (error) {
+//       console.error("Error preparing audio:", error);
+//       setIsPreparingAudio(false);
+//     }
+//   }
+// },
+
+export default function ChatComponent({ initialSessionUserId }: { initialSessionUserId: number | null }) {
+  const [sessionUserId, setSessionUserId] = useState(initialSessionUserId);
   const [ttsEnabled, setTTSEnabled] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [savedMessages, setSavedMessages] = useState<Message[]>([]);
@@ -32,6 +64,7 @@ export default function ChatBot({ furnitureName }: { furnitureName: string }) {
   const audioChunksRef = useRef<BlobPart[]>([]);
   const loadedRef = useRef(false);
   const chatParent = useRef<HTMLUListElement>(null);
+
   const {
     messages: primaryMessages,
     input,
@@ -43,13 +76,101 @@ export default function ChatBot({ furnitureName }: { furnitureName: string }) {
     isLoading,
     stop,
   } = useChat({
-    api: `${API_URL}chatbot`,
+    api: `${API_URL}supabase`,
     initialMessages: savedMessages,
-    body: { furnitureName },
     onError: (e: any) => {
       console.log(e);
     },
+    onFinish: async (message: { role: string; content: string }) => {
+      console.log(sessionUserId);
+      if (sessionUserId) {
+        try {
+          await insertChatMessageAction({
+            userId: sessionUserId,
+            role: message.role,
+            content: message.content,
+            createdAt: new Date(),
+          });
+          console.log("Message saved to database");
+        } catch (error) {
+          console.error("Error saving message to database:", error);
+        }
+      } else {
+        console.error('User not authenticated');
+      }
+    },
   });
+
+  useEffect(() => {
+    if (!loadedRef.current) {
+      const savedMessages = localStorage.getItem("chatMessages");
+      if (savedMessages) {
+        const parsedMessages = JSON.parse(savedMessages);
+        setSavedMessages(parsedMessages);
+        setMessages(parsedMessages);
+      }
+      loadedRef.current = true;
+    }
+  }, [setMessages]);
+
+  // Poista vanhimpia viestejä, jos viestihistoria ylittää tallennuskoon rajan
+  const trimMessages = useCallback((messages: Message[], maxSize: number) => {
+    let size = JSON.stringify(messages).length;
+    while (size > maxSize && messages.length > 0) {
+      messages.shift();
+      size = JSON.stringify(messages).length;
+    }
+    return messages;
+  }, []);
+
+  // Tarkista ja poista vanhentuneet viestit
+  const checkAndClearExpiredMessages = useCallback((messages: Message[]) => {
+    if (messages.length > 0) {
+      const firstAssistantMessage = messages.find(
+        (message) => message.role === "assistant"
+      );
+      if (firstAssistantMessage && firstAssistantMessage.createdAt) {
+        const firstMessageTime = new Date(
+          firstAssistantMessage.createdAt
+        ).getTime();
+        if (Date.now() - firstMessageTime > MESSAGE_EXPIRATION_TIME) {
+          console.warn(
+            "Ensimmäinen assistant-viesti on vanhentunut. Tyhjennetään koko viestihistoria."
+          );
+          return [];
+        }
+      }
+    }
+    return messages;
+  }, []);
+
+  // Karsi viestejä, jos ne ylittävät tallennuskoon rajan tai ovat vanhentuneita
+  useEffect(() => {
+    if (primaryMessages.length > 0) {
+      let updatedMessages = checkAndClearExpiredMessages([...primaryMessages]);
+      updatedMessages = trimMessages(updatedMessages, MAX_STORAGE_SIZE);
+      try {
+        localStorage.setItem("chatMessages", JSON.stringify(updatedMessages));
+      } catch (error) {
+        console.error("Failed to save messages to localStorage:", error);
+      }
+      if (updatedMessages.length < primaryMessages.length) {
+        setMessages(updatedMessages);
+        if (updatedMessages.length === 0) {
+          console.warn(
+            "Ensimmäinen assistant-viesti oli vanhentunut, joten koko viestihistoria tyhjennettiin."
+          );
+        } else {
+          console.warn("Vanhimpia viestejä poistettiin tilan säästämiseksi.");
+        }
+      }
+    }
+  }, [
+    primaryMessages,
+    setMessages,
+    trimMessages,
+    checkAndClearExpiredMessages,
+  ]);
 
   useEffect(() => {
     const domNode = chatParent.current;
@@ -57,6 +178,13 @@ export default function ChatBot({ furnitureName }: { furnitureName: string }) {
       domNode.scrollTop = domNode.scrollHeight;
     }
   });
+
+  // Lataa viestit localStorage:sta komponentin alustuksen yhteydessä
+  const clearChatHistory = useCallback(() => {
+    localStorage.removeItem("chatMessages");
+    setMessages([]);
+    setSavedMessages([]);
+  }, [setMessages]);
 
   const handleStartRecording = useCallback(() => {
     audioChunksRef.current = [];
@@ -82,8 +210,6 @@ export default function ChatBot({ furnitureName }: { furnitureName: string }) {
         console.error("Error starting recording:", error);
       });
   }, []);
-
-
 
   const handleStopRecording = useCallback(async () => {
     if (!mediaRecorderRef.current) {
@@ -136,37 +262,38 @@ export default function ChatBot({ furnitureName }: { furnitureName: string }) {
       )),
     [primaryMessages]
   );
-  
 
   return (
-    <div className="flex flex-col w-full xl:max-w-[900px] h-[calc(62vh-4rem)] md:h-full">
+    <div className="flex flex-col w-full flex-grow max-h-dvh ">
       <div className="p-4 w-full max-w-3xl mx-auto">
         <div className="flex items-center">
-          <h1 className="text-md text-nowrap sm:text-xl lg:text-2xl font-bold text-center flex-1">
+          <h1 className="text-md text-nowrap sm:text-2xl lg:text-3xl font-bold text-center flex-1">
             Chatbot - Älyä-avustaja
           </h1>
-            {/* <Button
-              onClick={toggleTTS}
-              type="button"
-              className="ml-auto"
-              variant={"outline"}
-              disabled={isDisabled || recording}
-            >
-              {ttsEnabled ? (
-                <Volume2 className="h-5 w-5" />
-              ) : (
-                <VolumeX className="h-5 w-5" />
-              )}
-            </Button> */}
+          {/* <Button
+            onClick={toggleTTS}
+            type="button"
+            className="ml-auto"
+            variant={"outline"}
+            disabled={isDisabled || recording}
+          >
+            {ttsEnabled ? (
+              <Volume2 className="h-5 w-5" />
+            ) : (
+              <VolumeX className="h-5 w-5" />
+            )}
+          </Button> */}
         </div>
       </div>
-      <section className="container flex flex-col flex-grow px-0 pb-10 gap-4 mx-auto w-full max-h-[calc(62vh-4rem)] h-[800px]">
+      <section className="container px-0 pb-10 flex flex-col flex-grow gap-4 mx-auto max-w-3xl shadow-sm border rounded-b-lg">
         <ul
           ref={chatParent}
-          className="p-4 flex-grow bg-muted/50 rounded-lg overflow-y-auto flex flex-col gap-4"
+          className="h-1 p-4 flex-grow bg-muted/50 rounded-lg overflow-y-auto flex flex-col gap-4"
         >
+          {/* {primaryMessages.map((m) => (
+            <ChatMessage key={m.id} message={m} />
+          ))} */}
           {chatMessages}
-
           {(isProcessingAudio || isLoading || isPreparingAudio) && (
             <li
               className={clsx("flex", {
@@ -237,6 +364,13 @@ export default function ChatBot({ furnitureName }: { furnitureName: string }) {
           Älyä-avustaja voi tehdä virheitä. Suosittelemme tarkastamaan tärkeät
           tiedot.
         </p>
+        <Button
+          onClick={clearChatHistory}
+          className="absolute top-0 right-0 mt-2 mr-4 md:static md:mt-0 md:mr-0"
+          variant={"secondary"}
+        >
+          Tyhjennä viestihistoria
+        </Button>
       </div>
     </div>
   );
