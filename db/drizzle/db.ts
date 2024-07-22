@@ -1,9 +1,14 @@
 import * as schema from "@/db/drizzle/schema";
-import { users, NewUser } from "@/db/drizzle/schema";
+import {
+  users,
+  NewUser,
+  chatMessages,
+  NewChatMessage,
+} from "@/db/drizzle/schema";
 // Edge runtime virheen korjaukseen
 import { drizzle } from "drizzle-orm/neon-serverless";
 import { Pool } from "@neondatabase/serverless";
-
+import { ChatMessage } from "@/data/types";
 // import { drizzle } from 'drizzle-orm/postgres-js'
 // import postgres from 'postgres'
 
@@ -28,4 +33,15 @@ export const insertUser = async (user: NewUser) => {
 
 export const getAllUsers = async () => {
   return db.select().from(users);
+};
+
+// Uusi funktio chat-viestin lisäämiseksi
+export const insertChatMessage = async (message: ChatMessage) => {
+  const newMessage: NewChatMessage = {
+    role: message.role,
+    content: message.content,
+    created_at: new Date(message.createdAt || new Date()),
+  };
+
+  return db.insert(chatMessages).values(newMessage).returning();
 };

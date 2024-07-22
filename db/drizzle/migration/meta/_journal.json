@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1720088049595,
-      "tag": "0000_foamy_lilith",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1721640930455,
-      "tag": "0001_smart_alex_wilder",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1721644458360,
-      "tag": "0002_parallel_toad_men",
+      "when": 1721647699189,
+      "tag": "0000_grey_norman_osborn",
       "breakpoints": true
     }
   ]

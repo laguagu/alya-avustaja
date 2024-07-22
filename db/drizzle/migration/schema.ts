@@ -8,6 +8,7 @@ export const factor_type = pgEnum("factor_type", ['totp', 'webauthn'])
 export const one_time_token_type = pgEnum("one_time_token_type", ['confirmation_token', 'reauthentication_token', 'recovery_token', 'email_change_token_new', 'email_change_token_current', 'phone_change_token'])
 export const key_status = pgEnum("key_status", ['default', 'valid', 'invalid', 'expired'])
 export const key_type = pgEnum("key_type", ['aead-ietf', 'aead-det', 'hmacsha512', 'hmacsha256', 'auth', 'shorthash', 'generichash', 'kdf', 'secretbox', 'secretstream', 'stream_xchacha20'])
+export const user_role = pgEnum("user_role", ['user', 'admin'])
 export const action = pgEnum("action", ['INSERT', 'UPDATE', 'DELETE', 'TRUNCATE', 'ERROR'])
 export const equality_op = pgEnum("equality_op", ['eq', 'neq', 'lt', 'lte', 'gt', 'gte', 'in'])
 
@@ -17,6 +18,7 @@ export const users = pgTable("users", {
 	name: text("name").notNull(),
 	email: text("email").notNull(),
 	password: text("password").notNull(),
+	role: user_role("role").default('user').notNull(),
 },
 (table) => {
 	return {

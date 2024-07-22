@@ -14,6 +14,7 @@ import {
 import { TailSpin, Rings } from "react-loader-spinner";
 import clsx from "clsx";
 import ChatMessage from "@/components/chat-message";
+import { insertChatMessageAction } from "@/lib/actions"; 
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const MAX_STORAGE_SIZE = 4 * 1024 * 1024; // 4 MB
@@ -23,6 +24,34 @@ interface TTSResponse {
   audioURL: string;
   tempFilePath: string;
 }
+
+// Text to speech -ominaisuuksien käsittely
+// onFinish: async (message: { role: string; content: string; }) => {
+//   if (message.role === "assistant" && ttsEnabled) {
+//     console.log("Assistant message received:", message.content);
+//     setIsPreparingAudio(true);
+//     try {
+//       const ttsResponse: TTSResponse = await getSpeechFromText(
+//         message.content
+//       );
+
+//       const audio = new Audio(ttsResponse.audioURL);
+//       audio.oncanplaythrough = () => {
+//         setIsPreparingAudio(false);
+//         setIsPlaying(true);
+//         audio.play();
+//       };
+
+//       audio.onended = async () => {
+//         await deleteTempFile(ttsResponse.tempFilePath);
+//         setIsPlaying(false);
+//       };
+//     } catch (error) {
+//       console.error("Error preparing audio:", error);
+//       setIsPreparingAudio(false);
+//     }
+//   }
+// },
 
 export default function Page() {
   const [ttsEnabled, setTTSEnabled] = useState(false);
@@ -53,32 +82,18 @@ export default function Page() {
     onError: (e: any) => {
       console.log(e);
     },
-    // onFinish: async (message: { role: string; content: string; }) => {
-    //   if (message.role === "assistant" && ttsEnabled) {
-    //     console.log("Assistant message received:", message.content);
-    //     setIsPreparingAudio(true);
-    //     try {
-    //       const ttsResponse: TTSResponse = await getSpeechFromText(
-    //         message.content
-    //       );
-
-    //       const audio = new Audio(ttsResponse.audioURL);
-    //       audio.oncanplaythrough = () => {
-    //         setIsPreparingAudio(false);
-    //         setIsPlaying(true);
-    //         audio.play();
-    //       };
-
-    //       audio.onended = async () => {
-    //         await deleteTempFile(ttsResponse.tempFilePath);
-    //         setIsPlaying(false);
-    //       };
-    //     } catch (error) {
-    //       console.error("Error preparing audio:", error);
-    //       setIsPreparingAudio(false);
-    //     }
-    //   }
-    // },
+    onFinish: async (message: { role: string; content: string }) => {
+      try {
+        await insertChatMessageAction({
+          role: message.role,
+          content: message.content,
+          createdAt: new Date(),
+        });
+        console.log("Message saved to database");
+      } catch (error) {
+        console.error("Error saving message to database:", error);
+      }
+    },
   });
 
   useEffect(() => {

@@ -297,6 +297,12 @@ export interface FurnitureInfo {
   problem_description: string | null;
 }
 
+export interface ChatMessage {
+  role: string;
+  content: string;
+  createdAt: Date;
+}
+
 export const issuesData: ServiceTask[] = [
   {
     id: 5,

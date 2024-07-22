@@ -1,9 +1,9 @@
 "use server";
-import { IssueFormValues } from "@/data/types";
+import { ChatMessage, IssueFormValues } from "@/data/types";
 import { actionClient } from "@/lib/safe-actions";
 import { FormSchema } from "@/lib/schemas";
 import { flattenValidationErrors } from "next-safe-action";
-import { getAllUsers } from "@/db/drizzle/db";
+import { getAllUsers, insertChatMessage } from "@/db/drizzle/db";
 import { z } from "zod";
 import { revalidateTag } from "next/cache";
 
@@ -172,3 +172,7 @@ export const fetchUsers = async () => {
   const users = await getAllUsers();
   return users;
 };
+
+export async function insertChatMessageAction(message: ChatMessage) {
+  return await insertChatMessage(message);
+}
