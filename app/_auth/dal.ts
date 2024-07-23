@@ -1,9 +1,15 @@
-import 'server-only';
-import { db } from '@/db/drizzle/db'; 
-import { eq } from 'drizzle-orm';
-import { cache } from 'react';
-import { users } from '@/db/drizzle/schema'; 
-import { verifySession } from './sessions'; 
+import "server-only";
+import { db } from "@/db/drizzle/db";
+import { eq } from "drizzle-orm";
+import { cache } from "react";
+import {
+  NewChatMessage,
+  users,
+  chatMessages,
+  NewUser,
+} from "@/db/drizzle/schema";
+import { verifySession } from "./sessions";
+import { ChatMessage } from "@/data/types";
 
 export const getUser = cache(async () => {
   const session = await verifySession();
@@ -26,7 +32,27 @@ export const getUser = cache(async () => {
 
     return user;
   } catch (error) {
-    console.log('Failed to fetch user');
+    console.log("Failed to fetch user");
     return null;
   }
 });
+
+export const insertUser = async (user: NewUser) => {
+  return db.insert(users).values(user).returning();
+};
+
+export const getAllUsers = async () => {
+  return db.select().from(users);
+};
+
+// Uusi funktio chat-viestin lisäämiseksi
+export const insertChatMessage = async (message: ChatMessage) => {
+  const newMessage: NewChatMessage = {
+    userId: message.userId,
+    role: message.role,
+    content: message.content,
+    created_at: new Date(message.createdAt || new Date()),
+  };
+
+  return db.insert(chatMessages).values(newMessage).returning();
+};

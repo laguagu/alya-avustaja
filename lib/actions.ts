@@ -3,10 +3,10 @@ import { ChatMessage, IssueFormValues } from "@/data/types";
 import { actionClient } from "@/lib/safe-actions";
 import { FormSchema } from "@/lib/schemas";
 import { flattenValidationErrors } from "next-safe-action";
-import { getAllUsers, insertChatMessage } from "@/db/drizzle/db";
 import { z } from "zod";
 import { revalidateTag } from "next/cache";
 import { verifySession } from "@/app/_auth/sessions";
+import { insertChatMessage } from "@/app/_auth/dal";
 
 export async function updateIssueDataAction(
   issueId: number | undefined,
@@ -168,11 +168,6 @@ export const openIssueAction = actionClient
     revalidateTag("issues");
     return { message: "Vikailmoitus avattu onnistuneesti" };
   });
-
-export const fetchUsers = async () => {
-  const users = await getAllUsers();
-  return users;
-};
 
 export async function insertChatMessageAction(message: ChatMessage) {
   return await insertChatMessage(message);

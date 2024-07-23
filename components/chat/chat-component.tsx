@@ -5,14 +5,13 @@ import { Button } from "@/components/ui/button";
 import { useChat } from "@ai-sdk/react";
 import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { Message } from "ai";
-import { Send, Mic, VolumeX, Volume2 } from "lucide-react";
-import {
-  getWhisperTranscription,
-} from "@/lib/ai-actions";
+import { Send, Mic } from "lucide-react";
+import { getWhisperTranscription } from "@/lib/ai-actions";
 import { TailSpin, Rings } from "react-loader-spinner";
 import clsx from "clsx";
 import ChatMessage from "@/components/chat-message";
-import { insertChatMessageAction, getSessionAction } from "@/lib/actions";
+import { insertChatMessageAction } from "@/lib/actions";
+
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const MAX_STORAGE_SIZE = 4 * 1024 * 1024; // 4 MB
@@ -51,7 +50,11 @@ interface TTSResponse {
 //   }
 // },
 
-export default function ChatComponent({ initialSessionUserId }: { initialSessionUserId: number | null }) {
+export default function ChatComponent({
+  initialSessionUserId,
+}: {
+  initialSessionUserId: number | null;
+}) {
   const [sessionUserId, setSessionUserId] = useState(initialSessionUserId);
   const [ttsEnabled, setTTSEnabled] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -96,7 +99,7 @@ export default function ChatComponent({ initialSessionUserId }: { initialSession
           console.error("Error saving message to database:", error);
         }
       } else {
-        console.error('User not authenticated');
+        console.error("User not authenticated");
       }
     },
   });
@@ -248,6 +251,7 @@ export default function ChatComponent({ initialSessionUserId }: { initialSession
     // Tyhjennä audioChunks seuraavaa nauhoitusta varten
     audioChunksRef.current = [];
   }, [append]);
+
   const toggleTTS = useCallback(() => {
     setTTSEnabled((prev) => !prev);
   }, []);
