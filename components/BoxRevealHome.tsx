@@ -2,7 +2,8 @@ import BoxReveal from "@/components/magicui/box-reveal";
 
 export async function BoxRevealHome() {
   return (
-    <div className="p-2 md:p-0 h-full max-w-[20rem] md:max-w-[32rem] items-start justify-start overflow-hidden pt-8 mx-auto">
+    // <div className="p-2 h-full max-w-[20rem] md:max-w-[32rem] items-start justify-start overflow-hidden pt-8 mx-auto">
+    <div className="flex flex-col justify-center items-center p-2 h-full max-w-[20rem] md:max-w-[32rem] overflow-hidden pt-8 mx-auto">
       <BoxReveal boxColor={"#b6cfff"} duration={0.5}>
         <p className="text-[2.5rem] md:text-[3.5rem] font-semibold">
           Älyä Avustaja<span className="text-[#5046e6]">.</span>
@@ -25,7 +26,9 @@ export async function BoxRevealHome() {
             <span className="font-semibold text-[#5046e6]"> Haaga-Helian kanssa</span>. */}
             {/* <br /> */}
             {/* -&gt; Integroitu Lunni-järjestelmään. <br /> */}
-            -&gt; Sovelluksessa voit tarkistella huoltokohteen vikailmoituksia ja täydentää niitä sekä käyttää tekoälyä hyödyksi etsiessäsi huonekalujen huolto-ohjeita. <br />
+            -&gt; Sovelluksessa voit tarkistella huoltokohteen vikailmoituksia
+            ja täydentää niitä sekä käyttää tekoälyä hyödyksi etsiessäsi
+            huonekalujen huolto-ohjeita. <br />
           </p>
         </div>
       </BoxReveal>
