@@ -81,9 +81,11 @@ const ImageSkeleton = ({ src }: { src: string }) => (
     <Image
       src={src}
       alt="Vikailmoituksen kuva"
-      layout="fill"
-      objectFit="cover"
+      fill
+      priority={true}
+      style={{ objectFit: "cover" }}
       className="rounded-xl sm:object-cover md:object-contain"
+      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
     />
   </div>
 );
@@ -91,15 +93,6 @@ const ImageSkeleton = ({ src }: { src: string }) => (
 const Skeleton = () => (
   <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100"></div>
 );
-
-const issueItems = [
-  {
-    title: "The Dawn of Innovation",
-    description: "Explore the birth of groundbreaking ideas and inventions.",
-    header: <Skeleton />,
-    icon: <IconClipboardCopy className="h-4 w-4 text-neutral-500" />,
-  },
-];
 
 // Esimerkki
 const items = [

@@ -22,39 +22,12 @@ interface TTSResponse {
   tempFilePath: string;
 }
 
-// Text to speech -ominaisuuksien käsittely
-// onFinish: async (message: { role: string; content: string; }) => {
-//   if (message.role === "assistant" && ttsEnabled) {
-//     console.log("Assistant message received:", message.content);
-//     setIsPreparingAudio(true);
-//     try {
-//       const ttsResponse: TTSResponse = await getSpeechFromText(
-//         message.content
-//       );
-
-//       const audio = new Audio(ttsResponse.audioURL);
-//       audio.oncanplaythrough = () => {
-//         setIsPreparingAudio(false);
-//         setIsPlaying(true);
-//         audio.play();
-//       };
-
-//       audio.onended = async () => {
-//         await deleteTempFile(ttsResponse.tempFilePath);
-//         setIsPlaying(false);
-//       };
-//     } catch (error) {
-//       console.error("Error preparing audio:", error);
-//       setIsPreparingAudio(false);
-//     }
-//   }
-// },
-
 export default function ChatComponent({
   initialSessionUserId,
 }: {
   initialSessionUserId: number | null;
 }) {
+  console.log("initialSessionUserId", initialSessionUserId);
   const [sessionUserId, setSessionUserId] = useState(initialSessionUserId);
   const [ttsEnabled, setTTSEnabled] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -85,7 +58,6 @@ export default function ChatComponent({
       console.log(e);
     },
     onFinish: async (message: { role: string; content: string }) => {
-      console.log(sessionUserId);
       if (sessionUserId) {
         try {
           await insertChatMessageAction({
@@ -379,3 +351,32 @@ export default function ChatComponent({
     </div>
   );
 }
+
+
+// Text to speech -ominaisuuksien käsittely
+// onFinish: async (message: { role: string; content: string; }) => {
+//   if (message.role === "assistant" && ttsEnabled) {
+//     console.log("Assistant message received:", message.content);
+//     setIsPreparingAudio(true);
+//     try {
+//       const ttsResponse: TTSResponse = await getSpeechFromText(
+//         message.content
+//       );
+
+//       const audio = new Audio(ttsResponse.audioURL);
+//       audio.oncanplaythrough = () => {
+//         setIsPreparingAudio(false);
+//         setIsPlaying(true);
+//         audio.play();
+//       };
+
+//       audio.onended = async () => {
+//         await deleteTempFile(ttsResponse.tempFilePath);
+//         setIsPlaying(false);
+//       };
+//     } catch (error) {
+//       console.error("Error preparing audio:", error);
+//       setIsPreparingAudio(false);
+//     }
+//   }
+// },

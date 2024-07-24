@@ -43,8 +43,7 @@ export async function createSession(id: number, role: string): Promise<void> {
     .returning({ id: sessions.id });
 
   const sessionId = data[0].id;
-  console.log('sessionId', sessionId);
-
+  
   // 2. Encrypt the session ID
   const sessionPayload: SessionPayload = { userId: id, role, expiresAt, sessionId };
   const encryptedSession = await encrypt(sessionPayload);
@@ -71,6 +70,10 @@ export async function verifySession() {
   return { isAuth: true, userId: Number(session.userId), role: session.role };
 }
 
+export function deleteSession() {
+  cookies().delete('session');
+  redirect('/');
+}
 
 // export async function refreshSession(sessionId: number) {
 //   const newExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
@@ -108,8 +111,3 @@ export async function verifySession() {
 //     });
 //   }
 // }
-
-export function deleteSession() {
-  cookies().delete('session');
-  redirect('/');
-}
