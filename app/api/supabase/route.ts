@@ -131,22 +131,19 @@ export async function POST(req: NextRequest) {
       new StringOutputParser(),
     ]);
 
-    let resolveWithDocuments: (value: Document[]) => void;
-    // const documentPromise = new Promise<Document[]>((resolve) => {
-    //   resolveWithDocuments = resolve;
-    // });
+    // let resolveWithDocuments: (value: Document[]) => void;
 
     // Hakee dokumentit Supabase-tietokannasta.
     const retriever = vectorstore.asRetriever({
       k: 2,
-      callbacks: [
-        {
-          handleRetrieverEnd(documents: Document<Record<string, any>>[]) {
-            // console.log("documents", documents); // Tulostaa kaikki haetut dokumentit
-            resolveWithDocuments(documents); // Kun dokumentit on haettu, ratkaisee lupauksen dokumenteilla
-          },
-        },
-      ],
+      // callbacks: [
+      //   {
+      //     handleRetrieverEnd(documents: Document<Record<string, any>>[]) {
+      //       // console.log("documents", documents); // Tulostaa kaikki haetut dokumentit
+      //       resolveWithDocuments(documents); // Kun dokumentit on haettu, ratkaisee lupauksen dokumenteilla
+      //     },
+      //   },
+      // ],
     });
 
     const retrievalChain = retriever.pipe(formatDocumentsAsString); // Kombinoi haetut dokumentit yhdeksi tekstiksi
@@ -181,6 +178,7 @@ export async function POST(req: NextRequest) {
       question: currentMessageContent,
       chat_history: formatVercelMessages(previousMessages), // Muotoilee keskusteluhistorian
     });
+    
 
     const aiStream = LangChainAdapter.toAIStream(stream);
     return new StreamingTextResponse(aiStream);
@@ -190,7 +188,7 @@ export async function POST(req: NextRequest) {
       stream.pipeThrough(createStreamDataTransformer()) // Luo ja muuntaa streamin vastaukselle
     );
   } catch (e: any) {
-    console.error(e);
+    console.error('Tarkka virhe:', e);
     return NextResponse.json({ error: e.message }, { status: e.status ?? 500 });
   }
 }
