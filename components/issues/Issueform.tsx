@@ -35,7 +35,11 @@ import { toast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { DeviceItemCard, FurnitureInfo, IssueFormValues } from "@/data/types";
 import { useState } from "react";
-import { closeIssueAction, openIssueAction, postNewIssueAction } from "@/lib/actions";
+import {
+  closeIssueAction,
+  openIssueAction,
+  postNewIssueAction,
+} from "@/lib/actions";
 import { AiInstructionButton } from "../Client-Buttons";
 import { FormSchema } from "@/lib/schemas";
 import { useAction } from "next-safe-action/hooks";
@@ -325,7 +329,9 @@ export default function IssueForm({
           />
           {isEditing ? (
             <div className="flex space-x-4">
-              <Button type="submit" disabled={isExecuting}>Tallenna</Button>
+              <Button type="submit" disabled={isExecuting}>
+                Tallenna
+              </Button>
               <Button type="button" variant={"outline"} onClick={handleCancel}>
                 Peruuta
               </Button>

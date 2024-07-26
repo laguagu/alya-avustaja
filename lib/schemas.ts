@@ -38,7 +38,7 @@ export const repairRequestSchema = z.object({
     "Materiaali vioittunut",
     "Ilkivalta",
     "Vaatii puhdistuksen",
-    "Muu vika"
+    "Muu vika",
   ]),
   problem_description: z.string(),
   instruction: z.string(),

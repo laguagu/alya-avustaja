@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {  DevicesTableColums } from "@/data/types";
+import { DevicesTableColums } from "@/data/types";
 import { retrieveFurnitureParts } from "@/lib/dataFetching";
 import { useState } from "react";
 
@@ -35,11 +35,12 @@ export const PartsDropdown = ({ item }: { item: DevicesTableColums }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Osat</DropdownMenuLabel>
         {isLoading && <DropdownMenuItem disabled>Ladataan...</DropdownMenuItem>}
-        {!isLoading && parts && parts.length > 0 && (
+        {!isLoading &&
+          parts &&
+          parts.length > 0 &&
           parts.map((part, index) => (
             <DropdownMenuItem key={index}>{part}</DropdownMenuItem>
-          ))
-        )}
+          ))}
         {!isLoading && parts === null && (
           <DropdownMenuItem disabled>Ei osia saatavilla</DropdownMenuItem>
         )}

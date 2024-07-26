@@ -1,64 +1,64 @@
 {
-    "clientName": "Thunder Client",
-    "collectionName": "lunni",
-    "collectionId": "0bdabf12-3a0f-4432-a6d1-17dc18b10096",
-    "dateExported": "2024-06-11T08:27:35.850Z",
-    "version": "1.2",
-    "folders": [],
-    "requests": [
-        {
-            "_id": "4030dae6-d2e8-49b9-b1bb-47499dfbf64d",
-            "colId": "0bdabf12-3a0f-4432-a6d1-17dc18b10096",
-            "containerId": "",
-            "name": "Vikailmoitukset",
-            "url": "https://apiv3.lunni.io/services",
-            "method": "GET",
-            "sortNum": 10000,
-            "created": "2024-06-07T12:14:00.254Z",
-            "modified": "2024-06-10T08:17:40.561Z",
-            "headers": [],
-            "auth": {
-                "type": "bearer",
-                "bearer": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJvaWQiOiIzODI2ZjliNDZkYWVlODllZDUxN2NjMDZkZWQwMThhNiIsInVpZCI6MSwidG9rZW4iOiJQelZ0S3pOMEtUbHVaWElyVzJadk9ETTVabUYyZURVcGFqaHZOMlUyUDJ0MGQya3ZPelkyTmpKa01UUTFZV0U0TnpZPSJ9.JBWV767c0pYEaa9Jd7kTNT9Beyv5Bt1f64JXjWpPATc"
-            }
-        },
-        {
-            "_id": "aaa3eed4-ae6d-42da-9b97-4549dba5a2a7",
-            "colId": "0bdabf12-3a0f-4432-a6d1-17dc18b10096",
-            "containerId": "",
-            "name": "huonekalut",
-            "url": "https://apiv3.lunni.io/devices",
-            "method": "GET",
-            "sortNum": 20000,
-            "created": "2024-06-10T08:02:55.756Z",
-            "modified": "2024-06-10T08:09:17.893Z",
-            "headers": [],
-            "auth": {
-                "type": "bearer",
-                "bearer": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJvaWQiOiIzODI2ZjliNDZkYWVlODllZDUxN2NjMDZkZWQwMThhNiIsInVpZCI6MSwidG9rZW4iOiJQelZ0S3pOMEtUbHVaWElyVzJadk9ETTVabUYyZURVcGFqaHZOMlUyUDJ0MGQya3ZPelkyTmpKa01UUTFZV0U0TnpZPSJ9.JBWV767c0pYEaa9Jd7kTNT9Beyv5Bt1f64JXjWpPATc"
-            }
-        },
-        {
-            "_id": "f9564d63-3900-4ac9-9f93-47727432aaec",
-            "colId": "0bdabf12-3a0f-4432-a6d1-17dc18b10096",
-            "containerId": "",
-            "name": "Muuta kenttää",
-            "url": "https://apiv3.lunni.io/services/5",
-            "method": "PUT",
-            "sortNum": 30000,
-            "created": "2024-06-10T11:33:20.327Z",
-            "modified": "2024-06-11T08:27:03.050Z",
-            "headers": [],
-            "body": {
-                "type": "json",
-                "raw": "{\n  \"name\": \"Päivitetty Huoltopyyntö\",\n  \"description\": \"Tämä on päivitetty kuvaus.\"\n}",
-                "form": []
-            },
-            "auth": {
-                "type": "bearer",
-                "bearer": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJvaWQiOiIzODI2ZjliNDZkYWVlODllZDUxN2NjMDZkZWQwMThhNiIsInVpZCI6MSwidG9rZW4iOiJQelZ0S3pOMEtUbHVaWElyVzJadk9ETTVabUYyZURVcGFqaHZOMlUyUDJ0MGQya3ZPelkyTmpKa01UUTFZV0U0TnpZPSJ9.JBWV767c0pYEaa9Jd7kTNT9Beyv5Bt1f64JXjWpPATc"
-            }
-        }
-    ],
-    "ref": "LDvWVcm_BqaNCTiUpf4mrHYmjEa2mq7ANmyqwMsqntAhilpU72LrYOC8LZ4nvGXBKE_1r4o3e3OCPmALKRefJw"
+  "clientName": "Thunder Client",
+  "collectionName": "lunni",
+  "collectionId": "0bdabf12-3a0f-4432-a6d1-17dc18b10096",
+  "dateExported": "2024-06-11T08:27:35.850Z",
+  "version": "1.2",
+  "folders": [],
+  "requests": [
+    {
+      "_id": "4030dae6-d2e8-49b9-b1bb-47499dfbf64d",
+      "colId": "0bdabf12-3a0f-4432-a6d1-17dc18b10096",
+      "containerId": "",
+      "name": "Vikailmoitukset",
+      "url": "https://apiv3.lunni.io/services",
+      "method": "GET",
+      "sortNum": 10000,
+      "created": "2024-06-07T12:14:00.254Z",
+      "modified": "2024-06-10T08:17:40.561Z",
+      "headers": [],
+      "auth": {
+        "type": "bearer",
+        "bearer": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJvaWQiOiIzODI2ZjliNDZkYWVlODllZDUxN2NjMDZkZWQwMThhNiIsInVpZCI6MSwidG9rZW4iOiJQelZ0S3pOMEtUbHVaWElyVzJadk9ETTVabUYyZURVcGFqaHZOMlUyUDJ0MGQya3ZPelkyTmpKa01UUTFZV0U0TnpZPSJ9.JBWV767c0pYEaa9Jd7kTNT9Beyv5Bt1f64JXjWpPATc"
+      }
+    },
+    {
+      "_id": "aaa3eed4-ae6d-42da-9b97-4549dba5a2a7",
+      "colId": "0bdabf12-3a0f-4432-a6d1-17dc18b10096",
+      "containerId": "",
+      "name": "huonekalut",
+      "url": "https://apiv3.lunni.io/devices",
+      "method": "GET",
+      "sortNum": 20000,
+      "created": "2024-06-10T08:02:55.756Z",
+      "modified": "2024-06-10T08:09:17.893Z",
+      "headers": [],
+      "auth": {
+        "type": "bearer",
+        "bearer": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJvaWQiOiIzODI2ZjliNDZkYWVlODllZDUxN2NjMDZkZWQwMThhNiIsInVpZCI6MSwidG9rZW4iOiJQelZ0S3pOMEtUbHVaWElyVzJadk9ETTVabUYyZURVcGFqaHZOMlUyUDJ0MGQya3ZPelkyTmpKa01UUTFZV0U0TnpZPSJ9.JBWV767c0pYEaa9Jd7kTNT9Beyv5Bt1f64JXjWpPATc"
+      }
+    },
+    {
+      "_id": "f9564d63-3900-4ac9-9f93-47727432aaec",
+      "colId": "0bdabf12-3a0f-4432-a6d1-17dc18b10096",
+      "containerId": "",
+      "name": "Muuta kenttää",
+      "url": "https://apiv3.lunni.io/services/5",
+      "method": "PUT",
+      "sortNum": 30000,
+      "created": "2024-06-10T11:33:20.327Z",
+      "modified": "2024-06-11T08:27:03.050Z",
+      "headers": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Päivitetty Huoltopyyntö\",\n  \"description\": \"Tämä on päivitetty kuvaus.\"\n}",
+        "form": []
+      },
+      "auth": {
+        "type": "bearer",
+        "bearer": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJvaWQiOiIzODI2ZjliNDZkYWVlODllZDUxN2NjMDZkZWQwMThhNiIsInVpZCI6MSwidG9rZW4iOiJQelZ0S3pOMEtUbHVaWElyVzJadk9ETTVabUYyZURVcGFqaHZOMlUyUDJ0MGQya3ZPelkyTmpKa01UUTFZV0U0TnpZPSJ9.JBWV767c0pYEaa9Jd7kTNT9Beyv5Bt1f64JXjWpPATc"
+      }
+    }
+  ],
+  "ref": "LDvWVcm_BqaNCTiUpf4mrHYmjEa2mq7ANmyqwMsqntAhilpU72LrYOC8LZ4nvGXBKE_1r4o3e3OCPmALKRefJw"
 }

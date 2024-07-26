@@ -39,7 +39,7 @@ export const AiInstructionButton: React.FC<CustomButtonProps> = ({
   const [isPending, startTransition] = useTransition();
 
   const handleInstructionInputChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     setInstructionInput(event.target.value);
   };

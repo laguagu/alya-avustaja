@@ -6,7 +6,7 @@ import { NewIssue } from "@/components/issues/newissue-button";
 import { Separator } from "@/components/ui/separator";
 
 const extractFilteredServiceItems = (
-  issuesData: ServiceTask[]
+  issuesData: ServiceTask[],
 ): FilteredServiceItem[] => {
   return issuesData.map((item: ServiceTask) => ({
     id: item.id,

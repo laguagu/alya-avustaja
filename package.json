@@ -12,7 +12,8 @@
     "seed-db": "npx tsx db/drizzle/seed.ts",
     "push": "npx drizzle-kit push",
     "pull": "npx drizzle-kit introspect",
-    "studio": "npx drizzle-kit studio"
+    "studio": "npx drizzle-kit studio",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@ai-sdk/openai": "^0.0.38",
@@ -85,6 +86,7 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.3",
     "postcss": "^8",
+    "prettier": "^3.3.3",
     "tailwindcss": "^3.4.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"

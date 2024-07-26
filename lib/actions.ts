@@ -10,7 +10,7 @@ import { insertChatMessage } from "@/app/_auth/dal";
 
 export async function updateIssueDataAction(
   issueId: number | undefined,
-  formData: IssueFormValues
+  formData: IssueFormValues,
 ) {
   console.log("updateIssueData", issueId, formData);
   if (issueId === undefined) {
@@ -67,10 +67,10 @@ export const updateIssueAction = actionClient
             instruction,
             missing_equipments,
           }),
-        }
+        },
       );
       return { message: "Vikailmoitus Päivitetty! 🎉" };
-    }
+    },
   );
 
 export const postNewIssueAction = actionClient
@@ -96,7 +96,7 @@ export const postNewIssueAction = actionClient
         problem_description,
         type,
         instruction,
-        missing_equipments
+        missing_equipments,
       );
       throw new Error("not implemented");
       await fetch(`https://6549f6b1e182221f8d523a44.mockapi.io/api/issues/`, {
@@ -115,7 +115,7 @@ export const postNewIssueAction = actionClient
       });
       revalidateTag("issues");
       return { message: "Vikailmoitus Päivitetty! 🎉" };
-    }
+    },
   );
 
 export const closeIssueAction = actionClient
@@ -133,7 +133,7 @@ export const closeIssueAction = actionClient
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ is_completed: true }),
-      }
+      },
     );
 
     if (!response.ok) {
@@ -158,7 +158,7 @@ export const openIssueAction = actionClient
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ is_completed: false }),
-      }
+      },
     );
 
     if (!response.ok) {

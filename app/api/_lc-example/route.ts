@@ -129,7 +129,7 @@
 //       chat_history: formattedPreviousMessages.join("\n"),
 //       question: currentMessageContent,
 //     });
-    
+
 //     return new Response(stream);
 //     // Respond with the stream
 //     // return new StreamingTextResponse(

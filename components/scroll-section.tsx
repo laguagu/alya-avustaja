@@ -10,9 +10,9 @@ const sectionContents = [
     content:
       "Sovelluksemme hyödyntää edistynyttä tekoälyä kalusteiden vikailmoitusten käsittelyssä. Tekoäly analysoi vian kuvauksen, täydentää vikailmoituslomakkeen automaattisesti ja tarjoaa räätälöityjä hoito-ohjeita. Tämä nopeuttaa prosessia ja varmistaa tarkat, yksilölliset ratkaisut jokaiseen ongelmaan.",
     images: [
-"/homepage-images/ai-1-min.png",
-"/homepage-images/ai-2-min.png",
-"/homepage-images/ai-3-min.png",
+      "/homepage-images/ai-1-min.png",
+      "/homepage-images/ai-2-min.png",
+      "/homepage-images/ai-3-min.png",
     ],
   },
   {
@@ -111,8 +111,8 @@ function ScrollSection() {
                     imgIndex === 0
                       ? "w-[50vh] h-[60vh] z-10"
                       : imgIndex === 1
-                      ? "w-[30vh] h-[40vh] left-[20vh] top-[10vh] z-20"
-                      : "w-[20vh] h-[25vh] left-[-5vh] top-[30vh] z-30"
+                        ? "w-[30vh] h-[40vh] left-[20vh] top-[10vh] z-20"
+                        : "w-[20vh] h-[25vh] left-[-5vh] top-[30vh] z-30"
                   }`}
                 >
                   <Image

@@ -21,7 +21,6 @@ export default function InformationCard({
   partsList,
   issueData,
 }: InformationCardProps) {
-  
   if (!deviceData) {
     return <div>Ei saatavilla olevia huonekalutietoja</div>;
   }
@@ -64,7 +63,7 @@ export default function InformationCard({
                 alt={deviceData.name}
                 priority
                 className="rounded-lg"
-                style={{ width: 'auto', height: 'auto' }}
+                style={{ width: "auto", height: "auto" }}
               />
             </div>
           )}

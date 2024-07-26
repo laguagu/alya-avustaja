@@ -1,7 +1,7 @@
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 import { Suspense } from "react";
-import { DevicesTableColums,  } from "@/data/types";
+import { DevicesTableColums } from "@/data/types";
 import { fetchFurnitures } from "@/lib/dataFetching";
 
 export default async function Page() {

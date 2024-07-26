@@ -4,7 +4,7 @@ import { arabiaKaikkiTilaukset } from "./arabiaKaikkiTilaukset";
 
 // Käytetään mockattua dataa
 export async function getIssueFormDataById(
-  id: string
+  id: string,
 ): Promise<IssueFormValues | null> {
   try {
     const data = issuesData.find((item) => item.id.toString() === id);
@@ -29,11 +29,11 @@ export async function getIssueFormDataById(
 }
 
 export async function getDataForDevice(
-  device_id: string
+  device_id: string,
 ): Promise<DeviceItemCard | null> {
   try {
     const data = deviceData.find(
-      (device) => device.id.toString() === device_id
+      (device) => device.id.toString() === device_id,
     );
 
     if (!data) {
@@ -59,7 +59,7 @@ export async function getDataForDevice(
 }
 
 export async function retrieveLocationName(
-  locationId: number
+  locationId: number,
 ): Promise<string | null> {
   try {
     const data = locationData.find((item) => item.id === locationId);
@@ -76,11 +76,11 @@ export async function retrieveLocationName(
 }
 
 export async function retrieveFurnitureParts(
-  furnitureName: string
+  furnitureName: string,
 ): Promise<string[] | null> {
   try {
     const item = arabiaKaikkiTilaukset.find(
-      (order) => order.nimi === furnitureName
+      (order) => order.nimi === furnitureName,
     );
 
     if (!item) {
@@ -95,10 +95,9 @@ export async function retrieveFurnitureParts(
   }
 }
 
-
 export async function fetchIssuePageData(
   issueId: string,
-  deviceId: string
+  deviceId: string,
 ): Promise<{
   issueData: IssueFormValues | null;
   deviceData: DeviceItemCard | null;

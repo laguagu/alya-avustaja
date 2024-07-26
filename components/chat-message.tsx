@@ -20,7 +20,7 @@ function ChatMessage({ message }: ChatMessageProps) {
           "max-w-[75%] break-words", // Lisätty maksimileveys ja sanojen rivitys
           {
             "ml-auto": !isUser, // Siirtää viestin oikealle, jos ei ole käyttäjä
-          }
+          },
         )}
       >
         <p className="text-primary">{message.content}</p>

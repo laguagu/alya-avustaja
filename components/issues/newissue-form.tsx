@@ -232,11 +232,10 @@ export default function NewIssueForm() {
             </div>
           </DialogContent>
         </Dialog>
-        
       </div>
       <p className="text-sm text-red-500 mb-2">
-      * Pakolliset kentät on merkitty tähdellä
-    </p>
+        * Pakolliset kentät on merkitty tähdellä
+      </p>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -377,12 +376,10 @@ export default function NewIssueForm() {
               </FormItem>
             )}
           />
-                      
 
           <div className="flex space-x-4">
             <Button type="submit" disabled={isExecuting || isProcessing}>
               Lähetä
-              
             </Button>
             <Button
               type="button"

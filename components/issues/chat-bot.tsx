@@ -5,10 +5,8 @@ import { Button } from "@/components/ui/button";
 import { useChat } from "@ai-sdk/react";
 import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { Message } from "ai";
-import { Send, Mic, } from "lucide-react";
-import {
-  getWhisperTranscription,
-} from "@/lib/ai-actions";
+import { Send, Mic } from "lucide-react";
+import { getWhisperTranscription } from "@/lib/ai-actions";
 import { TailSpin, Rings } from "react-loader-spinner";
 import ChatMessage from "../chat-message";
 import clsx from "clsx";
@@ -83,8 +81,6 @@ export default function ChatBot({ furnitureName }: { furnitureName: string }) {
       });
   }, []);
 
-
-
   const handleStopRecording = useCallback(async () => {
     if (!mediaRecorderRef.current) {
       console.error("MediaRecorder not initialized");
@@ -134,9 +130,8 @@ export default function ChatBot({ furnitureName }: { furnitureName: string }) {
       primaryMessages.map((m: Message) => (
         <ChatMessage key={m.id} message={m} />
       )),
-    [primaryMessages]
+    [primaryMessages],
   );
-  
 
   return (
     <div className="flex flex-col w-full xl:max-w-[900px] h-[calc(62vh-4rem)] md:h-full">
@@ -145,7 +140,7 @@ export default function ChatBot({ furnitureName }: { furnitureName: string }) {
           <h1 className="text-md text-nowrap sm:text-xl lg:text-2xl font-bold text-center flex-1">
             Chatbot - Älyä-avustaja
           </h1>
-            {/* <Button
+          {/* <Button
               onClick={toggleTTS}
               type="button"
               className="ml-auto"

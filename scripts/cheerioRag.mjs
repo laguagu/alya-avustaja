@@ -15,9 +15,7 @@ delete process.env.OPENAI_API_KEY;
 
 dotenv.config({ path: "../.env.local" });
 
-console.log('process.env.OPENAI_API_KEY', process.env.OPENAI_API_KEY);
-
-
+console.log("process.env.OPENAI_API_KEY", process.env.OPENAI_API_KEY);
 
 (async () => {
   const output_parsers = new StringOutputParser();
@@ -42,7 +40,7 @@ console.log('process.env.OPENAI_API_KEY', process.env.OPENAI_API_KEY);
   // Luodaan vectorstore
   const vectorstore = await MemoryVectorStore.fromDocuments(
     splitDocs,
-    embeddings
+    embeddings,
   );
 
   const prompt =
@@ -68,7 +66,6 @@ console.log('process.env.OPENAI_API_KEY', process.env.OPENAI_API_KEY);
 
   const result = await retrievalChain.invoke({
     input: "Mikä on kolmas uutinen?",
-    
   });
 
   console.log(result);

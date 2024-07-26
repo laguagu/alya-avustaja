@@ -1,6 +1,6 @@
 import ChatComponent from "@/components/chat/chat-component";
 import { Suspense } from "react";
-import { verifySession } from "@/app/_auth/sessions"; 
+import { verifySession } from "@/app/_auth/sessions";
 
 export default async function Page() {
   const session = await verifySession();

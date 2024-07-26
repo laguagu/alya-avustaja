@@ -51,7 +51,7 @@ Follow Up Input: {question}
 Standalone question:`;
 
 const condenseQuestionPrompt = PromptTemplate.fromTemplate(
-  CONDENSE_QUESTION_TEMPLATE
+  CONDENSE_QUESTION_TEMPLATE,
 );
 
 // Vastausmalli, joka käyttää aiempaa keskusteluhistoriaa ja kontekstia vastauksen generoimiseen.
@@ -116,7 +116,7 @@ export async function POST(req: NextRequest) {
 
     const client = createClient(
       process.env.SUPABASE_URL!,
-      process.env.SUPABASE_PRIVATE_KEY!
+      process.env.SUPABASE_PRIVATE_KEY!,
     );
 
     const vectorstore = new SupabaseVectorStore(new OpenAIEmbeddings(), {
@@ -188,7 +188,7 @@ export async function POST(req: NextRequest) {
     // return new StreamingTextResponse(stream); // Ei striimaukseen sendMessage kanssa frontendissa
 
     return new StreamingTextResponse(
-      stream.pipeThrough(createStreamDataTransformer()) // Luo ja muuntaa streamin vastaukselle
+      stream.pipeThrough(createStreamDataTransformer()), // Luo ja muuntaa streamin vastaukselle
     );
   } catch (e: any) {
     console.error(e);

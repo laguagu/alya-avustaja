@@ -1,12 +1,6 @@
 "use client";
 import Link from "next/link";
-import {
-  Home,
-  Package,
-  Bot,
-  TriangleAlert,
-  Users,
-} from "lucide-react";
+import { Home, Package, Bot, TriangleAlert, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
@@ -63,7 +57,7 @@ export default function SimpleSidenav({ issues }: { issues: number }) {
         </nav>
       </div>
       <div className="mt-auto p-4 border-t">
-          <LogoutButton />
+        <LogoutButton />
       </div>
     </div>
   );

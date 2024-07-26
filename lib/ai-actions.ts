@@ -1,7 +1,7 @@
 "use server";
 
-import { generateObject, streamObject  } from "ai";
-import { createStreamableValue } from 'ai/rsc';
+import { generateObject, streamObject } from "ai";
+import { createStreamableValue } from "ai/rsc";
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
 import { ReactNode } from "react";
@@ -20,11 +20,12 @@ export interface Message {
 
 export async function processAudioTranscription(transcription: string) {
   const stream = createStreamableValue();
-  
+
   (async () => {
     const { partialObjectStream } = await streamObject({
-      model: openai('gpt-4o'),
-      system: 'You are an AI assistant helping to fill out a maintenance request form based on an audio transcription.',
+      model: openai("gpt-4o"),
+      system:
+        "You are an AI assistant helping to fill out a maintenance request form based on an audio transcription.",
       prompt: `Based on the following transcription, generate appropriate values for a maintenance request form: "${transcription}"`,
       schema: repairRequestSchema,
     });
@@ -55,7 +56,8 @@ export async function getWhisperTranscription(formData: FormData) {
       file: file,
       model: "whisper-1",
       language: "fi",
-      prompt: "Tämä on suomenkielinen äänitys. Kirjoita teksti suomeksi käyttäen oikeaa kielioppia ja välimerkkejä.",
+      prompt:
+        "Tämä on suomenkielinen äänitys. Kirjoita teksti suomeksi käyttäen oikeaa kielioppia ja välimerkkejä.",
       response_format: "json",
     });
 

@@ -15,14 +15,17 @@ export async function getIssuesNumber(): Promise<number> {
   }
 
   try {
-    const response = await fetch(`${process.env.LUNNI_SERVICES}?fields=is_completed`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${process.env.LUNNI_API}`,
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${process.env.LUNNI_SERVICES}?fields=is_completed`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${process.env.LUNNI_API}`,
+          "Content-Type": "application/json",
+        },
+        next: { revalidate: 1000, tags: ["issues"] },
       },
-      next: { revalidate: 1000, tags: ["issues"] },
-    });
+    );
 
     if (!response.ok) {
       console.error("Failed to fetch issues");
@@ -30,7 +33,9 @@ export async function getIssuesNumber(): Promise<number> {
     }
     const data = await response.json();
     // Suodatetaan data niin, että lasketaan vain aktiiviset (is_active === 1) vikailmoitukset
-    const activeIssuesCount = data.filter((issue: { is_completed: number }) => issue.is_completed === 0).length;
+    const activeIssuesCount = data.filter(
+      (issue: { is_completed: number }) => issue.is_completed === 0,
+    ).length;
     return activeIssuesCount;
   } catch (error) {
     console.error("Error fetching issues:", error);
@@ -39,7 +44,7 @@ export async function getIssuesNumber(): Promise<number> {
 }
 
 export async function getIssueFormDataById(
-  id: string
+  id: string,
 ): Promise<IssueFormValues | null> {
   const response = await fetch(
     `https://apiv3.lunni.io/services/${id}?fields=location_id,priority,problem_description,type,instruction,missing_equipments,is_completed`,
@@ -48,7 +53,7 @@ export async function getIssueFormDataById(
         Authorization: `Bearer ${process.env.LUNNI_API}`,
         "Content-Type": "application/json",
       },
-    }
+    },
   );
 
   if (!response.ok) {
@@ -70,7 +75,7 @@ export async function getIssueFormDataById(
 }
 
 async function retrieveLocationName(
-  locationId: number
+  locationId: number,
 ): Promise<string | null> {
   try {
     const response = await fetch(
@@ -80,7 +85,7 @@ async function retrieveLocationName(
           Authorization: `Bearer ${process.env.LUNNI_API}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     if (!response.ok) {
       throw new Error("Failed to fetch location data");
@@ -96,7 +101,7 @@ async function retrieveLocationName(
 
 export async function updateIssueData(
   issueId: number | undefined,
-  formData: IssueFormValues
+  formData: IssueFormValues,
 ) {
   throw new Error("Not implemented");
   if (issueId === undefined) {
@@ -149,7 +154,6 @@ export async function fetchFurnitures(): Promise<DevicesTableColums[]> {
     console.error("Failed to fetch furniture data:", error);
     throw error;
   }
-
 }
 
 export async function fetchAllFurnitures(): Promise<DeviceItemExample[]> {
@@ -204,7 +208,7 @@ export async function fetchIssuesData(): Promise<ServiceTask[]> {
 }
 
 async function getDataForDevice(
-  device_id: string
+  device_id: string,
 ): Promise<DeviceItemCard | null> {
   try {
     const response = await fetch(
@@ -214,7 +218,7 @@ async function getDataForDevice(
           Authorization: `Bearer ${process.env.LUNNI_API}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     if (!response.ok) {
@@ -241,11 +245,11 @@ async function getDataForDevice(
 }
 
 export async function retrieveFurnitureParts(
-  furnitureName: string
+  furnitureName: string,
 ): Promise<string[] | null> {
   try {
     const item = arabiaKaikkiTilaukset.find(
-      (order) => order.nimi === furnitureName
+      (order) => order.nimi === furnitureName,
     );
 
     if (!item) {
@@ -260,7 +264,7 @@ export async function retrieveFurnitureParts(
 
 export async function fetchIssuePageData(
   issueId: string,
-  deviceId: string
+  deviceId: string,
 ): Promise<{
   issueData: IssueFormValues | null;
   deviceData: DeviceItemCard | null;

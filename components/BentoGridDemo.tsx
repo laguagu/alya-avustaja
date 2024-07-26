@@ -22,7 +22,7 @@ export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
   const toggleShowCompleted = () => setShowCompleted(!showCompleted);
 
   const filteredIssues = issues.filter(
-    (issue) => showCompleted || issue.is_completed !== 1
+    (issue) => showCompleted || issue.is_completed !== 1,
   );
 
   const issueItems = filteredIssues.map((issue, i) => ({

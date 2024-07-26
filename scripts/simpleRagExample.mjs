@@ -4,22 +4,24 @@ import { HNSWLib } from "@langchain/community/vectorstores/hnswlib";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { PromptTemplate } from "@langchain/core/prompts";
 import * as fs from "fs";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
 
-const apiKey =  process.env.OPENAI_API_KEY;
+const apiKey = process.env.OPENAI_API_KEY;
 
-const fileContent = fs.readFileSync('data/hoito-ohjeet.txt', 'utf8');
+const fileContent = fs.readFileSync("data/hoito-ohjeet.txt", "utf8");
 
 // Kovakoodattu esimerkki data
 const data = [
   {
     title: "Nikari December-tuoli",
-    content: "Nikari December on tammesta valmistettu tuoli. Hoito-ohje: Puhdista säännöllisesti kuivalla tai nihkeällä liinalla. Vältä liiallista kosteutta."
+    content:
+      "Nikari December on tammesta valmistettu tuoli. Hoito-ohje: Puhdista säännöllisesti kuivalla tai nihkeällä liinalla. Vältä liiallista kosteutta.",
   },
   {
     title: "Nikari Fino-pöytä",
-    content: "Nikari Fino on massiivitammesta valmistettu ruokapöytä. Hoito-ohje: Pyyhi pöytä säännöllisesti kuivalla tai nihkeällä liinalla. Vältä voimakkaita puhdistusaineita."
+    content:
+      "Nikari Fino on massiivitammesta valmistettu ruokapöytä. Hoito-ohje: Pyyhi pöytä säännöllisesti kuivalla tai nihkeällä liinalla. Vältä voimakkaita puhdistusaineita.",
   },
 ];
 
@@ -37,7 +39,7 @@ const prompt = new PromptTemplate({
 
 (async () => {
   // Alusta OpenAI LLM ja Embeddings
-  const model = new OpenAI({apiKey});
+  const model = new OpenAI({ apiKey });
   const embeddings = new OpenAIEmbeddings();
 
   // Jaa data pienempiin osiin
@@ -59,7 +61,5 @@ const prompt = new PromptTemplate({
   // Kysy kysymys ja hae vastaus
   const question = "Miten Nikari December -tuolia tulisi hoitaa?";
   const res = await chain.invoke({ query: question });
-;
   console.log("Vastaus:", res.text);
-  
 })();

@@ -10,7 +10,9 @@ async function main() {
   // const userEmail = process.env.USER_EMAIL;
 
   if (!plainPassword || !userEmail) {
-    console.error("SEED_USER_PASSWORD and SEED_USER_EMAIL environment variables are required.");
+    console.error(
+      "SEED_USER_PASSWORD and SEED_USER_EMAIL environment variables are required.",
+    );
     process.exit(1);
   }
 

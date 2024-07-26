@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 
 export async function login(
   state: FormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<FormState> {
   // 1. Validate form fields
   const validatedFields = LoginFormSchema.safeParse({
@@ -38,7 +38,7 @@ export async function login(
   // 3. Compare the user's password with the hashed password in the database
   const passwordMatch = await bcrypt.compare(
     validatedFields.data.password,
-    user.password
+    user.password,
   );
   // 3. Compare the user's password with the plaintext password in the database (not recommended for production)
   // const passwordMatch = validatedFields.data.password === user.password;

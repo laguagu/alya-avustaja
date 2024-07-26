@@ -53,7 +53,7 @@ async function main() {
     {
       input: "What's my name?",
     },
-    config
+    config,
   );
 
   console.log(response.content);
@@ -63,9 +63,8 @@ async function main() {
   //   },
   //   config
   // );
-  
+
   // console.log('followupResponse', followupResponse.content)
-  
 }
 
 main().catch(console.error);

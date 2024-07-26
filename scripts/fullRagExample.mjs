@@ -27,7 +27,7 @@ dotenv.config();
 
   // Lataa dokumentti
   const loader = new CheerioWebBaseLoader(
-    "https://docs.smith.langchain.com/user_guide"
+    "https://docs.smith.langchain.com/user_guide",
   );
   const docs = await loader.load();
 
@@ -39,7 +39,7 @@ dotenv.config();
   // Luodaan vectorstore
   const vectorstore = await MemoryVectorStore.fromDocuments(
     splitDocs,
-    embeddings
+    embeddings,
   );
 
   const prompt =
@@ -63,7 +63,6 @@ dotenv.config();
   //   retriever: myRetriever,
   // });
 
-
   const historyAwarePrompt = ChatPromptTemplate.fromMessages([
     new MessagesPlaceholder("chat_history"),
     ["user", "{input}"],
@@ -72,7 +71,7 @@ dotenv.config();
       "Given the above conversation, generate a search query to look up in order to get information relevant to the conversation",
     ],
   ]);
-  
+
   const historyAwareRetrieverChain = await createHistoryAwareRetriever({
     llm: chatModel,
     retriever: myRetriever,
@@ -83,7 +82,7 @@ dotenv.config();
     new HumanMessage("Can LangSmith help test my LLM applications?"),
     new AIMessage("Yes!"),
   ];
-  
+
   const historyAwareRetrievalPrompt = ChatPromptTemplate.fromMessages([
     [
       "system",
@@ -97,18 +96,16 @@ dotenv.config();
     llm: chatModel,
     prompt: historyAwareRetrievalPrompt,
   });
-  
+
   const conversationalRetrievalChain = await createRetrievalChain({
     retriever: historyAwareRetrieverChain,
     combineDocsChain: historyAwareCombineDocsChain,
   });
 
-
   const result2 = await conversationalRetrievalChain.invoke({
     chat_history: chatHistory,
     input: "tell me how",
   });
-  
-  console.log(result2.answer);
 
-  })();
+  console.log(result2.answer);
+})();

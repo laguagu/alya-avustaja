@@ -9,8 +9,8 @@ export const arabiaKaikkiTilaukset = [
       "Jalka Grand Canyon MCr",
       "Peitelevy Grand Canyon MCr",
       "Grand canyon 3B L Kvadrat",
-      "Flora2 847 sinivihreä U02"
-    ]
+      "Flora2 847 sinivihreä U02",
+    ],
   },
   {
     nimi: "Grand Canyon Sohva 3B R",
@@ -22,8 +22,8 @@ export const arabiaKaikkiTilaukset = [
       "Jalka Grand Canyon MCr",
       "Peitelevy Grand Canyon MCr",
       "Grand canyon 3B R Kvadrat",
-      "Flora2 847 sinivihreä U02"
-    ]
+      "Flora2 847 sinivihreä U02",
+    ],
   },
   {
     nimi: "Arena 013S/800 baarituoli",
@@ -34,20 +34,20 @@ export const arabiaKaikkiTilaukset = [
       "Koivu*C102",
       "Runko 013 S/800",
       "pulverimaalattu QZ4781",
-      "huopanasta 011, suora"
-    ]
+      "huopanasta 011, suora",
+    ],
   },
   {
     nimi: "Istuin 033 verhoilu U02",
     määrä: 8,
     toimitus_pvm: "11.08.2009",
-    osat: ["Kvadrat Flora2 826 turkoosi"]
+    osat: ["Kvadrat Flora2 826 turkoosi"],
   },
   {
     nimi: "Istuin 033 verhoilu U02",
     määrä: 8,
     toimitus_pvm: "11.08.2009",
-    osat: ["Kvadrat Flora2 217 keltainen"]
+    osat: ["Kvadrat Flora2 217 keltainen"],
   },
   {
     nimi: "XO kevyt sohvapöytä Ø60",
@@ -57,8 +57,8 @@ export const arabiaKaikkiTilaukset = [
       "Kansi Laminaatti Ø Ø60*1040",
       "Koivureunalista petsattu kannen sävyyn",
       "Runko XO-pöytä 600 Ø60",
-      "pulverimaalattu QZ4781"
-    ]
+      "pulverimaalattu QZ4781",
+    ],
   },
   {
     nimi: "Pöytä Arena C72 60x60",
@@ -69,8 +69,8 @@ export const arabiaKaikkiTilaukset = [
       "C111 60x60*C111",
       "Runko C72 pöytä Pöydän",
       "KORKEUS 550mm 60x60",
-      "pulverimaalattu QZ4781"
-    ]
+      "pulverimaalattu QZ4781",
+    ],
   },
   {
     nimi: "Pöytä Arena C72",
@@ -81,8 +81,8 @@ export const arabiaKaikkiTilaukset = [
       "C102 60x60*C102",
       "Runko C72 pöytä Pöydän",
       "KORKEUS 1100mm 60x60",
-      "pulverimaalattu QZ4781"
-    ]
+      "pulverimaalattu QZ4781",
+    ],
   },
   {
     nimi: "Arena 022",
@@ -95,8 +95,8 @@ export const arabiaKaikkiTilaukset = [
       "Runko 022 S MCr Tuolissa",
       "erikoiskor ERIK.",
       "Selkä 022 Melamiini",
-      "Melamii*Valk"
-    ]
+      "Melamii*Valk",
+    ],
   },
   {
     nimi: "Tuoli Arena 022",
@@ -109,8 +109,8 @@ export const arabiaKaikkiTilaukset = [
       "Selkä 022 Melamiini",
       "Melamii*Valk",
       "022 huopanasta, suora",
-      "022 huopanasta vino"
-    ]
+      "022 huopanasta vino",
+    ],
   },
   {
     nimi: "Tuoli Arena 022",
@@ -125,8 +125,8 @@ export const arabiaKaikkiTilaukset = [
       "Selkä 022 Melamiini",
       "Melamii*Valk",
       "022 huopanasta, suora",
-      "022 huopanasta vino"
-    ]
+      "022 huopanasta vino",
+    ],
   },
   {
     nimi: "Tuoli Arena 033 C",
@@ -137,8 +137,8 @@ export const arabiaKaikkiTilaukset = [
       "Kvadrat Flora2 826 turkoosi U02",
       "Runko 033 C MCr",
       "033 huopanasta, suora",
-      "033 huopanasta, vino"
-    ]
+      "033 huopanasta, vino",
+    ],
   },
   {
     nimi: "Tuoli Arena 022 S",
@@ -151,8 +151,8 @@ export const arabiaKaikkiTilaukset = [
       "Pyörä 022S AR 800 1 50mm",
       "Runko 022 S MCr",
       "Selkä 022 Melamiini",
-      "Melamii*Valk"
-    ]
+      "Melamii*Valk",
+    ],
   },
   {
     nimi: "Tuoli Arena 033",
@@ -165,8 +165,8 @@ export const arabiaKaikkiTilaukset = [
       "Flora2 826 turkoosi U02",
       "Runko 033 MCr",
       "033 huopanasta, suora",
-      "033 huopanasta, vino"
-    ]
+      "033 huopanasta, vino",
+    ],
   },
   {
     nimi: "Tuoli Arena 033",
@@ -177,8 +177,8 @@ export const arabiaKaikkiTilaukset = [
       "Kvadrat Flora2 826 turkoosi U02",
       "Runko 033 MCr",
       "033 huopanasta, suora",
-      "033 huopanasta, vino"
-    ]
+      "033 huopanasta, vino",
+    ],
   },
   {
     nimi: "Pöytä Arena 800 Ø100",
@@ -189,8 +189,8 @@ export const arabiaKaikkiTilaukset = [
       "F2255 Ø, suorareuna petsattu kannen sävyyn Ø100*",
       "Runko 800 h=720 > Ø800*",
       "Ø100",
-      "pulverimaalattu QZ4781"
-    ]
+      "pulverimaalattu QZ4781",
+    ],
   },
   {
     nimi: "Pöytä Arena 800 Ø80",
@@ -201,8 +201,8 @@ export const arabiaKaikkiTilaukset = [
       "F2255 Ø, suorareuna petsattu kannen sävyyn Ø80*",
       "Runko 800 h=720 > Ø800*",
       "Ø80",
-      "pulverimaalattu QZ4781"
-    ]
+      "pulverimaalattu QZ4781",
+    ],
   },
   {
     nimi: "Pöytä Arena 800 Ø120",
@@ -213,8 +213,8 @@ export const arabiaKaikkiTilaukset = [
       "F2255 Ø, suorareuna petsattu kannen sävyyn Ø120*erik.",
       "Runko 800 h=720 > Ø800*",
       "Ø120",
-      "pulverimaalattu QZ4781"
-    ]
+      "pulverimaalattu QZ4781",
+    ],
   },
   {
     nimi: "Grand Canyon Sohva 3B R",
@@ -226,8 +226,8 @@ export const arabiaKaikkiTilaukset = [
       "Jalka Grand Canyon MCr",
       "Peitelevy Grand Canyon MCr",
       "Grand canyon 3B R Xorel",
-      "Meteor 216 sinivihreä (Vallila) U02"
-    ]
+      "Meteor 216 sinivihreä (Vallila) U02",
+    ],
   },
   {
     nimi: "Grand Canyon Sohva 1B L",
@@ -239,8 +239,8 @@ export const arabiaKaikkiTilaukset = [
       "Jalka Grand Canyon MCr",
       "Peitelevy Grand Canyon MCr",
       "Grand canyon 1B L Xorel",
-      "Meteor 216 sinivihreä (Vallila) U02"
-    ]
+      "Meteor 216 sinivihreä (Vallila) U02",
+    ],
   },
   {
     nimi: "Grand Canyon Sohva 1B R",
@@ -252,7 +252,7 @@ export const arabiaKaikkiTilaukset = [
       "Jalka Grand Canyon MCr",
       "Peitelevy Grand Canyon MCr",
       "Grand canyon 1B R Xorel",
-      "Meteor 216 sinivihreä (Vallila) U02"
-    ]
-  }
+      "Meteor 216 sinivihreä (Vallila) U02",
+    ],
+  },
 ];

@@ -5,10 +5,12 @@ This application provides a comprehensive solution for viewing, reporting, and u
 ## Features
 
 - **Fault Reporting and Viewing**
+
   - Users can report new furniture faults.
   - View existing faults along with detailed descriptions.
 
 - **Maintenance Instructions**
+
   - Get detailed maintenance and repair instructions from an AI chatbot.
   - The chatbot provides responses in Finnish, focusing on precision and clarity.
 

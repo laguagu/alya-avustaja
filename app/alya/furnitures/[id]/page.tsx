@@ -39,7 +39,7 @@ export default function Page({ params }: { params?: { id?: string } }) {
     const { name, value } = event.target;
     console.log(name, value);
 
-    setUser((prevUser) => ({ ...prevUser, [name]: value } as Payment));
+    setUser((prevUser) => ({ ...prevUser, [name]: value }) as Payment);
   };
 
   const handleSubmit = (event: React.FormEvent) => {

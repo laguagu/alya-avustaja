@@ -51,7 +51,7 @@ Follow Up Input: {question}
 Standalone question:`;
 
 const condenseQuestionPrompt = PromptTemplate.fromTemplate(
-  CONDENSE_QUESTION_TEMPLATE
+  CONDENSE_QUESTION_TEMPLATE,
 );
 
 // Vastausmalli, joka käyttää aiempaa keskusteluhistoriaa ja kontekstia vastauksen generoimiseen.
@@ -114,14 +114,13 @@ export async function POST(req: NextRequest) {
 
     const client = createClient(
       process.env.SUPABASE_URL!,
-      process.env.SUPABASE_PRIVATE_KEY!
+      process.env.SUPABASE_PRIVATE_KEY!,
     );
 
     const vectorstore = new SupabaseVectorStore(new OpenAIEmbeddings(), {
       client,
       tableName: "piiroinen_chairs", // Tietokantataulun nimi
       queryName: "matching_documents", // Kysely funktion nimi
-      
     });
 
     // Muodostaa LangChain-ketjuja tiedonhaulle ja vastausten generoinnille.
@@ -178,17 +177,16 @@ export async function POST(req: NextRequest) {
       question: currentMessageContent,
       chat_history: formatVercelMessages(previousMessages), // Muotoilee keskusteluhistorian
     });
-    
 
     const aiStream = LangChainAdapter.toAIStream(stream);
     return new StreamingTextResponse(aiStream);
     // return new StreamingTextResponse(stream); // Ei striimaukseen sendMessage kanssa frontendissa
 
     return new StreamingTextResponse(
-      stream.pipeThrough(createStreamDataTransformer()) // Luo ja muuntaa streamin vastaukselle
+      stream.pipeThrough(createStreamDataTransformer()), // Luo ja muuntaa streamin vastaukselle
     );
   } catch (e: any) {
-    console.error('Tarkka virhe:', e);
+    console.error("Tarkka virhe:", e);
     return NextResponse.json({ error: e.message }, { status: e.status ?? 500 });
   }
 }

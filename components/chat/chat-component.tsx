@@ -12,7 +12,6 @@ import clsx from "clsx";
 import ChatMessage from "@/components/chat-message";
 import { insertChatMessageAction } from "@/lib/actions";
 
-
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const MAX_STORAGE_SIZE = 4 * 1024 * 1024; // 4 MB
 const MESSAGE_EXPIRATION_TIME = 2 * 24 * 60 * 60 * 1000; // 2 days in milliseconds
@@ -102,15 +101,15 @@ export default function ChatComponent({
   const checkAndClearExpiredMessages = useCallback((messages: Message[]) => {
     if (messages.length > 0) {
       const firstAssistantMessage = messages.find(
-        (message) => message.role === "assistant"
+        (message) => message.role === "assistant",
       );
       if (firstAssistantMessage && firstAssistantMessage.createdAt) {
         const firstMessageTime = new Date(
-          firstAssistantMessage.createdAt
+          firstAssistantMessage.createdAt,
         ).getTime();
         if (Date.now() - firstMessageTime > MESSAGE_EXPIRATION_TIME) {
           console.warn(
-            "Ensimmäinen assistant-viesti on vanhentunut. Tyhjennetään koko viestihistoria."
+            "Ensimmäinen assistant-viesti on vanhentunut. Tyhjennetään koko viestihistoria.",
           );
           return [];
         }
@@ -133,7 +132,7 @@ export default function ChatComponent({
         setMessages(updatedMessages);
         if (updatedMessages.length === 0) {
           console.warn(
-            "Ensimmäinen assistant-viesti oli vanhentunut, joten koko viestihistoria tyhjennettiin."
+            "Ensimmäinen assistant-viesti oli vanhentunut, joten koko viestihistoria tyhjennettiin.",
           );
         } else {
           console.warn("Vanhimpia viestejä poistettiin tilan säästämiseksi.");
@@ -236,7 +235,7 @@ export default function ChatComponent({
       primaryMessages.map((m: Message) => (
         <ChatMessage key={m.id} message={m} />
       )),
-    [primaryMessages]
+    [primaryMessages],
   );
 
   return (
@@ -351,7 +350,6 @@ export default function ChatComponent({
     </div>
   );
 }
-
 
 // Text to speech -ominaisuuksien käsittely
 // onFinish: async (message: { role: string; content: string; }) => {

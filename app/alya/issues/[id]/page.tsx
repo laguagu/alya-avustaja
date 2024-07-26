@@ -7,10 +7,17 @@ import { fetchIssuePageData } from "@/lib/dataFetching";
 import BackButton from "@/components/issues/back-button";
 import { Suspense } from "react";
 import ChatBot from "@/components/issues/chat-bot";
-export const fetchCache = 'force-no-store';
+export const fetchCache = "force-no-store";
 
-const AsyncDataComponent = async ({ issueId, deviceId }: { issueId: string, deviceId: string }) => {
-  const { issueData, deviceData, locationData, partsList } = await fetchIssuePageData(issueId, deviceId);
+const AsyncDataComponent = async ({
+  issueId,
+  deviceId,
+}: {
+  issueId: string;
+  deviceId: string;
+}) => {
+  const { issueData, deviceData, locationData, partsList } =
+    await fetchIssuePageData(issueId, deviceId);
   const furnitureName = deviceData?.name || "";
 
   return (
@@ -44,7 +51,9 @@ const AsyncDataComponent = async ({ issueId, deviceId }: { issueId: string, devi
         />
       </TabsContent>
 
-      <TabsContent value="chat"><ChatBot furnitureName={furnitureName}/></TabsContent>
+      <TabsContent value="chat">
+        <ChatBot furnitureName={furnitureName} />
+      </TabsContent>
     </Tabs>
   );
 };

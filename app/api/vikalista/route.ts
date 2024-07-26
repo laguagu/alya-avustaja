@@ -1,17 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  StreamingTextResponse,
-  LangChainAdapter,
-} from "ai";
+import { StreamingTextResponse, LangChainAdapter } from "ai";
 import { createClient } from "@supabase/supabase-js";
 import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 import { Document } from "@langchain/core/documents";
 import { RunnableSequence } from "@langchain/core/runnables";
-import {
-  StringOutputParser,
-} from "@langchain/core/output_parsers";
+import { StringOutputParser } from "@langchain/core/output_parsers";
 
 import { formatDocumentsAsString } from "langchain/util/document";
 export const dynamic = "force-dynamic";
@@ -26,7 +21,7 @@ Follow Up Input: {question}
 Standalone question:`;
 
 const condenseQuestionPrompt = PromptTemplate.fromTemplate(
-  STANDALONE_QUESTION_TEMPLATE
+  STANDALONE_QUESTION_TEMPLATE,
 );
 
 // Vastausmalli, joka käyttää aiempaa keskusteluhistoriaa ja kontekstia vastauksen generoimiseen.
@@ -50,7 +45,6 @@ Answer the question based only on the following context and chat history (if any
 Question: {question}
 `;
 
-
 const answerPrompt = PromptTemplate.fromTemplate(ANSWER_TEMPLATE);
 
 export async function POST(req: NextRequest) {
@@ -65,7 +59,7 @@ export async function POST(req: NextRequest) {
   //   };
   //   // Vaiheet 1. Ota body rungon mukana tiedot huonekalusta
   //   // 2. Muodosta standalone-kysymys jolla haet vastauksen supabasesta perustuen furnitureInfoon
-  //   // 3. 
+  //   // 3.
 
   //   // Alustaa OpenAI-mallin ja Supabase-asiakasohjelman.
   //   const model = new ChatOpenAI({
@@ -93,7 +87,7 @@ export async function POST(req: NextRequest) {
   //     new StringOutputParser(),
   //   ]);
   //   console.log(JSON.stringify(standaloneQuestionChain, null, 2));
-    
+
   //   let resolveWithDocuments: (value: Document[]) => void;
   //   // const documentPromise = new Promise<Document[]>((resolve) => {
   //   //   resolveWithDocuments = resolve;

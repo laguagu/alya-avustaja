@@ -1,30 +1,30 @@
-import 'server-only';
-import { SignJWT, jwtVerify } from 'jose';
-import { cookies } from 'next/headers';
-import type { SessionPayload } from '@/app/_auth/definitions';
-import { sessions } from '@/db/drizzle/schema';
-import { db } from '@/db/drizzle/db'; 
-import { redirect } from 'next/navigation';
+import "server-only";
+import { SignJWT, jwtVerify } from "jose";
+import { cookies } from "next/headers";
+import type { SessionPayload } from "@/app/_auth/definitions";
+import { sessions } from "@/db/drizzle/schema";
+import { db } from "@/db/drizzle/db";
+import { redirect } from "next/navigation";
 
 const secretKey = process.env.SECRET;
 const key = new TextEncoder().encode(secretKey);
 
 export async function encrypt(payload: SessionPayload) {
   return new SignJWT(payload)
-    .setProtectedHeader({ alg: 'HS256' })
+    .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime('7d')
+    .setExpirationTime("7d")
     .sign(key);
 }
 
-export async function decrypt(session: string | undefined = '') {
+export async function decrypt(session: string | undefined = "") {
   try {
     const { payload } = await jwtVerify(session, key, {
-      algorithms: ['HS256'],
+      algorithms: ["HS256"],
     });
     return payload;
   } catch (error) {
-    console.log('Failed to verify session');
+    console.log("Failed to verify session");
     return null;
   }
 }
@@ -43,36 +43,40 @@ export async function createSession(id: number, role: string): Promise<void> {
     .returning({ id: sessions.id });
 
   const sessionId = data[0].id;
-  
+
   // 2. Encrypt the session ID
-  const sessionPayload: SessionPayload = { userId: id, role, expiresAt, sessionId };
+  const sessionPayload: SessionPayload = {
+    userId: id,
+    role,
+    expiresAt,
+    sessionId,
+  };
   const encryptedSession = await encrypt(sessionPayload);
 
   // 3. Store the session in cookies for optimistic auth checks
-  cookies().set('session', encryptedSession , {
+  cookies().set("session", encryptedSession, {
     httpOnly: true,
     secure: true,
     expires: expiresAt,
-    sameSite: 'lax',
-    path: '/',
+    sameSite: "lax",
+    path: "/",
   });
-
 }
 
 export async function verifySession() {
-  const cookie = cookies().get('session')?.value;
+  const cookie = cookies().get("session")?.value;
   const session = await decrypt(cookie);
 
   if (!session?.userId) {
-    redirect('/');
+    redirect("/");
   }
 
   return { isAuth: true, userId: Number(session.userId), role: session.role };
 }
 
 export function deleteSession() {
-  cookies().delete('session');
-  redirect('/');
+  cookies().delete("session");
+  redirect("/");
 }
 
 // export async function refreshSession(sessionId: number) {
@@ -94,11 +98,11 @@ export function deleteSession() {
 //   });
 
 //   if (user) {
-//     const sessionPayload: SessionPayload = { 
-//       userId: user.id, 
-//       role: user.role, 
-//       expiresAt: newExpiresAt, 
-//       sessionId 
+//     const sessionPayload: SessionPayload = {
+//       userId: user.id,
+//       role: user.role,
+//       expiresAt: newExpiresAt,
+//       sessionId
 //     };
 //     const encryptedSession = await encrypt(sessionPayload);
 

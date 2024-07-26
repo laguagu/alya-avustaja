@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
   try {
     const client = createClient(
       process.env.SUPABASE_URL!,
-      process.env.SUPABASE_PRIVATE_KEY!
+      process.env.SUPABASE_PRIVATE_KEY!,
     );
 
     const splitter = new RecursiveCharacterTextSplitter({
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
         client,
         tableName: "piiroinen_chairs",
         queryName: "matching_documents",
-      }
+      },
     );
     return NextResponse.json({ ok: true }, { status: 200 });
   } catch (e: any) {

@@ -76,7 +76,7 @@ Issue Description: {issue_description}
 Standalone question:`;
 
 const standAloneQuestionPrompt = PromptTemplate.fromTemplate(
-  STANDALONE_QUESTION_TEMPLATE
+  STANDALONE_QUESTION_TEMPLATE,
 );
 
 interface GenerateInstructionParams {
@@ -99,7 +99,7 @@ export async function generateAIinstruction({
 
     const client = createClient(
       process.env.SUPABASE_URL!,
-      process.env.SUPABASE_PRIVATE_KEY!
+      process.env.SUPABASE_PRIVATE_KEY!,
     );
 
     const vectorstore = new SupabaseVectorStore(new OpenAIEmbeddings(), {

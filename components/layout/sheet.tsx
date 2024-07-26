@@ -1,12 +1,6 @@
 "use client";
 import Link from "next/link";
-import {
-  Home,
-  Package,
-  TriangleAlert,
-  Users,
-  Menu,
-} from "lucide-react";
+import { Home, Package, TriangleAlert, Users, Menu } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -65,7 +59,7 @@ export default function SheetNav({ issues }: { issues: number }) {
             ))}
           </nav>
           <div className="mt-auto">
-          <LogoutButton />
+            <LogoutButton />
           </div>
         </SheetContent>
       </Sheet>

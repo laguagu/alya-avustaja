@@ -69,7 +69,7 @@ export async function POST(req: Request) {
     // return new Response(stream);
     // Respond with the stream
     return new StreamingTextResponse(
-      stream.pipeThrough(createStreamDataTransformer())
+      stream.pipeThrough(createStreamDataTransformer()),
     );
   } catch (e: any) {
     console.error(e);

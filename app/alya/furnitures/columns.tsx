@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {  DevicesTableColums } from "@/data/types";
+import { DevicesTableColums } from "@/data/types";
 import { PartsDropdown } from "@/components/furnitures/parts-dropdown";
 
 // Use zod schema to define the shape of the data later
@@ -64,6 +64,6 @@ export const columns: ColumnDef<DevicesTableColums>[] = [
     id: "actions",
     cell: ({ row }) => {
       return <PartsDropdown item={row.original} />;
-    }
+    },
   },
 ];

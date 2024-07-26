@@ -5,12 +5,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import Link from "next/link";
-import {
-  Package,
-  ClipboardPlus,
-  TriangleAlert,
-  Users,
-} from "lucide-react";
+import { Package, ClipboardPlus, TriangleAlert, Users } from "lucide-react";
 import { Button } from "./ui/button";
 
 export default function DashboardCards() {
