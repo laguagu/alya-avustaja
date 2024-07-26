@@ -45,7 +45,7 @@ function ScrollSection() {
     offset: ["start start", "end end"],
   });
 
-  const y0 = useTransform(scrollYProgress, [0, 0.2], [0, -50]);
+  const y0 = useTransform(scrollYProgress, [0, 0.2], [0, -50]); // FIXME -50 -> -25 tai 0 ?
   const y1 = useTransform(scrollYProgress, [0.1, 0.3], [75, 0]);
   const y2 = useTransform(scrollYProgress, [0.3, 0.5], [75, 0]);
   const y3 = useTransform(scrollYProgress, [0.5, 0.7], [75, 0]);
