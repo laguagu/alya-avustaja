@@ -46,9 +46,9 @@ function ScrollSection() {
   });
 
   const y0 = useTransform(scrollYProgress, [0, 0.2], [0, -50]);
-  const y1 = useTransform(scrollYProgress, [0.1, 0.3], [100, 0]);
-  const y2 = useTransform(scrollYProgress, [0.3, 0.5], [100, 0]);
-  const y3 = useTransform(scrollYProgress, [0.5, 0.7], [100, 0]);
+  const y1 = useTransform(scrollYProgress, [0.1, 0.3], [75, 0]);
+  const y2 = useTransform(scrollYProgress, [0.3, 0.5], [75, 0]);
+  const y3 = useTransform(scrollYProgress, [0.5, 0.7], [75, 0]);
   const opacity = useTransform(scrollYProgress, [0.7, 0.9], [0, 1]);
 
   // Luodaan useTransform hookit tässä
@@ -60,14 +60,14 @@ function ScrollSection() {
       useTransform(scrollYProgress, [0, 1], [0, isMobile ? -75 : -150]),
     ],
     [
-      useTransform(scrollYProgress, [0, 1], [0, -100]),
-      useTransform(scrollYProgress, [0, 1], [0, -200]),
-      useTransform(scrollYProgress, [0, 1], [0, -300]),
+      useTransform(scrollYProgress, [0, 1], [0, isMobile ? -50 : -100]),
+      useTransform(scrollYProgress, [0, 1], [0, isMobile ? -100 : -200]),
+      useTransform(scrollYProgress, [0, 1], [0, isMobile ? -150 : -300]),
     ],
     [
-      useTransform(scrollYProgress, [0, 1], [0, isMobile ? -75 : -150]),
-      useTransform(scrollYProgress, [0, 1], [0, isMobile ? -125 : -300]),
-      useTransform(scrollYProgress, [0, 1], [0, isMobile ? -225 : -450]),
+      useTransform(scrollYProgress, [0, 1], [0, isMobile ? -50 : -100]),
+      useTransform(scrollYProgress, [0, 1], [0, isMobile ? -100 : -200]),
+      useTransform(scrollYProgress, [0, 1], [0, isMobile ? -150 : -270]),
     ],
   ];
 
