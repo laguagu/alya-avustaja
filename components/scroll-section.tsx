@@ -8,21 +8,21 @@ const sectionContents = [
   {
     title: "Älykäs vikailmoitusten käsittely",
     content:
-      "Sovelluksemme hyödyntää edistynyttä tekoälyä kalusteiden vikailmoitusten käsittelyssä. Tekoäly analysoi vian kuvauksen, täydentää lomakkeen automaattisesti ja tarjoaa räätälöityjä hoito-ohjeita. Tämä nopeuttaa prosessia ja varmistaa tarkat, yksilölliset ratkaisut jokaiseen ongelmaan.",
+      "Sovelluksemme hyödyntää edistynyttä tekoälyä kalusteiden vikailmoitusten käsittelyssä. Tekoäly analysoi vian kuvauksen, täydentää vikailmoituslomakkeen automaattisesti ja tarjoaa räätälöityjä hoito-ohjeita. Tämä nopeuttaa prosessia ja varmistaa tarkat, yksilölliset ratkaisut jokaiseen ongelmaan.",
     images: [
-      "/fault-report.png",
-      "/ai-analysis.png",
-      "/custom-instructions.png",
+"/homepage-images/ai-1-min.png",
+"/homepage-images/ai-2-min.png",
+"/homepage-images/ai-3-min.png",
     ],
   },
   {
-    title: "Kattava huoltohistoria ja seuranta",
+    title: "Kattava vikailmoitushistoria ja seuranta",
     content:
       "Pidä kalusteidesi kunto optimaalisena helpon seurannan avulla. Sovellus tarjoaa vikailmoitusten tarkastelun ja reaaliaikaisen tilanneseurannan.",
     images: [
-      "/maintenance-history.png",
-      "/scheduling.png",
-      "/real-time-tracking.png",
+      "/homepage-images/vikailmoitus-1-min.png",
+      "/homepage-images/vikailmoitus-2-min.png",
+      "/homepage-images/vikailmoitus-3-min.png",
     ],
   },
   {
@@ -30,9 +30,9 @@ const sectionContents = [
     content:
       "Tutustu kalusteisiin yksityiskohtaisesti sovelluksessamme. Näet jokaisen kalusteen tarkat tiedot ja osaluettelon. Tämä helpottaa huoltoa, varaosien hankintaa ja kalusteiden elinkaaren hallintaa.",
     images: [
-      "/furniture-details.png",
-      "/parts-list.png",
-      "/lifecycle-management.png",
+      "/homepage-images/huonekalut-1-min.png",
+      "/homepage-images/huonekalut-2-min.png",
+      "/homepage-images/huonekalut-3-min.png",
     ],
   },
 ];
@@ -131,16 +131,12 @@ function ScrollSection() {
           style={{ opacity }}
           className="flex flex-col items-center bg-white/80 backdrop-blur-sm rounded-lg p-10 space-y-6"
         >
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">
+          <h2 className="text-3xl font-bold text-gray-800 ">
             Yhteistyökumppanit
           </h2>
-          <p className="text-lg text-gray-600 text-center max-w-2xl">
-            Sovellus on kehitetty tiiviissä yhteistyössä alan johtavien
-            toimijoiden kanssa. Yhdistämällä Helsingin kaupungin resurssit,
-            Lunni-järjestelmän tehokkuuden, Piiroinen huoltoyhtiön
-            asiantuntemuksen ja Haaga-Helian innovatiivisen lähestymistavan,
-            olemme luoneet ainutlaatuisen ratkaisun kalusteiden ylläpitoon.
-          </p>
+          {/* <p className="text-lg text-gray-600 text-center max-w-2xl">
+              TÄHÄN JOTAIN TEKSTIÄ
+          </p> */}
           <PartnerLogos />
         </motion.div>
       </div>

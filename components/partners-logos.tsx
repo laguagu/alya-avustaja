@@ -1,10 +1,10 @@
 import Image from "next/image";
 
 const partners = [
-  { name: "Helsingin kaupunki", logo: "/helsinki-logo.png" },
-  { name: "Lunni", logo: "/lunni-logo.png" },
-  { name: "Piiroinen", logo: "/piiroinen-logo.png" },
+  { name: "Helsingin kaupunki", logo: "/hki-logo.png" },
   { name: "Haaga-Helia", logo: "/hh-logo.png" },
+  // { name: "Lunni", logo: "/lunni-logo.png" },
+  // { name: "Piiroinen", logo: "/piiroinen-logo.png" },
 ];
 
 function PartnerLogos() {
