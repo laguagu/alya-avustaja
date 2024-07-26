@@ -33,34 +33,39 @@ export async function createSession(id: number, role: string): Promise<void> {
   const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
   // 1. Create a session in the database
-  const data = await db
-    .insert(sessions)
-    .values({
+  try {
+    const data = await db
+      .insert(sessions)
+      .values({
+        userId: id,
+        expiresAt,
+      })
+      // Return the session ID
+      .returning({ id: sessions.id });
+
+    const sessionId = data[0].id;
+
+    // 2. Encrypt the session ID
+    const sessionPayload: SessionPayload = {
       userId: id,
+      role,
       expiresAt,
-    })
-    // Return the session ID
-    .returning({ id: sessions.id });
+      sessionId,
+    };
+    const encryptedSession = await encrypt(sessionPayload);
 
-  const sessionId = data[0].id;
-
-  // 2. Encrypt the session ID
-  const sessionPayload: SessionPayload = {
-    userId: id,
-    role,
-    expiresAt,
-    sessionId,
-  };
-  const encryptedSession = await encrypt(sessionPayload);
-
-  // 3. Store the session in cookies for optimistic auth checks
-  cookies().set("session", encryptedSession, {
-    httpOnly: true,
-    secure: true,
-    expires: expiresAt,
-    sameSite: "lax",
-    path: "/",
-  });
+    // 3. Store the session in cookies for optimistic auth checks
+    cookies().set("session", encryptedSession, {
+      httpOnly: true,
+      secure: true,
+      expires: expiresAt,
+      sameSite: "lax",
+      path: "/",
+    });
+  } catch (error) {
+    console.error("Failed to create session", error);
+    throw error;
+  }
 }
 
 export async function verifySession() {
