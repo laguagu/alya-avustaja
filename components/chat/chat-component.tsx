@@ -12,7 +12,6 @@ import clsx from "clsx";
 import ChatMessage from "@/components/chat-message";
 import { insertChatMessageAction } from "@/lib/actions";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const MAX_STORAGE_SIZE = 4 * 1024 * 1024; // 4 MB
 const MESSAGE_EXPIRATION_TIME = 2 * 24 * 60 * 60 * 1000; // 2 days in milliseconds
 
@@ -51,7 +50,7 @@ export default function ChatComponent({
     isLoading,
     stop,
   } = useChat({
-    api: `${API_URL}supabase`,
+    api: `/api/supabase`,
     initialMessages: savedMessages,
     onError: (e: any) => {
       console.log(e);

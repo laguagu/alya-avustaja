@@ -11,8 +11,6 @@ import { TailSpin, Rings } from "react-loader-spinner";
 import ChatMessage from "../chat-message";
 import clsx from "clsx";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
 interface TTSResponse {
   audioURL: string;
   tempFilePath: string;
@@ -41,7 +39,7 @@ export default function ChatBot({ furnitureName }: { furnitureName: string }) {
     isLoading,
     stop,
   } = useChat({
-    api: `${API_URL}chatbot`,
+    api: `/api/chatbot`,
     initialMessages: savedMessages,
     body: { furnitureName },
     onError: (e: any) => {
