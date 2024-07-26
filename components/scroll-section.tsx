@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import Image from "next/image";
 import PartnerLogos from "./partners-logos";
+import { useMediaQuery } from "react-responsive";
 
 const sectionContents = [
   {
@@ -51,11 +52,12 @@ function ScrollSection() {
   const opacity = useTransform(scrollYProgress, [0.7, 0.9], [0, 1]);
 
   // Luodaan useTransform hookit tässä
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const imageTransforms = [
     [
-      useTransform(scrollYProgress, [0, 1], [0, -50]),
-      useTransform(scrollYProgress, [0, 1], [0, -100]),
-      useTransform(scrollYProgress, [0, 1], [0, -150]),
+      useTransform(scrollYProgress, [0, 1], [0, isMobile ? -25 : -50]),
+      useTransform(scrollYProgress, [0, 1], [0, isMobile ? -50 : -100]),
+      useTransform(scrollYProgress, [0, 1], [0, isMobile ? -75 : -150]),
     ],
     [
       useTransform(scrollYProgress, [0, 1], [0, -100]),
@@ -63,9 +65,9 @@ function ScrollSection() {
       useTransform(scrollYProgress, [0, 1], [0, -300]),
     ],
     [
-      useTransform(scrollYProgress, [0, 1], [0, -150]),
-      useTransform(scrollYProgress, [0, 1], [0, -300]),
-      useTransform(scrollYProgress, [0, 1], [0, -450]),
+      useTransform(scrollYProgress, [0, 1], [0, isMobile ? -75 : -150]),
+      useTransform(scrollYProgress, [0, 1], [0, isMobile ? -125 : -300]),
+      useTransform(scrollYProgress, [0, 1], [0, isMobile ? -225 : -450]),
     ],
   ];
 
@@ -94,7 +96,7 @@ function ScrollSection() {
             style={{ y }}
             className="flex flex-col md:flex-row items-center bg-transparent p-10 space-y-6 md:space-y-0 md:space-x-10"
           >
-            <div className="flex-1">
+            <div className="flex-1 w-full md:w-auto mb-6 md:mb-0">
               <h2 className="text-3xl font-bold text-gray-800 mb-4">
                 {sectionContents[index].title}
               </h2>
@@ -102,7 +104,7 @@ function ScrollSection() {
                 {sectionContents[index].content}
               </p>
             </div>
-            <div className="relative w-[50vh] h-[60vh]">
+            <div className="relative w-full h-[60vh] md:w-[50vh] md:h-[60vh]">
               {sectionContents[index].images.map((src, imgIndex) => (
                 <motion.div
                   key={imgIndex}
@@ -111,8 +113,8 @@ function ScrollSection() {
                     imgIndex === 0
                       ? "w-[50vh] h-[60vh] z-10"
                       : imgIndex === 1
-                        ? "w-[30vh] h-[40vh] left-[20vh] top-[10vh] z-20"
-                        : "w-[20vh] h-[25vh] left-[-5vh] top-[30vh] z-30"
+                        ? "w-[60%] h-[60%] left-[20%] top-[20%] z-20"
+                        : "w-[40%] h-[40%] left-[10%] top-[30%] z-30"
                   }`}
                 >
                   <Image
