@@ -15,8 +15,9 @@ function PartnerLogos() {
           <Image
             src={partner.logo}
             alt={`${partner.name} logo`}
-            layout="fill"
-            objectFit="contain"
+            fill
+            sizes="96px"
+            style={{ objectFit: "contain" }}
           />
         </div>
       ))}

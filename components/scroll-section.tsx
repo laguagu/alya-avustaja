@@ -45,7 +45,7 @@ function ScrollSection() {
     offset: ["start start", "end end"],
   });
 
-  const y0 = useTransform(scrollYProgress, [0, 0.2], [0, -50]); // FIXME -50 -> -25 tai 0 ?
+  const y0 = useTransform(scrollYProgress, [0, 0.2], [0, 0]); // FIXME -50 -> -25 tai 0 ?
   const y1 = useTransform(scrollYProgress, [0.1, 0.3], [75, 0]);
   const y2 = useTransform(scrollYProgress, [0.3, 0.5], [75, 0]);
   const y3 = useTransform(scrollYProgress, [0.5, 0.7], [75, 0]);
@@ -104,7 +104,7 @@ function ScrollSection() {
                 {sectionContents[index].content}
               </p>
             </div>
-            <div className="relative w-full h-[60vh] md:w-[50vh] md:h-[60vh]">
+            <div className="relative w-full h-[70vh] md:w-[50vh] md:h-[70vh]">
               {sectionContents[index].images.map((src, imgIndex) => (
                 <motion.div
                   key={imgIndex}
@@ -120,9 +120,9 @@ function ScrollSection() {
                   <Image
                     src={src}
                     alt={`Image ${imgIndex + 1}`}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-lg shadow-md"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="rounded-lg shadow-md object-cover"
                   />
                 </motion.div>
               ))}
