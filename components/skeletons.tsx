@@ -9,3 +9,11 @@ export default function AiButtonSkeleton() {
     </div>
   );
 }
+
+export function LoadingIssueSkeleton() {
+  return (
+    <div className="space-y-2 p-4">
+      <Skeleton className="w-11/12 h-[420px] " />
+    </div>
+  );
+}

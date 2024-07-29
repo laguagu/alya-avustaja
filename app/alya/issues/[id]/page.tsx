@@ -7,6 +7,7 @@ import { fetchIssuePageData } from "@/lib/dataFetching";
 import BackButton from "@/components/issues/back-button";
 import { Suspense } from "react";
 import ChatBot from "@/components/issues/chat-bot";
+import { LoadingIssueSkeleton } from "@/components/skeletons";
 export const fetchCache = "force-no-store";
 
 const AsyncDataComponent = async ({
@@ -58,8 +59,6 @@ const AsyncDataComponent = async ({
   );
 };
 
-const LoadingIndicator = () => <div>Ladataan vikailmoitusta...</div>;
-
 export default function Page({
   params,
   searchParams,
@@ -84,7 +83,7 @@ export default function Page({
         <h1 className="text-2xl">Vikailmoitus - {params?.id}</h1>
       </div>
       <Separator className="md:my-4 my-3" />
-      <Suspense fallback={<LoadingIndicator />}>
+      <Suspense fallback={<LoadingIssueSkeleton />}>
         <AsyncDataComponent issueId={issueId} deviceId={deviceId} />
       </Suspense>
     </div>
