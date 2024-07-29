@@ -63,7 +63,6 @@ export default function ChatComponent({
             content: message.content,
             createdAt: new Date(),
           });
-          console.log("Message saved to database");
         } catch (error) {
           console.error("Error saving message to database:", error);
         }

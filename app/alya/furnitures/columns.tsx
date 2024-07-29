@@ -61,7 +61,7 @@ export const columns: ColumnDef<DevicesTableColums>[] = [
   },
   {
     header: "Osat",
-    id: "actions",
+    id: "Parts",
     cell: ({ row }) => {
       return <PartsDropdown item={row.original} />;
     },

@@ -8,7 +8,6 @@ import {
   SheetContent,
   SheetTitle,
   SheetTrigger,
-  SheetHeader,
   SheetDescription,
 } from "@/components/ui/sheet";
 import { usePathname } from "next/navigation";

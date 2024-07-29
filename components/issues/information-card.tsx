@@ -109,7 +109,7 @@ export default function InformationCard({
                   Tyyppi: <span className="font-normal">{issueData.type}</span>
                 </p>
                 <p className="font-semibold">
-                  Ohje:{" "}
+                  Tekoälyn huolto-ohje:{" "}
                   <span className="font-normal">{issueData.instruction}</span>
                 </p>
                 <p className="font-semibold">

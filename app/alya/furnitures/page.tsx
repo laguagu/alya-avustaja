@@ -5,7 +5,7 @@ import { DevicesTableColums } from "@/data/types";
 import { fetchFurnitures } from "@/lib/dataFetching";
 
 export default async function Page() {
-  let data: DevicesTableColums[] | null = null;
+  let data: DevicesTableColums[] = [];
   let error: string | null = null;
 
   try {
@@ -21,7 +21,7 @@ export default async function Page() {
   return (
     <div className="container mx-auto py-10">
       <Suspense fallback={<div>Ladataan huonekaluja...</div>} />
-      {data && <DataTable columns={columns} data={data} />}
+      <DataTable columns={columns} data={data} />
       <Suspense />
     </div>
   );
