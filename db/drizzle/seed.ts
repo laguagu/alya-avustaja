@@ -1,5 +1,5 @@
 import "@/db/drizzle/envConfig"; // Varmista, että ympäristömuuttujat ladataan ensin
-import { insertUser } from "@/db/drizzle/db";
+import { insertUser } from "@/app/_auth/dal"; 
 import { NewUser } from "@/db/drizzle/schema";
 import bcrypt from "bcrypt";
 

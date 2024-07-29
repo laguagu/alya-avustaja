@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -208,10 +209,10 @@ export default function NewIssueForm() {
         )}
 
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <DialogContent>
+          <DialogContent aria-describedby="dialog-description">
             <DialogHeader>
               <DialogTitle>Tarkista sanelemasi kuvaus</DialogTitle>
-              <DialogDescription>
+              <DialogDescription id="dialog-description">
                 Tarkista sanelemasi vian kuvaus ja tee tarvittavat muutokset
                 ennen lomakkeen täyttämistä.
               </DialogDescription>
@@ -221,15 +222,17 @@ export default function NewIssueForm() {
               onChange={(e) => setTranscription(e.target.value)}
               rows={5}
             />
-            <div className="flex justify-between">
-              <Button onClick={() => setIsModalOpen(false)}>Peruuta</Button>
-              <Button
-                onClick={() => handleDescriptionSubmit(transcription)}
-                disabled={isProcessing}
-              >
-                {isProcessing ? "Käsitellään..." : "Vahvista ja täytä lomake"}
-              </Button>
-            </div>
+            <DialogFooter>
+              <div className="flex justify-between w-full">
+                <Button onClick={() => setIsModalOpen(false)}>Peruuta</Button>
+                <Button
+                  onClick={() => handleDescriptionSubmit(transcription)}
+                  disabled={isProcessing}
+                >
+                  {isProcessing ? "Käsitellään..." : "Vahvista ja täytä lomake"}
+                </Button>
+              </div>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>

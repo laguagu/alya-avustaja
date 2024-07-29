@@ -3,7 +3,14 @@ import Link from "next/link";
 import { Home, Package, TriangleAlert, Users, Menu } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+  SheetHeader,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import LogoutButton from "./logout-button";
@@ -39,6 +46,10 @@ export default function SheetNav({ issues }: { issues: number }) {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col">
+          <SheetTitle className="sr-only">Navigation</SheetTitle>
+          <SheetDescription className="sr-only">
+            Access different sections of the application.
+          </SheetDescription>
           <nav className="grid gap-2 mt-4 text-lg font-medium">
             {navLinks.map((link, index) => (
               <Link

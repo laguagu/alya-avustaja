@@ -98,10 +98,13 @@ export const AiInstructionButton: React.FC<CustomButtonProps> = ({
           Avaa <Bot className="ml-2 h-5 w-5" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        className="sm:max-w-[425px]"
+        aria-describedby="ai-dialog-description"
+      >
         <DialogHeader>
           <DialogTitle>Avustajan huolto-ohje suositus</DialogTitle>
-          <DialogDescription>
+          <DialogDescription id="ai-dialog-description">
             Tekoäly analysoi vikailmoituksesi ja tarjoaa parhaan mahdollisen
             suosituksen.
           </DialogDescription>
@@ -158,46 +161,6 @@ export const AiInstructionButton: React.FC<CustomButtonProps> = ({
               </Button>
             )}
           </div>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-};
-
-export const AiPartsButton: React.FC<CustomButtonProps> = ({ isEditing }) => {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button
-          type="button"
-          variant="outline"
-          className="ml-2 flex "
-          disabled={!isEditing}
-        >
-          Avaa <Bot className="ml-2 h-5 w-5" />
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Tarvittavat varaosat</DialogTitle>
-          <DialogDescription></DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input id="name" value="Pedro Duarte" className="col-span-3" />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input id="username" value="@peduarte" className="col-span-3" />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
