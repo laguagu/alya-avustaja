@@ -25,7 +25,6 @@ export default function ChatComponent({
 }: {
   initialSessionUserId: number | null;
 }) {
-  console.log("initialSessionUserId", initialSessionUserId);
   const [sessionUserId, setSessionUserId] = useState(initialSessionUserId);
   const [ttsEnabled, setTTSEnabled] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);

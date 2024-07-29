@@ -8,32 +8,6 @@ import { revalidateTag } from "next/cache";
 import { verifySession } from "@/app/_auth/sessions";
 import { insertChatMessage } from "@/app/_auth/dal";
 
-export async function updateIssueDataAction(
-  issueId: number | undefined,
-  formData: IssueFormValues,
-) {
-  console.log("updateIssueData", issueId, formData);
-  if (issueId === undefined) {
-    throw new Error("issueId is undefined");
-  }
-
-  const url = `https://apiv3.lunni.io/services/${issueId}`;
-  throw new Error("Not implemented");
-  const response = await fetch(url, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(formData),
-  });
-
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-
-  const data = await response.json();
-  return data; // Return the updated data
-}
 
 export const updateIssueAction = actionClient
   .schema(FormSchema, {

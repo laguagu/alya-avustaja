@@ -15,16 +15,5 @@ const pool = new Pool({
   idleTimeoutMillis: 30000, // kuinka kauan yhteyttä pidetään auki, kun se on idle
   connectionTimeoutMillis: 2000, // yhteyden muodostamisen aikakatkaisu
 });
+
 export const db = drizzle(pool, { schema });
-
-const testConnection = async () => {
-  try {
-    const client = await pool.connect();
-    console.log("Database connection successful");
-    client.release();
-  } catch (error) {
-    console.error("Database connection failed:", error);
-  }
-};
-
-testConnection();
