@@ -6,7 +6,7 @@ import { useChat } from "@ai-sdk/react";
 import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { Message } from "ai";
 import { Send, Mic } from "lucide-react";
-import { getWhisperTranscription } from "@/lib/ai-actions";
+import { getWhisperTranscription } from "@/lib/actions/ai-actions";
 import { TailSpin, Rings } from "react-loader-spinner";
 import ChatMessage from "../chat-message";
 import clsx from "clsx";

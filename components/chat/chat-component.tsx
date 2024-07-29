@@ -6,11 +6,11 @@ import { useChat } from "@ai-sdk/react";
 import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { Message } from "ai";
 import { Send, Mic } from "lucide-react";
-import { getWhisperTranscription } from "@/lib/ai-actions";
+import { getWhisperTranscription } from "@/lib/actions/ai-actions";
 import { TailSpin, Rings } from "react-loader-spinner";
 import clsx from "clsx";
 import ChatMessage from "@/components/chat-message";
-import { insertChatMessageAction } from "@/lib/actions";
+import { insertChatMessageAction } from "@/lib/actions/actions";
 
 const MAX_STORAGE_SIZE = 4 * 1024 * 1024; // 4 MB
 const MESSAGE_EXPIRATION_TIME = 2 * 24 * 60 * 60 * 1000; // 2 days in milliseconds

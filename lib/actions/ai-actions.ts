@@ -10,7 +10,7 @@ import fs from "fs";
 import { promises as fsPromises } from "fs";
 import { nanoid } from "nanoid";
 import path from "path";
-import { repairRequestSchema } from "./schemas";
+import { repairRequestSchema } from "../schemas";
 
 export interface Message {
   role: "user" | "assistant";

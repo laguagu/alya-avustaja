@@ -75,11 +75,11 @@ export async function getIssueFormDataById(
 }
 
 async function retrieveLocationName(
-  locationId: number,
+  default_location_id: number,
 ): Promise<string | null> {
   try {
     const response = await fetch(
-      `https://apiv3.lunni.io/locations/${locationId}`,
+      `https://apiv3.lunni.io/locations/${default_location_id}`,
       {
         headers: {
           Authorization: `Bearer ${process.env.LUNNI_API}`,

@@ -30,15 +30,15 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
-import { postNewIssueAction } from "@/lib/actions";
+import { postNewIssueAction } from "@/lib/actions/actions";
 import { FormSchema } from "@/lib/schemas";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
 import AudioRecorder from "./audio-recorder";
-import { getWhisperTranscription } from "@/lib/ai-actions";
+import { getWhisperTranscription } from "@/lib/actions/ai-actions";
 import { useEffect, useState } from "react";
 import { readStreamableValue } from "ai/rsc";
-import { processAudioTranscription } from "@/lib/ai-actions";
+import { processAudioTranscription } from "@/lib/actions/ai-actions";
 import ModalSpinner from "./modal-spinner";
 
 export default function NewIssueForm() {

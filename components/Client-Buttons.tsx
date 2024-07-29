@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { generateAIinstruction } from "@/lib/langchainActions";
+import { generateAIinstruction } from "@/lib/actions/langchainActions";
 import { FurnitureInfo } from "@/data/types";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import AiButtonSkeleton from "./skeletons";

@@ -39,7 +39,7 @@ import {
   closeIssueAction,
   openIssueAction,
   postNewIssueAction,
-} from "@/lib/actions";
+} from "@/lib/actions/actions";
 import { AiInstructionButton } from "../Client-Buttons";
 import { FormSchema } from "@/lib/schemas";
 import { useAction } from "next-safe-action/hooks";
