@@ -12,7 +12,6 @@ export async function getIssueFormDataById(
     if (!data) {
       throw new Error("Failed to fetch data");
     }
-
     return {
       id: data.id,
       priority: data.priority ?? "",
@@ -21,6 +20,8 @@ export async function getIssueFormDataById(
       instruction: data.instruction ?? "",
       missing_equipments: data.missing_equipments ?? "",
       is_completed: data.is_completed ?? false,
+      service_contact_name: data.service_contact_name ?? "",
+      service_contact_phone: data.service_contact_phone ?? "",
     };
   } catch (error) {
     console.error("Error fetching Lunni form data:", error);

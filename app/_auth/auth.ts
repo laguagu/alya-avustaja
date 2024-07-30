@@ -7,6 +7,7 @@ import { createSession, deleteSession } from "@/app/_auth/sessions";
 import bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
+import { pause } from "@/lib/utils";
 
 export async function login(
   state: FormState,
@@ -59,11 +60,11 @@ export async function login(
     // 4. If login successful, create a session for the user and redirect
     console.log("Creating session...");
     await createSession(user.id, user.role);
-    redirect("/alya");
   } catch (error) {
     console.error("Login error:", error);
     return { message: "An error occurred during login. Please try again." };
   }
+  redirect("/alya");
 }
 
 export async function logout() {
