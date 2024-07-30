@@ -22,7 +22,7 @@ This application provides a comprehensive solution for viewing, reporting, and u
 
 1. Clone the repository to your local machine.
 2. Install the dependencies by running `npm install`.
-3. Set up your `.env` file with your OpenAI API Key.
+3. Set up your `.env` file with your API Keys.
 
 ### Running the Application
 
