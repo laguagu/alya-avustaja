@@ -7,3 +7,4 @@ README.md
 .git
 db/drizzle/seed.ts
 .env
+docs
