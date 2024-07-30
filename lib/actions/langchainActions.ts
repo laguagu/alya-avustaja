@@ -93,7 +93,7 @@ export async function generateAIinstruction({
     const model = new ChatOpenAI({
       modelName: "gpt-4o",
       temperature: 0.0,
-      verbose: true, // Tulostaa lisätietoja, jos true
+      // verbose: true, // Tulostaa lisätietoja, jos true
       streaming: true,
     });
 
@@ -115,18 +115,18 @@ export async function generateAIinstruction({
       new StringOutputParser(),
     ]);
 
-    let resolveWithDocuments: (value: Document[]) => void;
+    // let resolveWithDocuments: (value: Document[]) => void;
     // Vaihe 3: Hakee dokumentit Supabase-tietokannasta
     const retriever = vectorstore.asRetriever({
       k: 2,
-      callbacks: [
-        {
-          handleRetrieverEnd(documents: Document<Record<string, any>>[]) {
-            console.log("documents", documents); // Tulostaa kaikki haetut dokumentit
-            resolveWithDocuments(documents); // Kun dokumentit on haettu, ratkaisee lupauksen dokumenteilla
-          },
-        },
-      ],
+      // callbacks: [
+      //   {
+      //     handleRetrieverEnd(documents: Document<Record<string, any>>[]) {
+      //       console.log("documents", documents); // Tulostaa kaikki haetut dokumentit
+      //       resolveWithDocuments(documents); // Kun dokumentit on haettu, ratkaisee lupauksen dokumenteilla
+      //     },
+      //   },
+      // ],
     });
 
     // Muotoillaan haetut dokumentit
