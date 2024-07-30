@@ -3,6 +3,7 @@ import {
   DeviceItemCard,
   DeviceItemExample,
   DevicesTableColums,
+  FilteredServiceItem,
   IssueFormValues,
   ServiceTask,
 } from "@/data/types";
@@ -46,8 +47,22 @@ export async function getIssuesNumber(): Promise<number> {
 export async function getIssueFormDataById(
   id: string,
 ): Promise<IssueFormValues | null> {
+  const fields = [
+    "location_id",
+    "priority",
+    "problem_description",
+    "type",
+    "instruction",
+    "missing_equipments",
+    "is_completed",
+    "service_contact_name",
+    "service_contact_phone",
+  ];
+
+  const fieldsQuery = fields.join(",");
+
   const response = await fetch(
-    `https://apiv3.lunni.io/services/${id}?fields=location_id,priority,problem_description,type,instruction,missing_equipments,is_completed`,
+    `https://apiv3.lunni.io/services/${id}?fields=${fieldsQuery}`,
     {
       headers: {
         Authorization: `Bearer ${process.env.LUNNI_API}`,
@@ -61,17 +76,7 @@ export async function getIssueFormDataById(
   }
 
   const data = await response.json();
-
-  return {
-    id: data.id,
-    location_id: data.location_id ?? null,
-    priority: data.priority ?? "",
-    problem_description: data.problem_description ?? "",
-    type: data.type ?? "",
-    instruction: data.instruction ?? "",
-    missing_equipments: data.missing_equipments ?? "",
-    is_completed: data.is_completed ?? 0,
-  };
+  return data;
 }
 
 async function retrieveLocationName(
@@ -99,41 +104,17 @@ async function retrieveLocationName(
   }
 }
 
-export async function updateIssueData(
-  issueId: number | undefined,
-  formData: IssueFormValues,
-) {
-  throw new Error("Not implemented");
-  if (issueId === undefined) {
-    throw new Error("issueId is undefined");
-  }
-
-  const url = `https://apiv3.lunni.io/services/${issueId}`;
-
-  const response = await fetch(url, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(formData),
-  });
-
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-
-  const data = await response.json();
-  return data; // Palautetaan päivitetty data
-}
-
 export async function fetchFurnitures(): Promise<DevicesTableColums[]> {
   const url = process.env.LUNNI_UNITS;
   if (!url) {
     throw new Error("LUNNI_UNITS environment variable is not defined");
   }
 
+  const fields = ["name", "serial", "brand", "model"];
+  const fieldsQuery = fields.join(",");
+
   try {
-    const response = await fetch(`${url}?&fields=name,serial,brand,model`, {
+    const response = await fetch(`${url}?&fields=${fieldsQuery}`, {
       headers: {
         Authorization: `Bearer ${process.env.LUNNI_API}`,
         "Content-Type": "application/json",
@@ -186,15 +167,37 @@ export async function fetchAllFurnitures(): Promise<DeviceItemExample[]> {
   }
 }
 
-export async function fetchIssuesData(): Promise<ServiceTask[]> {
+export async function fetchIssuesData(): Promise<FilteredServiceItem[]> {
+  const fields = [
+    "id",
+    "name",
+    "device_id",
+    "device_serial",
+    "device_brand",
+    "device_model",
+    "location_id",
+    "problem_description",
+    "priority",
+    "created",
+    "updated",
+    "completed",
+    "is_completed",
+    "instruction", // // AI:lla rikastettu huolto-ohje
+    "description", // Työnselostus, mikäli huoltopyyntö on ratkaistu
+  ];
+
+  const fieldsQuery = fields.join(",");
   try {
-    const response = await fetch(`${process.env.LUNNI_SERVICES}`, {
-      headers: {
-        Authorization: `Bearer ${process.env.LUNNI_API}`,
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${process.env.LUNNI_SERVICES}?fields=${fieldsQuery}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.LUNNI_API}`,
+          "Content-Type": "application/json",
+        },
+        next: { revalidate: 0 },
       },
-      cache: "no-store",
-    });
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -210,9 +213,23 @@ export async function fetchIssuesData(): Promise<ServiceTask[]> {
 async function getDataForDevice(
   device_id: string,
 ): Promise<DeviceItemCard | null> {
+  const fields = [
+    "id",
+    "name",
+    "model",
+    "brand",
+    "devicecategory_id",
+    "image",
+    "location",
+    "default_location_id",
+    "serial",
+  ];
+
+  const fieldsQuery = fields.join(",");
+
   try {
     const response = await fetch(
-      `https://apiv3.lunni.io/devices/${device_id}`,
+      `https://apiv3.lunni.io/devices/${device_id}?fields=${fieldsQuery}`,
       {
         headers: {
           Authorization: `Bearer ${process.env.LUNNI_API}`,
@@ -226,18 +243,7 @@ async function getDataForDevice(
     }
 
     const data = await response.json();
-    return {
-      id: data.id.toString(),
-      name: data.name,
-      model: data.model,
-      brand: data.brand,
-      devicecategory_id: data.devicecategory_id,
-      image: data.image?.toString() ?? undefined,
-      location: data.location,
-      default_location_id: data.default_location_id,
-      serial: data.serial,
-      image_url: data.image_url,
-    };
+    return data;
   } catch (error) {
     console.error("Error fetching device data:", error);
     return null; // Return null if fetching fails

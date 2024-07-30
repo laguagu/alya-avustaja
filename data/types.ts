@@ -288,6 +288,8 @@ export interface IssueFormValues {
   instruction: string | null; // AI:n Ehdotettu huolto-ohje
   missing_equipments: string | null; // Tarvittavat työkalut
   is_completed: number | boolean | null; // Onko vikailmoitus avoinna
+  service_contact_name: string | null; // Yhteyshenkilö
+  service_contact_phone: string | null; // Yhteyshenkilön puhelinnumero
 }
 
 export interface FurnitureInfo {

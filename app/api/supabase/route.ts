@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
     const currentMessageContent = messages[messages.length - 1].content; // Ottaa viimeisen viestin sisällön
 
     console.log("Preparing to query database...");
-    
+
     // Alustaa OpenAI-mallin ja Supabase-asiakasohjelman.
     const model = new ChatOpenAI({
       modelName: "gpt-4o",
@@ -113,7 +113,7 @@ export async function POST(req: NextRequest) {
       // verbose: true, // Tulostaa lisätietoja, jos true
       streaming: true,
     });
-    
+
     const client = createClient(
       process.env.SUPABASE_URL!,
       process.env.SUPABASE_PRIVATE_KEY!,

@@ -81,7 +81,7 @@ export default function InformationCard({
       </Card>
       <div className="flex flex-col flex-1 min-w-[300px] gap-6">
         {issueData && (
-          <Card className="bg-white shadow-lg rounded-lg border-gray-200 border-4">
+          <Card className="bg-white shadow-lg rounded-lg border-gray-200 border-4 mb-4 md:mb-0">
             <CardHeader className="bg-gray-50 p-4 rounded-t-lg">
               <CardTitle className="text-2xl font-semibold">
                 Vikailmoituksen tiedot
@@ -92,8 +92,16 @@ export default function InformationCard({
               <div className="mb-4">
                 <h3 className="text-lg font-medium">Vian tiedot:</h3>
                 <p className="font-semibold">
-                  Sijainti ID:{" "}
-                  <span className="font-normal">{issueData.location_id}</span>
+                  Huoltoyhteyshenkilön nimi:{" "}
+                  <span className="font-normal">
+                    {issueData.service_contact_name}
+                  </span>
+                </p>
+                <p className="font-semibold">
+                  Huoltoyhteyshenkilön puhelin:{" "}
+                  <span className="font-normal">
+                    {issueData.service_contact_phone}
+                  </span>
                 </p>
                 <p className="font-semibold">
                   Prioriteetti:{" "}
