@@ -166,7 +166,7 @@ export default function IssueForm({
   };
 
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-2xl mb-8">
       <div className="mb-4">
         <p
           className={`text-lg font-semibold ${
@@ -327,8 +327,9 @@ export default function IssueForm({
               </FormItem>
             )}
           />
+
           {isEditing ? (
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 ">
               <Button type="submit" disabled={isExecuting}>
                 Tallenna
               </Button>

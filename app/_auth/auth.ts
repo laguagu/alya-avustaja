@@ -7,7 +7,6 @@ import { createSession, deleteSession } from "@/app/_auth/sessions";
 import bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
-import { pause } from "@/lib/utils";
 
 export async function login(
   state: FormState,
