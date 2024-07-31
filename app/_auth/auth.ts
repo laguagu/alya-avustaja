@@ -13,13 +13,12 @@ export async function login(
   formData: FormData,
 ): Promise<FormState> {
   try {
-    console.log("Validating form fields...");
     // 1. Validate form fields
     const validatedFields = LoginFormSchema.safeParse({
       email: formData.get("email"),
       password: formData.get("password"),
     });
-    const errorMessage = { message: "Invalid login credentials." };
+    const errorMessage = { message: "Virheelliset kirjautumistiedot." };
 
     // If any form fields are invalid, return early
     if (!validatedFields.success) {
@@ -29,7 +28,6 @@ export async function login(
       };
     }
 
-    console.log("Querying database for user...");
     // 2. Query the database for the user with the given email
     const user = await db.query.users.findFirst({
       where: eq(users.email, validatedFields.data.email),
@@ -41,7 +39,6 @@ export async function login(
       return errorMessage;
     }
 
-    console.log("Comparing passwords...");
     // 3. Compare the user's password with the hashed password in the database
     const passwordMatch = await bcrypt.compare(
       validatedFields.data.password,
@@ -54,10 +51,9 @@ export async function login(
         "Password does not match for user:",
         validatedFields.data.email,
       );
-      return { message: "Invalid login credentials." };
+      return { message: "Virheelliset kirjautumistiedot." };
     }
     // 4. If login successful, create a session for the user and redirect
-    console.log("Creating session...");
     await createSession(user.id, user.role);
   } catch (error) {
     console.error("Login error:", error);
