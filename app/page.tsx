@@ -5,13 +5,15 @@ import { Separator } from "@/components/ui/separator";
 
 export default function Page() {
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gradient-to-r from-blue-50 via-green-50 to-blue-100 mx-auto w-full lg:min-h-[500px] xl:min-h-[600px] overflow-hidden">
-      <section className="max-w-[80rem]">
+    <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-blue-50 to-white mx-auto w-full lg:min-h-[500px] xl:min-h-[600px] overflow-hidden">
+      <section className="max-w-[80rem] w-full">
         <BoxRevealHome />
-        <Separator className="w-[500px] mt-3" />
+        <div className="flex justify-center">
+          <Separator className="w-[500px] mt-3" />
+        </div>
         <LoginForm />
       </section>
-      <section>
+      <section className="">
         <ScrollSection />
       </section>
     </div>
