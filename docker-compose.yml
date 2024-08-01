@@ -1,11 +1,11 @@
 # Vaihtoehtoinen tapa määrittää ympäristömuuttujat Docker-kontille on käyttää docker-compose.yml tiedostoa.
 # Ennen kuin voit ajaa tämän tiedoston, sinun täytyy luoda .env tiedosto, joka sisältää kaikki ympäristömuuttujat.
 # Sen jälkeen asenna dotenv-cli kirjasto, joka lukee .env tiedoston ja asettaa ympäristömuuttujat. npm install dotenv-cli --save-dev
-# Käytä dotenv-komentoa lataamaan ympäristömuuttujat ja rakentamaan Docker-kuva: 
+# Käytä dotenv-komentoa lataamaan ympäristömuuttujat ja rakentamaan Docker-kuva:
 # dotenv -e .env docker-compose build
 # dotenv -e .env docker-compose up
 
-version: '3.8'
+version: "3.8"
 services:
   app:
     build:

@@ -8,11 +8,14 @@ const publicRoutes = ["/"];
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
-  
+
   // Kevyt tarkistus: Tarkista vain, onko session-eväste olemassa
   const sessionCookie = req.cookies.get("session");
-  
-  if (!sessionCookie && protectedRoutes.some(route => path.startsWith(route))) {
+
+  if (
+    !sessionCookie &&
+    protectedRoutes.some((route) => path.startsWith(route))
+  ) {
     // Jos ei ole sessiota ja reitti on suojattu, ohjaa kirjautumissivulle
     return NextResponse.redirect(new URL("/", req.url));
   }
@@ -21,20 +24,20 @@ export default async function middleware(req: NextRequest) {
   if (sessionCookie) {
     try {
       const session = await decrypt(sessionCookie.value);
-    
+
       if (session?.userId) {
         // Jos käyttäjä on kirjautunut ja yrittää päästä julkiselle reitille, ohjaa /alya
         if (publicRoutes.includes(path)) {
           return NextResponse.redirect(new URL("/alya", req.url));
         }
-      } else if (protectedRoutes.some(route => path.startsWith(route))) {
+      } else if (protectedRoutes.some((route) => path.startsWith(route))) {
         // Jos sessio on vanhentunut tai virheellinen ja reitti on suojattu
         return NextResponse.redirect(new URL("/", req.url));
       }
     } catch (error) {
       console.error("Error decrypting session:", error);
       // Jos dekryptaus epäonnistuu, käsittele kuin sessiota ei olisi
-      if (protectedRoutes.some(route => path.startsWith(route))) {
+      if (protectedRoutes.some((route) => path.startsWith(route))) {
         return NextResponse.redirect(new URL("/", req.url));
       }
     }

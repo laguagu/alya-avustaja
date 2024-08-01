@@ -5,11 +5,10 @@ import { createClient } from "@supabase/supabase-js";
 import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
+import { Document } from "@langchain/core/documents";
 import { RunnableSequence } from "@langchain/core/runnables";
 import { StringOutputParser } from "@langchain/core/output_parsers";
-
 import { formatDocumentsAsString } from "langchain/util/document";
-export const dynamic = "force-dynamic";
 
 // Apufunktio keskusteluhistorian formaatoinnille viestien roolien mukaan.
 const formatVercelMessages = (chatHistory: VercelChatMessage[]) => {
@@ -39,6 +38,7 @@ const condenseQuestionPrompt = PromptTemplate.fromTemplate(
   CONDENSE_QUESTION_TEMPLATE,
 );
 
+// Vastausmalli, joka käyttää aiempaa keskusteluhistoriaa ja kontekstia vastauksen generoimiseen.
 const ENG_ANSWER_TEMPLATE = `
 You are a Finnish-speaking AI assistant specializing in Piiroinen furniture maintenance and repair. You're assisting a caretaker with furniture care instructions. Answer the question based only on the given context and chat history. If you don't know the answer, say so directly.
 
@@ -56,22 +56,18 @@ Question: {question}
 Answer:
 `;
 
-// Vastausmalli, joka käyttää aiempaa keskusteluhistoriaa ja kontekstia vastauksen generoimiseen.
-
 const answerPrompt = PromptTemplate.fromTemplate(ENG_ANSWER_TEMPLATE);
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const messages = body.messages ?? []; // Ottaa viestit pyynnön rungosta tai tyhjän taulukon, jos viestejä ei ole
-    const furnitureName = body.furnitureName; // Ottaa viestit pyynnön rungosta tai tyhjän taulukon, jos viestejä ei ole
-    console.log(furnitureName, "furnitureName");
     const previousMessages = messages.slice(0, -1); // Ottaa kaikki viestit paitsi viimeisen
     const currentMessageContent = messages[messages.length - 1].content; // Ottaa viimeisen viestin sisällön
 
     const checkQuestionClarity = (question: string) => {
       if (question.length < 5) {
-        return "Voisitko tarkentaa kysymystäsi? Yritä muotoilla se kokonaisena kysymyslauseena ja mainitse, mitä Piiroisen huonekalua kysymys koskee.";
+        return "Voisitko tarkentaa kysymystäsi? Yritä muotoilla se kokonaisena kysymyslauseena.";
       }
       return null;
     };

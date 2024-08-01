@@ -167,7 +167,9 @@ export async function fetchAllFurnitures(): Promise<DeviceItemExample[]> {
   }
 }
 
-export async function fetchFilteredServiceItems(): Promise<FilteredServiceItem[]> {
+export async function fetchFilteredServiceItems(): Promise<
+  FilteredServiceItem[]
+> {
   const fields = [
     "id",
     "name",
