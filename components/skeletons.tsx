@@ -17,3 +17,7 @@ export function LoadingIssueSkeleton() {
     </div>
   );
 }
+
+// ChatSkeletton: Alya/Chat
+// FurnituresSkeleton: Alya/Furnitures
+// IssueSkeleton: Alya/Issue

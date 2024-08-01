@@ -1,7 +1,7 @@
 import { BentoGridDemo } from "@/components/BentoGridDemo";
-import { fetchIssuesData } from "@/lib/dataFetching";
+import { fetchFilteredServiceItems } from "@/lib/dataFetching";
 
 export default async function IssuesList() {
-  const issuesData = await fetchIssuesData();
+  const issuesData = await fetchFilteredServiceItems();
   return <BentoGridDemo issues={issuesData} />;
 }

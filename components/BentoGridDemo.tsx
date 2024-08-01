@@ -2,19 +2,12 @@
 import React, { useState } from "react";
 import { BentoGrid, BentoGridItem } from "./ui/bento-grid";
 import {
-  IconArrowWaveRightUp,
-  IconBoxAlignRightFilled,
-  IconBoxAlignTopLeft,
   IconClipboardCopy,
-  IconFileBroken,
-  IconSignature,
-  IconTableColumn,
   IconSquareRoundedCheck,
   IconAlertSquare,
 } from "@tabler/icons-react";
 import { FilteredServiceItem } from "@/data/types";
 import Image from "next/image";
-import { Button } from "./ui/button";
 import { Switch } from "@/components/ui/switch";
 
 export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
@@ -33,7 +26,7 @@ export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
     description: issue.problem_description,
     priority: issue.priority,
     device_id: issue.device_id,
-    header: <ImageSkeleton src={"/chairs/arena022.jpg"} />, // Tämä pitäisi saada API:sta
+    header: <ImagePreview src={"/chairs/arena022.jpg"} />, // Tämä pitäisi saada API:sta
     icon:
       issue.is_completed === 1 ? (
         <div className="flex items-center">
@@ -83,7 +76,7 @@ export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
   );
 }
 
-const ImageSkeleton = ({ src }: { src: string }) => (
+const ImagePreview = ({ src }: { src: string }) => (
   <div className="relative flex justify-center items-center w-full  min-h-[6rem] rounded-xl md:h-full h-64">
     <Image
       src={src}
