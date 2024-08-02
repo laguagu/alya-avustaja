@@ -52,8 +52,8 @@ function ScrollSection() {
   const y2 = useTransform(scrollYProgress, [0.3, 0.5], [75, 0]);
   const y3 = useTransform(scrollYProgress, [0.5, 0.7], [75, 0]);
 
-  const opacity = useTransform(scrollYProgress, [0.7, 0.9], [0, 1]);
-
+  // const opacity = useTransform(scrollYProgress, [0.7, 0.9], [0, 1]);
+  const opacity = useTransform(scrollYProgress, [0.75, 0.95], [0, 1]);
   // Luodaan useTransform hookit tässä
   const imageTransforms = [
     [
@@ -74,7 +74,10 @@ function ScrollSection() {
   ];
 
   return (
-    <div ref={containerRef} className="relative w-full min-h-screen py-20">
+    <div
+      ref={containerRef}
+      className="relative w-full min-h-screen pt-20 pb-28"
+    >
       <div className="max-w-6xl mx-auto px-4 md:space-y-20 space-y-12">
         <motion.div style={{ y: y0 }} className="rounded-lg p-10">
           <div className="flex items-center justify-center flex-col max-w-4xl mx-auto">
@@ -135,7 +138,7 @@ function ScrollSection() {
         ))}
         <motion.div
           style={{ opacity }}
-          className="flex flex-col items-center bg-blue-50/85 backdrop-blur-sm rounded-lg p-10 space-y-6"
+          className="flex flex-col items-center bg-blue-50/85 backdrop-blur-sm rounded-lg p-10 space-y-6 "
         >
           <h2 className="text-3xl font-bold text-gray-800 ">
             Yhteistyökumppanit

@@ -5,7 +5,6 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 
 const fontSans = FontSans({
-  weight: "500",
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",

@@ -4,7 +4,8 @@ node_modules
 npm-debug.log
 README.md
 .next
+!.next/static
+!.next/standalone
 .git
 db/drizzle/seed.ts
-.env
 docs

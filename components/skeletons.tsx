@@ -18,6 +18,19 @@ export function LoadingIssueSkeleton() {
   );
 }
 
+export function LoadingIssuePageSkeleton() {
+  return (
+    <div>
+      <h1 className="flex text-center justify-center font-bold">
+        Ladataan vikailmoituksia . . .
+      </h1>
+      <div className="space-y-2 p-4 flex items-center justify-center">
+        <Skeleton className="w-6/12 h-[420px] " />
+      </div>
+    </div>
+  );
+}
+
 // ChatSkeletton: Alya/Chat
 // FurnituresSkeleton: Alya/Furnitures
 // IssueSkeleton: Alya/Issue

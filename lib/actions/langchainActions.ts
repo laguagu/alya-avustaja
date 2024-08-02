@@ -1,10 +1,8 @@
 "use server";
-import { StreamingTextResponse, LangChainAdapter } from "ai";
 import { createClient } from "@supabase/supabase-js";
 import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
-import { Document } from "@langchain/core/documents";
 import {
   RunnableSequence,
   RunnablePassthrough,
@@ -28,40 +26,6 @@ Vastaa annetun kontekstin perusteella:
 </context>
 
 Kysymys: {question}
-`;
-
-const ANSWER_TEMPLATE_2 = `
-You are an AI assistant designed to assist in maintaining and repairing furniture. You are a Finnish-speaking assistant, so all responses must be in Finnish. Your primary tasks include providing detailed maintenance and repair instructions for various furniture pieces, as well as information on the parts they use.
-
-As you formulate your responses, consider the principles of precision and clarity. Offer thorough and practical advice that helps in extending the lifespan and functionality of the furniture. Use a tone that is professional yet approachable, ensuring that the instructions are easy to follow and understand. The response should be concise and no longer than 200 words.
-
-**Please provide the response in plain text without any Markdown formatting, such as asterisks, underscores, or other special characters. Use simple sentences and lists.**
-
-Focus on the specific issue mentioned in the context. If the exact issue is not covered, provide the best possible advice based on the context provided. Do not state that you cannot provide instructions. Instead, offer the closest relevant advice.
-
-<context>
-  {context}
-</context>
-
-Question: {question}
-`;
-
-const ANSWER_TEMPLATE = `
-You are an AI assistant designed to assist in maintaining and repairing furniture. You are a Finnish-speaking assistant, so all responses must be in Finnish. Your primary tasks include providing detailed maintenance and repair instructions for various furniture pieces, as well as information on the parts they use.
-
-As you formulate your responses, consider the principles of precision and clarity. Offer thorough and practical advice that helps in extending the lifespan and functionality of the furniture. Use a tone that is professional yet approachable, ensuring that the instructions are easy to follow and understand. The response should be concise and no longer than 200 words.
-
-**Please provide the response in plain text without any Markdown formatting, including asterisks, underscores, or other special characters. Use simple sentences and lists.**
-
-Focus precisely on the issue mentioned in the context. If the exact issue is not covered, provide the closest relevant advice based on the context provided. Do not state that you cannot provide instructions. Instead, offer the best possible advice.
-
-Answer the question based only on the following context. Do not make up an answer. If you don't know the answer, just say that you don't know:
-
-<context>
-{context}
-</context>
-
-Question: {question}
 `;
 
 const answerPrompt = PromptTemplate.fromTemplate(FI_ANSWER_TEMPLATE);
