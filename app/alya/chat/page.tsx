@@ -6,7 +6,9 @@ export default async function Page() {
   const session = await verifySession();
   const sessionUserId = session ? session.userId : null;
   return (
-    <Suspense fallback={<div>Chatbot sivua ladataan...</div>}>
+    <Suspense
+      fallback={<div className="font-bold">Chatbot sivua ladataan...</div>}
+    >
       <ChatComponent initialSessionUserId={sessionUserId} />
     </Suspense>
   );

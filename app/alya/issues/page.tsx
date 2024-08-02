@@ -13,7 +13,7 @@ export default async function Page() {
 
   return (
     <div>
-      <Suspense fallback={<LoadingIssuePageSkeleton/>}>
+      <Suspense fallback={<LoadingIssuePageSkeleton />}>
         <div className="flex flex-col md:flex-row justify-between items-center w-full mb-4">
           <div className="flex flex-col items-center flex-grow">
             <h1 className="text-3xl lg:text-4xl text-center mb-2 md:my-2">

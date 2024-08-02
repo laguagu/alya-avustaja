@@ -33,4 +33,3 @@ export function LoadingIssuePageSkeleton() {
 
 // ChatSkeletton: Alya/Chat
 // FurnituresSkeleton: Alya/Furnitures
-// IssueSkeleton: Alya/Issue
