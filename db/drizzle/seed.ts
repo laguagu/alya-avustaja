@@ -1,13 +1,13 @@
 import "@/db/drizzle/envConfig"; // Varmista, että ympäristömuuttujat ladataan ensin
-import { insertUser } from "@/app/_auth/dal";
 import { NewUser } from "@/db/drizzle/schema";
 import bcrypt from "bcrypt";
+import { insertUser } from "./db";
 
 async function main() {
-  const plainPassword = process.env.ADMIN_PASSWORD;
-  const userEmail = process.env.ADMIN_EMAIL;
-  // const plainPassword = process.env.USER_PASSWORD;
-  // const userEmail = process.env.USER_EMAIL;
+  // const plainPassword = process.env.ADMIN_PASSWORD;
+  // const userEmail = process.env.ADMIN_EMAIL;
+  const plainPassword = process.env.USER_PASSWORD;
+  const userEmail = process.env.USER_EMAIL;
 
   if (!plainPassword || !userEmail) {
     console.error(

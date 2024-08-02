@@ -136,7 +136,7 @@ export default function ChatBot({ furnitureName }: { furnitureName: string }) {
       <div className="p-4 w-full max-w-3xl mx-auto">
         <div className="flex items-center">
           <h1 className="text-md text-nowrap sm:text-xl lg:text-2xl font-bold text-center flex-1">
-            Chatbot - Älyä-avustaja
+            Chatbot - Älyäavustaja
           </h1>
           {/* <Button
               onClick={toggleTTS}
@@ -227,7 +227,7 @@ export default function ChatBot({ furnitureName }: { furnitureName: string }) {
       </section>
       <div className="flex flex-col items-center justify-center">
         <p className="text-center sm:text-base text-sm tracking-tight sm:mb-5">
-          Älyä-avustaja voi tehdä virheitä. Suosittelemme tarkastamaan tärkeät
+          Älyäavustaja voi tehdä virheitä. Suosittelemme tarkastamaan tärkeät
           tiedot.
         </p>
       </div>

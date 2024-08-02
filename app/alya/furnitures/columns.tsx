@@ -46,15 +46,15 @@ export const columns: ColumnDef<DevicesTableColums>[] = [
   },
   {
     accessorKey: "serial",
-    header: "Sarja numero",
+    header: "Sarjanumero",
   },
   {
     accessorKey: "brand",
-    header: "Brand",
+    header: "Brändi",
   },
   {
     accessorKey: "model",
-    header: "Model",
+    header: "Malli",
     cell({ row }) {
       return <div>{row.original.model}</div>;
     },

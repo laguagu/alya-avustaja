@@ -1,6 +1,7 @@
 import * as schema from "@/db/drizzle/schema";
 import { drizzle } from "drizzle-orm/neon-serverless";
 import { Pool } from "@neondatabase/serverless";
+import { users } from "./migration/schema";
 
 const connectionString = process.env.DATABASE_URL;
 
@@ -16,4 +17,10 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000, // yhteyden muodostamisen aikakatkaisu
 });
 
+
 export const db = drizzle(pool, { schema });
+
+
+export const insertUser = async (user: schema.NewUser) => {
+  return db.insert(users).values(user).returning();
+};
