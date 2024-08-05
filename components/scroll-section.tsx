@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import PartnerLogos from "./partners-logos";
 import { useMediaQuery } from "react-responsive";
+import HomeContentSection from "./home-content-sectio";
 
 const sectionContents = [
   {
@@ -98,43 +99,14 @@ function ScrollSection() {
         </motion.div>
 
         {[y1, y2, y3].map((y, index) => (
-          <motion.div
+          <HomeContentSection
             key={index}
-            style={{ y }}
-            className="flex flex-col md:flex-row items-center bg-transparent p-10 space-y-6 md:space-y-0 md:space-x-10"
-          >
-            <div className="flex-1 w-full md:w-auto mb-6 md:mb-0">
-              <h2 className="text-3xl font-bold text-gray-800 mb-4">
-                {sectionContents[index].title}
-              </h2>
-              <p className="text-lg text-gray-600">
-                {sectionContents[index].content}
-              </p>
-            </div>
-            <div className="relative w-full h-[70vh] md:w-[50vh] md:h-[70vh]">
-              {sectionContents[index].images.map((src, imgIndex) => (
-                <motion.div
-                  key={imgIndex}
-                  style={{ y: imageTransforms[index][imgIndex] }}
-                  className={`absolute ${
-                    imgIndex === 0
-                      ? "w-[100%] h-[60vh] md:w-[50vh] z-10"
-                      : imgIndex === 1
-                        ? "w-[60%] h-[60%] left-[20%] top-[20%] z-20"
-                        : "w-[40%] h-[40%] left-[10%] top-[30%] z-30"
-                  }`}
-                >
-                  <Image
-                    src={src}
-                    alt={`Image ${imgIndex + 1}`}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="rounded-lg shadow-md object-cover"
-                  />
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+            title={sectionContents[index].title}
+            content={sectionContents[index].content}
+            images={sectionContents[index].images}
+            y={y}
+            imageTransforms={imageTransforms[index]}
+          />
         ))}
         <motion.div
           style={{ opacity }}

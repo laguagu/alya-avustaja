@@ -2,7 +2,6 @@
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useChat } from "@ai-sdk/react";
 import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { Message } from "ai";
 import { Send, Mic } from "lucide-react";
@@ -10,10 +9,9 @@ import { getWhisperTranscription } from "@/lib/actions/ai-actions";
 import { TailSpin, Rings } from "react-loader-spinner";
 import clsx from "clsx";
 import ChatMessage from "@/components/chat-message";
-import { insertChatMessageAction } from "@/lib/actions/actions";
-
-const MAX_STORAGE_SIZE = 4 * 1024 * 1024; // 4 MB
-const MESSAGE_EXPIRATION_TIME = 2 * 24 * 60 * 60 * 1000; // 2 days in milliseconds
+import { useChatMessages } from "@/lib/hooks/UseChatMessages";
+import { useTextToSpeech } from "@/lib/hooks/useTextToSpeech";
+import { useAudioRecording } from "@/lib/hooks/useAudioRecording";
 
 interface TTSResponse {
   audioURL: string;
@@ -25,123 +23,30 @@ export default function ChatComponent({
 }: {
   initialSessionUserId: number | null;
 }) {
-  const [sessionUserId, setSessionUserId] = useState(initialSessionUserId);
-  const [ttsEnabled, setTTSEnabled] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [savedMessages, setSavedMessages] = useState<Message[]>([]);
-  const [recording, setRecording] = useState(false);
-  const [isProcessingAudio, setIsProcessingAudio] = useState(false);
-  const [isPreparingAudio, setIsPreparingAudio] = useState(false);
-
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<BlobPart[]>([]);
-  const loadedRef = useRef(false);
-  const chatParent = useRef<HTMLUListElement>(null);
-
   const {
-    messages: primaryMessages,
-    input,
+    primaryMessages,
     append,
-    setMessages,
+    clearChatHistory,
+    input,
     handleInputChange,
     handleSubmit,
-    setInput,
     isLoading,
-    stop,
-  } = useChat({
-    api: `/api/supabase`,
-    initialMessages: savedMessages,
-    onError: (e: any) => {
-      console.log(e);
-    },
-    onFinish: async (message: { role: string; content: string }) => {
-      if (sessionUserId) {
-        try {
-          await insertChatMessageAction({
-            userId: sessionUserId,
-            role: message.role,
-            content: message.content,
-            createdAt: new Date(),
-          });
-        } catch (error) {
-          console.error("Error saving message to database:", error);
-        }
-      } else {
-        console.error("User not authenticated");
-      }
-    },
-  });
+  } = useChatMessages(initialSessionUserId);
+  const {
+    ttsEnabled,
+    isPreparingAudio,
+    isPlaying,
+    toggleTTS,
+    playTextToSpeech,
+  } = useTextToSpeech();
+  const {
+    recording,
+    isProcessingAudio,
+    handleStartRecording,
+    handleStopRecording,
+  } = useAudioRecording();
 
-  useEffect(() => {
-    if (!loadedRef.current) {
-      const savedMessages = localStorage.getItem("chatMessages");
-      if (savedMessages) {
-        const parsedMessages = JSON.parse(savedMessages);
-        setSavedMessages(parsedMessages);
-        setMessages(parsedMessages);
-      }
-      loadedRef.current = true;
-    }
-  }, [setMessages]);
-
-  // Poista vanhimpia viestejä, jos viestihistoria ylittää tallennuskoon rajan
-  const trimMessages = useCallback((messages: Message[], maxSize: number) => {
-    let size = JSON.stringify(messages).length;
-    while (size > maxSize && messages.length > 0) {
-      messages.shift();
-      size = JSON.stringify(messages).length;
-    }
-    return messages;
-  }, []);
-
-  // Tarkista ja poista vanhentuneet viestit
-  const checkAndClearExpiredMessages = useCallback((messages: Message[]) => {
-    if (messages.length > 0) {
-      const firstAssistantMessage = messages.find(
-        (message) => message.role === "assistant",
-      );
-      if (firstAssistantMessage && firstAssistantMessage.createdAt) {
-        const firstMessageTime = new Date(
-          firstAssistantMessage.createdAt,
-        ).getTime();
-        if (Date.now() - firstMessageTime > MESSAGE_EXPIRATION_TIME) {
-          console.warn(
-            "Ensimmäinen assistant-viesti on vanhentunut. Tyhjennetään koko viestihistoria.",
-          );
-          return [];
-        }
-      }
-    }
-    return messages;
-  }, []);
-
-  // Karsi viestejä, jos ne ylittävät tallennuskoon rajan tai ovat vanhentuneita
-  useEffect(() => {
-    if (primaryMessages.length > 0) {
-      let updatedMessages = checkAndClearExpiredMessages([...primaryMessages]);
-      updatedMessages = trimMessages(updatedMessages, MAX_STORAGE_SIZE);
-      try {
-        localStorage.setItem("chatMessages", JSON.stringify(updatedMessages));
-      } catch (error) {
-        console.error("Failed to save messages to localStorage:", error);
-      }
-      if (updatedMessages.length < primaryMessages.length) {
-        setMessages(updatedMessages);
-        if (updatedMessages.length === 0) {
-          console.warn(
-            "Ensimmäinen assistant-viesti oli vanhentunut, joten koko viestihistoria tyhjennettiin.",
-          );
-        } else {
-          console.warn("Vanhimpia viestejä poistettiin tilan säästämiseksi.");
-        }
-      }
-    }
-  }, [
-    primaryMessages,
-    setMessages,
-    trimMessages,
-    checkAndClearExpiredMessages,
-  ]);
+  const chatParent = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
     const domNode = chatParent.current;
@@ -150,79 +55,15 @@ export default function ChatComponent({
     }
   });
 
-  // Lataa viestit localStorage:sta komponentin alustuksen yhteydessä
-  const clearChatHistory = useCallback(() => {
-    localStorage.removeItem("chatMessages");
-    setMessages([]);
-    setSavedMessages([]);
-  }, [setMessages]);
-
-  const handleStartRecording = useCallback(() => {
-    audioChunksRef.current = [];
-    navigator.mediaDevices
-      .getUserMedia({ audio: true })
-      .then((stream) => {
-        if (mediaRecorderRef.current) {
-          mediaRecorderRef.current.stop();
-        }
-        const mediaRecorder = new MediaRecorder(stream, {
-          mimeType: "audio/webm",
-        });
-        mediaRecorderRef.current = mediaRecorder;
-        mediaRecorder.ondataavailable = (event) => {
-          if (event.data.size > 0) {
-            audioChunksRef.current.push(event.data);
-          }
-        };
-        mediaRecorder.start();
-        setRecording(true);
-      })
-      .catch((error) => {
-        console.error("Error starting recording:", error);
+  const handleAudioSubmit = useCallback(async () => {
+    const transcriptionText = await handleStopRecording();
+    if (transcriptionText) {
+      append({
+        role: "user",
+        content: transcriptionText,
       });
-  }, []);
-
-  const handleStopRecording = useCallback(async () => {
-    if (!mediaRecorderRef.current) {
-      console.error("MediaRecorder not initialized");
-      return;
     }
-    mediaRecorderRef.current.stop();
-    setRecording(false);
-    // Odota hetki, jotta kaikki audioChunks on varmasti lisätty
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    try {
-      const audioBlob = new Blob(audioChunksRef.current, {
-        type: "audio/webm",
-      });
-
-      if (audioBlob.size > 25415) {
-        setIsProcessingAudio(true);
-        const formData = new FormData();
-        formData.append("file", audioBlob, "audio.webm");
-        const transcriptionText = await getWhisperTranscription(formData);
-        setIsProcessingAudio(false);
-        if (transcriptionText) {
-          append({
-            role: "user",
-            content: transcriptionText,
-          });
-        }
-      } else {
-        console.log("Audio too short, not processing");
-      }
-    } catch (error) {
-      console.error("Error processing audio:", error);
-    }
-
-    // Tyhjennä audioChunks seuraavaa nauhoitusta varten
-    audioChunksRef.current = [];
-  }, [append]);
-
-  const toggleTTS = useCallback(() => {
-    setTTSEnabled((prev) => !prev);
-  }, []);
+  }, [handleStopRecording, append]);
 
   const isDisabled =
     isLoading || isPlaying || isProcessingAudio || isPreparingAudio;
@@ -318,7 +159,7 @@ export default function ChatComponent({
               aria-label={recording ? "Lopeta nauhoitus" : "Aloita nauhoitus"}
               type="button"
               variant={"secondary"}
-              onClick={recording ? handleStopRecording : handleStartRecording}
+              onClick={recording ? handleAudioSubmit : handleStartRecording}
               disabled={isDisabled && !recording}
             >
               {recording ? (
