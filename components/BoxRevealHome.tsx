@@ -1,10 +1,10 @@
 import BoxReveal from "@/components/magicui/box-reveal";
 import { Check } from "lucide-react";
 
-const ittems = [
+const items = [
   "Tarkastella huoltokohteen vikailmoituksia",
   "Täydentää vikailmoituksia",
-  "Saada tekoälyn avulla huonekalujen huolto-ohjeita",
+  "Saada huonekalujen huolto-ohjeita",
 ];
 
 export function BoxRevealHome() {
@@ -28,7 +28,7 @@ export function BoxRevealHome() {
         <div className="mt-6 text-sm md:text-base w-full">
           <p className="font-semibold mb-3">Sovelluksella voit:</p>
           <ul className="space-y-2">
-            {ittems.map((item, index) => (
+            {items.map((item, index) => (
               <ListItem key={index} item={item} />
             ))}
           </ul>
