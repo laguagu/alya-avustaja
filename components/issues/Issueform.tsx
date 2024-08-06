@@ -34,7 +34,7 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { DeviceItemCard, FurnitureInfo, IssueFormValues } from "@/data/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   closeIssueAction,
   openIssueAction,
@@ -44,6 +44,7 @@ import { AiInstructionButton } from "../Client-Buttons";
 import { FormSchema } from "@/lib/schemas";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
+import { Textarea } from "../ui/textarea";
 
 interface IssueFormProps {
   data: IssueFormValues | null;
@@ -61,6 +62,10 @@ export default function IssueForm({
   const issueId = data?.id;
   const [isEditing, setIsEditing] = useState(false);
   const isCompleted = data?.is_completed ?? false;
+  const [textareaRows, setTextareaRows] = useState(2);
+  const [instructionContent, setInstructionContent] = useState(
+    data?.instruction || "",
+  );
 
   const { execute: executeStatusChange, isExecuting: isChangingStatus } =
     useAction(isCompleted ? openIssueAction : closeIssueAction, {
@@ -164,6 +169,11 @@ export default function IssueForm({
       await executeStatusChange({ issueId: numericIssueId });
     }
   };
+
+  useEffect(() => {
+    const lineCount = instructionContent.split("\n").length;
+    setTextareaRows(Math.min(Math.max(2, lineCount), 10));
+  }, [instructionContent]);
 
   return (
     <div className="max-w-2xl mb-8">
@@ -285,17 +295,26 @@ export default function IssueForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Tekoälyn huolto-ohje ehdotus</FormLabel>
-                <Input
+                <Textarea
                   placeholder="Älyä avustajan huolto-ohje ehdotus"
                   {...field}
+                  value={instructionContent}
+                  onChange={(e) => {
+                    setInstructionContent(e.target.value);
+                    field.onChange(e);
+                  }}
                   disabled={!isEditing}
+                  rows={textareaRows}
                 />
                 <div className="mt-2 tracking-tight md:tracking-normal flex items-center">
                   Kysy AI:n suositusta kalusteen huollosta
                   <AiInstructionButton
                     isEditing={isEditing}
                     instruction={field.value}
-                    updateInstruction={updateInstruction}
+                    updateInstruction={(newInstruction) => {
+                      setInstructionContent(newInstruction);
+                      field.onChange(newInstruction);
+                    }}
                     furnitureInfo={furnitureInfo}
                   />
                 </div>
