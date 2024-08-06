@@ -159,10 +159,6 @@ export default function IssueForm({
     setIsEditing(false);
   }
 
-  const updateInstruction = (instruction: string) => {
-    setValue("instruction", instruction);
-  };
-
   const handleStatusChange = async () => {
     const numericIssueId = Number(issueId);
     if (issueId) {

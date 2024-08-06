@@ -20,6 +20,7 @@ export default async function Page() {
 
   return (
     <div className="container mx-auto py-10">
+     <p className="text-xs text-gray-500/70 italic md:hidden">Vinkki: Käännä laitteesi vaakatasoon nähdäksesi kaikki kentät kerralla.</p>
       <Suspense
         fallback={
           <div className="font-bold item-center flex justify-center">
