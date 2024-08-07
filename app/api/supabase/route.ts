@@ -9,9 +9,13 @@ import { RunnableSequence } from "@langchain/core/runnables";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { formatDocumentsAsString } from "langchain/util/document";
 
+// Määritellään maksimi keskusteluhistorian pituus
+const MAX_CHAT_HISTORY_LENGTH = 14;
+
 // Apufunktio keskusteluhistorian formaatoinnille viestien roolien mukaan.
 const formatVercelMessages = (chatHistory: VercelChatMessage[]) => {
-  const formattedDialogueTurns = chatHistory.map((message) => {
+  const recentChatHistory = chatHistory.slice(-MAX_CHAT_HISTORY_LENGTH);
+  const formattedDialogueTurns = recentChatHistory.map((message) => {
     if (message.role === "user") {
       return `Human: ${message.content}`;
     } else if (message.role === "assistant") {
