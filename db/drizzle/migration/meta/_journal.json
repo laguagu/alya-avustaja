@@ -15,6 +15,13 @@
       "when": 1721674643240,
       "tag": "0001_dusty_turbo",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1723021993151,
+      "tag": "0002_powerful_bromley",
+      "breakpoints": true
     }
   ]
 }

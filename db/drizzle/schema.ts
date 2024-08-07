@@ -6,6 +6,7 @@ import {
   integer,
   timestamp,
   time,
+  jsonb,
 } from "drizzle-orm/pg-core";
 import { InferInsertModel } from "drizzle-orm";
 import { pgEnum } from "drizzle-orm/pg-core";
@@ -43,7 +44,7 @@ export const chatMessages = pgTable("chat_messages", {
     .references(() => users.id)
     .notNull(), // Lisää tämä rivi
   role: text("role").notNull(),
-  content: text("content").notNull(),
+  content: jsonb("content").notNull(),
   created_at: timestamp("created_at", { withTimezone: true })
     .default(sql`timezone('utc', now())`)
     .notNull(),

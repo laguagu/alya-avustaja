@@ -302,7 +302,7 @@ export interface FurnitureInfo {
 export interface ChatMessage {
   userId: number;
   role: string;
-  content: string;
+  content: { role: string; message: string }[];
   createdAt: Date;
 }
 

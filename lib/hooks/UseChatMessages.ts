@@ -29,10 +29,14 @@ export function useChatMessages(initialSessionUserId: number | null) {
     onFinish: async (message: { role: string; content: string }) => {
       if (sessionUserId) {
         try {
+          const combinedContent = [
+            { role: "user", message: input },
+            { role: message.role, message: message.content },
+          ];
           await insertChatMessageAction({
             userId: sessionUserId,
             role: message.role,
-            content: message.content,
+            content: combinedContent,
             createdAt: new Date(),
           });
         } catch (error) {
