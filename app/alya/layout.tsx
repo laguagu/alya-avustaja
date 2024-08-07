@@ -20,7 +20,9 @@ export default async function DashboardLayout({
       <div className="flex flex-col overflow-hidden">
         <SheetNav issues={issues} />
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 overflow-auto">
-          <Suspense fallback={<div>Ladataan sisälöä...</div>}>
+          <Suspense
+            fallback={<div className="font-bold">Ladataan sisälöä . . .</div>}
+          >
             {children}
           </Suspense>
         </main>

@@ -1,5 +1,5 @@
-import { useState, useCallback, useRef } from 'react';
-import { getWhisperTranscription } from '@/lib/actions/ai-actions';
+import { useState, useCallback, useRef } from "react";
+import { getWhisperTranscription } from "@/lib/actions/ai-actions";
 
 export function useAudioRecording() {
   const [recording, setRecording] = useState(false);
@@ -70,6 +70,6 @@ export function useAudioRecording() {
     recording,
     isProcessingAudio,
     handleStartRecording,
-    handleStopRecording
+    handleStopRecording,
   };
 }

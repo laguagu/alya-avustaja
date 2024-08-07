@@ -17,9 +17,7 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000, // yhteyden muodostamisen aikakatkaisu
 });
 
-
 export const db = drizzle(pool, { schema });
-
 
 export const insertUser = async (user: schema.NewUser) => {
   return db.insert(users).values(user).returning();
