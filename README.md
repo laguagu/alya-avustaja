@@ -25,6 +25,14 @@ Tämä sovellus tarjoaa kattavan ratkaisun kaluston vikojen katseluun, raportoin
 - **Lunni API Integraatio**
   - Integroitu Lunni API -järjestelmän kanssa vikailmoitusten ja kaluston tietojen hakemiseen.
 
+## Tietojen Tallennus
+
+Sovellus käyttää Supabase-tietokantaa seuraavien tietojen tallentamiseen:
+- Käyttäjien kirjautumistiedot
+- Chatbotin viestit
+
+Nämä tiedot tallennetaan käyttökokemuksen parantamiseksi ja keskusteluhistorian säilyttämiseksi.
+
 ## Kohderyhmä
 
 Tämä sovellus on suunniteltu erityisesti Helsingin kaupungin kohdevastaavien (talonmiesten) käyttöön.
@@ -46,6 +54,6 @@ Tämä sovellus on suunniteltu erityisesti Helsingin kaupungin kohdevastaavien (
 - Next.js
 - LangChain
 - OpenAI API
-- Supabase (autentikointi)
+- Supabase (autentikointi ja tietojen tallennus)
 - Vercel AI SDK
 - Lunni API
