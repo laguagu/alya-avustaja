@@ -1,6 +1,7 @@
 import React from "react";
 import { motion, MotionValue, useTransform } from "framer-motion";
 import Image from "next/image";
+import clsx from 'clsx';
 
 interface HomeContentSectionProps {
   title: string;
@@ -65,13 +66,16 @@ const HomeContentSection: React.FC<HomeContentSectionProps> = ({
                   ? "w-[60%] h-[60%] left-[20%] top-[20%] z-20"
                   : "w-[40%] h-[40%] left-[10%] top-[30%] z-30"
             }`}
-          >
+          > 
             <Image
               src={src}
               alt={`Kuva ${imgIndex + 1}: ${title}`}
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
-              className="rounded-lg shadow-md object-cover"
+              className={clsx( 
+                "shadow-md object-cover",
+                imgIndex === 0 ? "rounded-3xl shadow-xl" : "rounded-lg"
+              )}
             />
           </motion.div>
         ))}
