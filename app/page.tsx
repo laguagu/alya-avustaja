@@ -13,7 +13,7 @@ export default function Page() {
         </div>
         <LoginForm />
       </section>
-      <section className="">
+      <section className="w-full py-20">
         <ScrollSection />
       </section>
     </div>

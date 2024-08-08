@@ -5,6 +5,7 @@ import Image from "next/image";
 import PartnerLogos from "./partners-logos";
 import { useMediaQuery } from "react-responsive";
 import HomeContentSection from "./home-content-sectio";
+import Link from "next/link";
 
 const sectionContents = [
   {
@@ -49,9 +50,9 @@ function ScrollSection() {
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   const y0 = useTransform(scrollYProgress, [0, 0.2], [0, 0]); // FIXME -50 -> -25 tai 0 ?
-  const y1 = useTransform(scrollYProgress, [0.1, 0.3], [75, 0]);
-  const y2 = useTransform(scrollYProgress, [0.3, 0.5], [75, 0]);
-  const y3 = useTransform(scrollYProgress, [0.5, 0.7], [75, 0]);
+  const y1 = useTransform(scrollYProgress, [0.1, 0.4], [50, 0]);
+  const y2 = useTransform(scrollYProgress, [0.3, 0.6], [50, 0]);
+  const y3 = useTransform(scrollYProgress, [0.5, 0.8], [50, 0]);
 
   // const opacity = useTransform(scrollYProgress, [0.7, 0.9], [0, 1]);
   const opacity = useTransform(scrollYProgress, [0.75, 0.95], [0, 1]);
@@ -77,27 +78,50 @@ function ScrollSection() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full min-h-screen pt-20 pb-28"
+      className="relative w-full min-h-screen md:pt-32 pt-20 pb-28"
     >
       <div className="max-w-6xl mx-auto px-4 md:space-y-20 space-y-12">
-        <motion.div style={{ y: y0 }} className="rounded-lg p-10">
-          <div className="flex items-center justify-center flex-col max-w-4xl mx-auto">
-            <h2 className="text-center  text-gray-700 tracking-tight">
-              Tämä sovellus on kehitetty osana Älyä-hanketta - älykästä
-              teknologiaa kalusteiden elinkaaren pidentämiseen
-            </h2>
-            <Image
-              src={"/hh-logo.png"}
-              priority
-              alt="hh-logo"
-              width={125}
-              height={125}
-              className="mt-4 transition-transform hover:scale-105"
-              style={{ width: "auto", height: "auto" }}
+        <motion.div style={{ y: y0 }} className="rounded-lg p-10  ">
+          <div className="flex items-center justify-center flex-col max-w-4xl mx-auto relative">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              // whileHover={{ scale: 1.95 }}
+              transition={{ duration: 0.5 }}
+              className="absolute -top-16 -left-16 w-32 h-32 bg-blue-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"
             />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="absolute -bottom-16 -right-16 w-32 h-32 bg-teal-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"
+            />
+            <h2 className="text-center text-2xl font-bold text-gray-800 mb-6 relative z-10">
+              Älyä-hanke
+            </h2>
+            <p className="text-center text-xl text-gray-700 tracking-tight mb-8 relative z-10">
+            Tämä sovellus on kehitetty osana Älyä-hanketta - älykästä
+            teknologiaa kalusteiden elinkaaren pidentämiseen
+            </p>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative z-10"
+            >
+              <Link href={"https://www.alya-hanke.fi/"}>
+                <Image
+                  src={"/hh-logo.png"}
+                  priority
+                  alt="Haaga-Helia logo"
+                  width={100}
+                  height={100}
+                  className="transition-all duration-300 filter hover:brightness-110"
+                  style={{ width: "auto", height: "auto" }}
+                />
+              </Link>
+            </motion.div>
           </div>
         </motion.div>
-
         {[y1, y2, y3].map((y, index) => (
           <HomeContentSection
             key={index}
@@ -110,14 +134,11 @@ function ScrollSection() {
         ))}
         <motion.div
           style={{ opacity }}
-          className="flex flex-col items-center bg-blue-50/85 backdrop-blur-sm rounded-lg p-10 space-y-6 "
+          className="flex flex-col items-center bg-blue-50/85 backdrop-blur-sm rounded-2xl p-10 space-y-6 "
         >
           <h2 className="text-3xl font-bold text-gray-800 ">
             Yhteistyökumppanit
           </h2>
-          {/* <p className="text-lg text-gray-600 text-center max-w-2xl">
-              TÄHÄN JOTAIN TEKSTIÄ
-          </p> */}
           <PartnerLogos />
         </motion.div>
       </div>
