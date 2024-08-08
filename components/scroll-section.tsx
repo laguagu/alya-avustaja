@@ -100,8 +100,8 @@ function ScrollSection() {
               Älyä-hanke
             </h2>
             <p className="text-center text-xl text-gray-700 tracking-tight mb-8 relative z-10">
-            Tämä sovellus on kehitetty osana Älyä-hanketta - älykästä
-            teknologiaa kalusteiden elinkaaren pidentämiseen
+              Tämä sovellus on kehitetty osana Älyä-hanketta - älykästä
+              teknologiaa kalusteiden elinkaaren pidentämiseen
             </p>
             <motion.div
               whileHover={{ scale: 1.05 }}

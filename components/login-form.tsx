@@ -20,11 +20,15 @@ function LoginForm() {
               Syötä sähköpostiosoitteesi ja salasanasi kirjautuaksesi sisään
             </p>
             {state?.message && (
-              <p className="text-red-500 text-center font-semibold">{state.message}</p>
+              <p className="text-red-500 text-center font-semibold">
+                {state.message}
+              </p>
             )}
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-700">Sähköposti</Label>
+                <Label htmlFor="email" className="text-gray-700">
+                  Sähköposti
+                </Label>
                 <Input
                   id="email"
                   type="email"
@@ -34,11 +38,15 @@ function LoginForm() {
                   className="w-full border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200"
                 />
                 {state?.errors?.email && (
-                  <p className="text-red-500 text-sm">{state.errors.email.join(", ")}</p>
+                  <p className="text-red-500 text-sm">
+                    {state.errors.email.join(", ")}
+                  </p>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-gray-700">Salasana</Label>
+                <Label htmlFor="password" className="text-gray-700">
+                  Salasana
+                </Label>
                 <Input
                   id="password"
                   type="password"
@@ -47,7 +55,9 @@ function LoginForm() {
                   className="w-full border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200"
                 />
                 {state?.errors?.password && (
-                  <p className="text-red-500 text-sm">{state.errors.password.join(", ")}</p>
+                  <p className="text-red-500 text-sm">
+                    {state.errors.password.join(", ")}
+                  </p>
                 )}
               </div>
               <LoginButton />

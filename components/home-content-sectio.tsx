@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion, MotionValue, useMotionValue, useTransform } from "framer-motion";
+import React from "react";
+import { motion, MotionValue, useTransform } from "framer-motion";
 import Image from "next/image";
 
 interface HomeContentSectionProps {
@@ -19,19 +19,15 @@ const HomeContentSection: React.FC<HomeContentSectionProps> = ({
   y,
   imageTransforms,
   index,
-  scrollProgress
+  scrollProgress,
 }) => {
   // Blob-efekti vain ensimmäiselle osiolle
   const blobOpacity = useTransform(
     scrollProgress,
-    index === 0
-      ? [0, 0.1, 0.3, 0.4]
-      : [0, 0.1, 0.9, 1],
-    index === 0
-      ? [0, 0.2, 0.2, 0]
-      : [0.2, 0.2, 0.2, 0.2]
+    index === 0 ? [0, 0.1, 0.3, 0.4] : [0, 0.1, 0.9, 1],
+    index === 0 ? [0, 0.2, 0.2, 0] : [0.2, 0.2, 0.2, 0.2],
   );
-  console.log(index,y,scrollProgress)
+  console.log(index, y, scrollProgress);
   return (
     <motion.div
       style={{ y }}
@@ -42,10 +38,11 @@ const HomeContentSection: React.FC<HomeContentSectionProps> = ({
           className="absolute -z-10 w-[600px] h-[600px] rounded-full mix-blend-multiply filter blur-[100px]"
           style={{
             opacity: blobOpacity,
-            background: "radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(16, 185, 129, 0.15) 100%)",
-            left: '-20%',
-            top: '50%',
-            transform: 'translateY(-50%)',
+            background:
+              "radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(16, 185, 129, 0.15) 100%)",
+            left: "-20%",
+            top: "50%",
+            transform: "translateY(-50%)",
           }}
         />
       )}
@@ -55,7 +52,7 @@ const HomeContentSection: React.FC<HomeContentSectionProps> = ({
         </h2>
         <p className="text-lg text-gray-600 leading-relaxed">{content}</p>
       </div>
-      
+
       <div className="relative w-full h-[70vh] md:w-[50vh] md:h-[70vh] z-10">
         {images.map((src, imgIndex) => (
           <motion.div
