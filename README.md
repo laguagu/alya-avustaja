@@ -1,31 +1,51 @@
-# Furniture Fault Reporting and Maintenance Application
+# Kalustohuollon ja Vikailmoitusten Hallintasovellus
 
-This application provides a comprehensive solution for viewing, reporting, and updating furniture faults. It leverages advanced AI chatbot technology to offer maintenance instructions, making it easier for users to manage and repair their furniture. Built with Next.js and utilizing the LangChain library, this application integrates seamlessly with OpenAI's models for generating conversational AI responses.
+Tämä sovellus tarjoaa kattavan ratkaisun kaluston vikojen katseluun, raportointiin ja päivittämiseen. Se hyödyntää edistynyttä tekoälypohjaista chatbot-teknologiaa tarjotakseen huolto-ohjeita, helpottaen käyttäjien kaluston hallintaa ja korjaamista. Sovellus on rakennettu Next.js:llä ja se käyttää LangChain-kirjastoa, integroituen saumattomasti OpenAI:n malleihin keskustelevan tekoälyn vastausten generoimiseksi.
 
-## Features
+## Ominaisuudet
 
-- **Fault Reporting and Viewing**
+- **Vikailmoitusten Raportointi ja Katselu**
+  - Käyttäjät voivat raportoida uusia kaluston vikoja.
+  - Tarkastella olemassa olevia vikoja yksityiskohtaisine kuvauksineen.
 
-  - Users can report new furniture faults.
-  - View existing faults along with detailed descriptions.
+- **Huolto-ohjeet**
+  - Saada yksityiskohtaisia huolto- ja korjausohjeita tekoäly-chatbotilta.
+  - Chatbot tarjoaa vastauksia suomeksi, keskittyen tarkkuuteen ja selkeyteen.
 
-- **Maintenance Instructions**
+- **Tekoälypohjaiset Ratkaisut**
+  - Hyödyntää LangChainia keskustelukontekstien käsittelyyn ja hallintaan.
+  - Integroituu OpenAI:n kanssa tekoälyvastausten generoimiseksi.
 
-  - Get detailed maintenance and repair instructions from an AI chatbot.
-  - The chatbot provides responses in Finnish, focusing on precision and clarity.
+- **Autentikointi**
+  - Sovellus käyttää Supabasea autentikointiin JSON Web Token (JWT) -teknologialla.
 
-- **AI-Powered Solutions**
-  - Utilizes LangChain for processing and managing conversational contexts.
-  - Integrates with OpenAI for generating AI responses.
+- **AI SDK Integraatio**
+  - Sovellus hyödyntää Vercel AI SDK:n useChat-koukkua chatbot-toiminnallisuuden integroimiseen.
 
-### Installation
+- **Lunni API Integraatio**
+  - Integroitu Lunni API -järjestelmän kanssa vikailmoitusten ja kaluston tietojen hakemiseen.
 
-1. Clone the repository to your local machine.
-2. Install the dependencies by running `npm install`.
-3. Set up your `.env` file with your API Keys.
+## Kohderyhmä
 
-### Running the Application
+Tämä sovellus on suunniteltu erityisesti Helsingin kaupungin kohdevastaavien (talonmiesten) käyttöön.
 
-- To start the development server, run `npm run dev`.
-- For building the application for production, use `npm run build`.
-- Start the production server with `npm start`.
+## Asennus
+
+1. Kloonaa repositorio paikalliselle koneellesi.
+2. Asenna riippuvuudet suorittamalla `npm install`.
+3. Määritä `.env`-tiedosto API-avaimillasi.
+
+## Sovelluksen Käynnistäminen
+
+- Käynnistä kehityspalvelin komennolla `npm run dev`.
+- Rakenna sovellus tuotantoa varten komennolla `npm run build`.
+- Käynnistä tuotantopalvelin komennolla `npm start`.
+
+## Teknologiat
+
+- Next.js
+- LangChain
+- OpenAI API
+- Supabase (autentikointi)
+- Vercel AI SDK
+- Lunni API
