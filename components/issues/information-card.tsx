@@ -77,7 +77,7 @@ export default function InformationCard({
       </Card>
 
       {issueData && (
-        <Card className="bg-white shadow-md rounded-lg border-gray-200 border transition-all duration-300 hover:shadow-lg lg:col-span-2">
+        <Card className="bg-white shadow-md rounded-lg border-gray-200 border transition-all duration-300 hover:shadow-lg lg:col-span-2 mb-4 md:mb-0">
           <CardHeader className="bg-gray-100 p-6 rounded-t-lg">
             <CardTitle className="text-2xl font-bold text-gray-800">
               Vikailmoituksen tiedot
