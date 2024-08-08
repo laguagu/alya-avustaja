@@ -5,23 +5,28 @@ Tämä sovellus tarjoaa kattavan ratkaisun kaluston vikojen katseluun, raportoin
 ## Ominaisuudet
 
 - **Vikailmoitusten Raportointi ja Katselu**
+
   - Käyttäjät voivat raportoida uusia kaluston vikoja.
   - Tarkastella olemassa olevia vikoja yksityiskohtaisine kuvauksineen.
   - Sulkea/Avata vikailmoituksia
   - Täydentää vikailmoituksua automaattisesti
 
 - **Huolto-ohjeet**
+
   - Saada yksityiskohtaisia huolto- ja korjausohjeita tekoäly-chatbotilta.
   - Chatbot tarjoaa vastauksia suomeksi Piiroisen huonekalujen ylläpitoon ja huoltoon keskittyen.
 
 - **Tekoälypohjaiset Ratkaisut**
+
   - Hyödyntää LangChainia keskustelukontekstien käsittelyyn ja hallintaan.
   - Integroituu OpenAI:n kanssa tekoälyvastausten generoimiseksi.
 
 - **Autentikointi**
+
   - Sovellus käyttää Supabasea autentikointiin JSON Web Token (JWT) -teknologialla.
 
 - **AI SDK Integraatio**
+
   - Sovellus hyödyntää Vercel AI SDK:n useChat-koukkua chatbot-toiminnallisuuden integroimiseen.
 
 - **Lunni API Integraatio**
