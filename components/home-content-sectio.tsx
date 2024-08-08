@@ -27,7 +27,7 @@ const HomeContentSection: React.FC<HomeContentSectionProps> = ({
     index === 0 ? [0, 0.1, 0.3, 0.4] : [0, 0.1, 0.9, 1],
     index === 0 ? [0, 0.2, 0.2, 0] : [0.2, 0.2, 0.2, 0.2],
   );
-  console.log(index, y, scrollProgress);
+
   return (
     <motion.div
       style={{ y }}
