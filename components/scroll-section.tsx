@@ -80,7 +80,7 @@ function ScrollSection() {
       ref={containerRef}
       className="relative w-full min-h-screen md:pt-32 pt-20 pb-28"
     >
-      <div className="max-w-6xl mx-auto px-4 md:space-y-20 space-y-12">
+      <div className="max-w-6xl mx-auto px-4 md:space-y-24 space-y-12">
         <motion.div style={{ y: y0 }} className="rounded-lg p-10  ">
           <div className="flex items-center justify-center flex-col max-w-4xl mx-auto relative">
             <motion.div
@@ -130,6 +130,8 @@ function ScrollSection() {
             images={sectionContents[index].images}
             y={y}
             imageTransforms={imageTransforms[index]}
+            index={index}
+            scrollProgress={scrollYProgress}
           />
         ))}
         <motion.div
