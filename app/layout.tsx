@@ -11,8 +11,8 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: "Kaupunki & Piiroinen",
-  description: "Application for generating care instructions for furnitures.",
+  title: "Äyläavustaja",
+  description: "Huolto- ja hoito-ohjeita tarjoava Tekoälysovellus",
 };
 
 export default function RootLayout({
