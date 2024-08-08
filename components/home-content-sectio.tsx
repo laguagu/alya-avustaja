@@ -1,7 +1,8 @@
 import React from "react";
 import { motion, MotionValue, useTransform } from "framer-motion";
 import Image from "next/image";
-import clsx from 'clsx';
+import clsx from "clsx";
+import { TextBlurAnimation } from "./blur-text-home";
 
 interface HomeContentSectionProps {
   title: string;
@@ -49,7 +50,7 @@ const HomeContentSection: React.FC<HomeContentSectionProps> = ({
       )}
       <div className="flex-1 w-full md:w-auto mb-6 md:mb-0 relative z-10">
         <h2 className="text-3xl font-bold text-gray-800 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-500">
-          {title}
+          <TextBlurAnimation word={title} />
         </h2>
         <p className="text-lg text-gray-600 leading-relaxed">{content}</p>
       </div>
@@ -66,15 +67,15 @@ const HomeContentSection: React.FC<HomeContentSectionProps> = ({
                   ? "w-[60%] h-[60%] left-[20%] top-[20%] z-20"
                   : "w-[40%] h-[40%] left-[10%] top-[30%] z-30"
             }`}
-          > 
+          >
             <Image
               src={src}
               alt={`Kuva ${imgIndex + 1}: ${title}`}
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
-              className={clsx( 
+              className={clsx(
                 "shadow-md object-cover",
-                imgIndex === 0 ? "rounded-3xl shadow-xl" : "rounded-lg"
+                imgIndex === 0 ? "rounded-3xl shadow-xl" : "rounded-lg",
               )}
             />
           </motion.div>
