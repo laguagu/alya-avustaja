@@ -30,6 +30,7 @@ Tämä sovellus tarjoaa kattavan ratkaisun kaluston vikojen katseluun, raportoin
 ## Tietojen Tallennus
 
 Sovellus käyttää Supabase-tietokantaa seuraavien tietojen tallentamiseen:
+
 - Käyttäjien kirjautumistiedot
 - Chatbotin viestit
 
