@@ -9,7 +9,7 @@ export default function Page() {
       <section className="max-w-[80rem] w-full">
         <BoxRevealHome />
         <div className="flex justify-center">
-          <Separator className="w-[500px] mt-3" />
+          <Separator className="w-[500px] mt-3 " />
         </div>
         <LoginForm />
       </section>
