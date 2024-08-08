@@ -7,10 +7,12 @@ Tämä sovellus tarjoaa kattavan ratkaisun kaluston vikojen katseluun, raportoin
 - **Vikailmoitusten Raportointi ja Katselu**
   - Käyttäjät voivat raportoida uusia kaluston vikoja.
   - Tarkastella olemassa olevia vikoja yksityiskohtaisine kuvauksineen.
+  - Sulkea/Avata vikailmoituksia
+  - Täydentää vikailmoituksua automaattisesti
 
 - **Huolto-ohjeet**
   - Saada yksityiskohtaisia huolto- ja korjausohjeita tekoäly-chatbotilta.
-  - Chatbot tarjoaa vastauksia suomeksi, keskittyen tarkkuuteen ja selkeyteen.
+  - Chatbot tarjoaa vastauksia suomeksi Piiroisen huonekalujen ylläpitoon ja huoltoon keskittyen.
 
 - **Tekoälypohjaiset Ratkaisut**
   - Hyödyntää LangChainia keskustelukontekstien käsittelyyn ja hallintaan.
