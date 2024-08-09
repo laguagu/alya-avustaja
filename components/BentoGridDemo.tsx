@@ -87,6 +87,7 @@ const ImagePreview = ({ src, index }: { src: string; index: number }) => (
       src={src}
       alt="Vikailmoituksen kuva"
       fill
+      quality={48}
       priority={index < 4} // Priorisoi vain ensimmäiset 4 kuvaa
       style={{ objectFit: "cover" }}
       className="rounded-xl sm:object-cover md:object-contain"
