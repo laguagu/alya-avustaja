@@ -23,7 +23,7 @@ const AsyncDataComponent = async ({
   const furnitureName = deviceData?.name || "";
   const session = await verifySession();
   const sessionUserId = session ? session.userId : null;
-  
+
   return (
     <Tabs defaultValue="info">
       <TabsList className="mb-2">

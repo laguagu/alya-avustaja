@@ -35,10 +35,15 @@ export default class RelevanceThresholdRetriever {
       return [];
     }
 
-    const results = await this.vectorStore.similaritySearchWithScore(query, this.k * 2);
+    const results = await this.vectorStore.similaritySearchWithScore(
+      query,
+      this.k * 2,
+    );
     // console.log("All results:", JSON.stringify(results, null, 2));
 
-    let filteredResults = results.filter(([_, score]) => score >= this.threshold);
+    let filteredResults = results.filter(
+      ([_, score]) => score >= this.threshold,
+    );
     // console.log("Filtered results:", JSON.stringify(filteredResults, null, 2));
 
     if (filteredResults.length === 0) {

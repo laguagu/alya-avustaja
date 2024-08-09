@@ -23,10 +23,7 @@ export default function ChatBot({
   sessionUserId,
 }: ChatBotProps) {
   const chatParent = useRef<HTMLUListElement>(null);
-  const {
-    isPreparingAudio,
-    isPlaying,
-  } = useTextToSpeech();
+  const { isPreparingAudio, isPlaying } = useTextToSpeech();
   const {
     recording,
     isProcessingAudio,
