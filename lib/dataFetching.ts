@@ -167,9 +167,7 @@ export async function fetchAllFurnitures(): Promise<DeviceItemExample[]> {
   }
 }
 
-export async function fetchFilteredServiceItems(): Promise<
-  FilteredServiceItem[]
-> {
+export async function fetchServiceWithImage(): Promise<FilteredServiceItem[]> {
   const fields = [
     "id",
     "name",
@@ -191,7 +189,7 @@ export async function fetchFilteredServiceItems(): Promise<
   const fieldsQuery = fields.join(",");
   try {
     const response = await fetch(
-      `${process.env.LUNNI_SERVICES}?fields=${fieldsQuery}`,
+      `${process.env.LUNNI_SERVICES}?fields=${fieldsQuery}&refs[files]=service_id`,
       {
         headers: {
           Authorization: `Bearer ${process.env.LUNNI_API}`,
@@ -205,7 +203,49 @@ export async function fetchFilteredServiceItems(): Promise<
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const result = await response.json();
-    return result;
+    // Haetaan tiedostojen URL:t jokaiselle huoltopyynnölle
+    const itemsWithImages = await Promise.all(
+      result.map(async (item: FilteredServiceItem) => {
+        const fileResponse = await fetch(
+          `https://apiv3.lunni.io/services/${item.id}?refs[files]=service_id`,
+          {
+            headers: {
+              Authorization: `Bearer ${process.env.LUNNI_API}`,
+              "Content-Type": "application/json",
+            },
+          },
+        );
+
+        if (fileResponse.ok) {
+          const fileData = await fileResponse.json();
+          if (
+            fileData.references &&
+            fileData.references.files &&
+            fileData.references.files.length > 0
+          ) {
+            const fileId = fileData.references.files[0];
+            const imageResponse = await fetch(
+              `https://apiv3.lunni.io/files/${fileId}?url=direct`,
+              {
+                headers: {
+                  Authorization: `Bearer ${process.env.LUNNI_API}`,
+                  "Content-Type": "application/json",
+                },
+              },
+            );
+
+            if (imageResponse.ok) {
+              const imageData = await imageResponse.json();
+              item.content_url = imageData.content_url;
+            }
+          }
+        }
+
+        return item;
+      }),
+    );
+
+    return itemsWithImages;
   } catch (error) {
     console.error("Virhe haettaessa tietoja:", error);
     return []; // Palauta tyhjä taulukko tai sopiva virheilmoitus
@@ -270,6 +310,50 @@ export async function retrieveFurnitureParts(
   }
 }
 
+async function fetchIssueImage(issueId: string): Promise<string | null> {
+  try {
+    const fileResponse = await fetch(
+      `https://apiv3.lunni.io/services/${issueId}?refs[files]=service_id`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.LUNNI_API}`,
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (fileResponse.ok) {
+      const fileData = await fileResponse.json();
+      if (
+        fileData.references &&
+        fileData.references.files &&
+        fileData.references.files.length > 0
+      ) {
+        const fileId = fileData.references.files[0];
+        const imageResponse = await fetch(
+          `https://apiv3.lunni.io/files/${fileId}?url=direct`,
+          {
+            headers: {
+              Authorization: `Bearer ${process.env.LUNNI_API}`,
+              "Content-Type": "application/json",
+            },
+            cache: "no-store", // Ei välimuistitusta, jotta kuvat päivittyvät oikein
+          },
+        );
+
+        if (imageResponse.ok) {
+          const imageData = await imageResponse.json();
+          return imageData.content_url;
+        }
+      }
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching issue image:", error);
+    return null;
+  }
+}
+
 export async function fetchIssuePageData(
   issueId: string,
   deviceId: string,
@@ -278,6 +362,7 @@ export async function fetchIssuePageData(
   deviceData: DeviceItemCard | null;
   locationData: string | null;
   partsList: string[] | null;
+  imageUrl: string | null;
 }> {
   const issueFormPromise = issueId
     ? getIssueFormDataById(issueId)
@@ -299,9 +384,14 @@ export async function fetchIssuePageData(
     ? retrieveFurnitureParts(deviceData.name)
     : Promise.resolve(null);
 
-  const [locationData, partsList] = await Promise.all([
+  const imageUrlPromise = issueId
+    ? fetchIssueImage(issueId)
+    : Promise.resolve(null);
+
+  const [locationData, partsList, imageUrl] = await Promise.all([
     locationDataPromise,
     furniturePartsPromise,
+    imageUrlPromise,
   ]);
-  return { issueData, deviceData, locationData, partsList };
+  return { issueData, deviceData, locationData, partsList, imageUrl };
 }

@@ -54,7 +54,6 @@ export default function NewIssueForm() {
 
   const { execute, result, isExecuting } = useAction(postNewIssueAction, {
     onSuccess: ({ data }) => {
-      console.log("onSuccess", data);
       toast({
         variant: "default",
         title: "Vikailmoitus tallennettu! 🎉",
@@ -66,7 +65,6 @@ export default function NewIssueForm() {
       setAiSuggestions({});
     },
     onError: ({ error }) => {
-      console.log("error", error);
       toast({
         variant: "destructive",
         title: "Virhe",
@@ -138,14 +136,12 @@ export default function NewIssueForm() {
   };
 
   const handleRecordingComplete = async (audioBlob: Blob) => {
-    console.log("Nauhoitus valmis: ", audioBlob);
     // 1. Nauhoita ääni
     const formData = new FormData();
     formData.append("file", audioBlob, "audio.wav");
     // 2. Muuta ääni tekstiksi
     try {
       const text = await getWhisperTranscription(formData);
-      console.log("Transcription: ", text); // Logataan teksti heti kun se saadaan
       setTranscription(text);
       setIsModalOpen(true);
       // Avaa modali jossa on teksti ja mahdollisuus muokata sitä

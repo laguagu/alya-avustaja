@@ -31,6 +31,19 @@ export function LoadingIssuePageSkeleton() {
   );
 }
 
+export function LoadingLayoutSkeleton() {
+  return (
+    <div>
+      <h1 className="flex text-center justify-center font-bold">
+        Ladataan . . .
+      </h1>
+      <div className="space-y-2 p-4 flex items-center justify-center">
+        <Skeleton className="w-full h-[420px] " />
+      </div>
+    </div>
+  );
+}
+
 // ChatSkeletton: Alya/Chat
 
 export function ChatSkeletton() {

@@ -17,7 +17,7 @@ const AsyncDataComponent = async ({
   issueId: string;
   deviceId: string;
 }) => {
-  const { issueData, deviceData, locationData, partsList } =
+  const { issueData, deviceData, locationData, partsList, imageUrl } =
     await fetchIssuePageData(issueId, deviceId);
 
   const furnitureName = deviceData?.name || "";
@@ -44,6 +44,7 @@ const AsyncDataComponent = async ({
           issueData={issueData}
           deviceData={deviceData}
           locationName={locationData}
+          IssueimageUrl={imageUrl || ""}
         />
       </TabsContent>
 

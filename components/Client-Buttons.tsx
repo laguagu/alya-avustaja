@@ -62,7 +62,6 @@ export const AiInstructionButton: React.FC<CustomButtonProps> = ({
           furnitureProblem: furnitureProblem,
         });
         setInstructionInput(result);
-        console.log("Saatu vastaus", result);
         // Tässä voisi olla logiikka huolto-ohjeiden generoimiseksi
         // Aseta isGenerated true, kun ohjeet on generoitu
         setIsGenerated(true);

@@ -3,6 +3,7 @@ import SheetNav from "@/components/layout/sheet";
 import { getIssuesNumber } from "@/lib/dataFetching";
 import { Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
+import { LoadingLayoutSkeleton } from "@/components/skeletons";
 
 export default async function DashboardLayout({
   children,
@@ -10,7 +11,6 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const issues = await getIssuesNumber(); // Hae API kutsulla issues määrä
-  // const issues: number = 2; // Mock data
 
   return (
     <div className="grid h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] overflow-hidden">
@@ -20,11 +20,7 @@ export default async function DashboardLayout({
       <div className="flex flex-col overflow-hidden">
         <SheetNav issues={issues} />
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 overflow-auto">
-          <Suspense
-            fallback={<div className="font-bold">Ladataan sisälöä . . .</div>}
-          >
-            {children}
-          </Suspense>
+          <Suspense fallback={<LoadingLayoutSkeleton />}>{children}</Suspense>
         </main>
         <Toaster />
       </div>

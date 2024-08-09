@@ -70,12 +70,9 @@ export async function getWhisperTranscription(formData: FormData) {
 
 export async function getSpeechFromText(text: string) {
   "use server";
-  console.log("getSpeechFromText called with text: ", text);
-
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
   });
-  console.log("getTextToSpeech called with text: ", text);
 
   const response = await openai.audio.speech.create({
     input: text,

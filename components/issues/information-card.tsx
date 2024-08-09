@@ -8,12 +8,14 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import ImageModal from "./image-modal";
+import { Suspense } from "react";
 
 interface InformationCardProps {
   deviceData: DeviceItemCard | null;
   issueData: IssueFormValues | null;
   locationName: string | null;
   partsList: string[] | null;
+  IssueimageUrl: string;
 }
 
 export default function InformationCard({
@@ -21,6 +23,7 @@ export default function InformationCard({
   locationName,
   partsList,
   issueData,
+  IssueimageUrl,
 }: InformationCardProps) {
   if (!deviceData) {
     return (
@@ -49,12 +52,12 @@ export default function InformationCard({
             <InfoItem label="Sarjanumero" value={deviceData.serial} />
             <InfoItem label="Sijainti" value={locationName} />
           </div>
-          {deviceData.image_url && (
+          {deviceData.image_url && ( // FIXME kuvaa ei haettua API:n kautta vielä palauttaa null siis
             <div className="mt-4">
               <Image
                 width={350}
                 height={350}
-                src={deviceData.image_url}
+                src={"/chairs/arena022.jpg"}
                 alt={deviceData.name}
                 priority
                 className="rounded-lg object-cover w-full h-auto"
@@ -115,15 +118,17 @@ export default function InformationCard({
                 value={issueData.missing_equipments}
                 fullWidth
               />
-              <InfoItem
-                label="Käyttäjän ottama kuva"
-                value={
-                  <ImageModal
-                    imageUrl="/chairs/arena022.jpg"
-                    altText="Käyttäjän ottama kuva viasta"
-                  />
-                }
-              />
+              <Suspense fallback={<div>Ladataan</div>}>
+                <InfoItem
+                  label="Käyttäjän ottama kuva"
+                  value={
+                    <ImageModal
+                      imageUrl={IssueimageUrl || "/vikailmoitus.png"}
+                      altText="Käyttäjän ottama kuva viasta"
+                    />
+                  }
+                />
+              </Suspense>
             </div>
           </CardContent>
         </Card>

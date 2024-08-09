@@ -3,14 +3,13 @@ import { Separator } from "@/components/ui/separator";
 import { NewIssue } from "@/components/issues/newissue-button";
 import { Badge } from "@/components/ui/badge";
 import { BentoGridDemo } from "@/components/BentoGridDemo";
-import { fetchFilteredServiceItems } from "@/lib/dataFetching";
+import { fetchServiceWithImage } from "@/lib/dataFetching";
 import { FilteredServiceItem } from "@/data/types";
 import { LoadingIssuePageSkeleton } from "@/components/skeletons";
 
 export default async function Page() {
-  const issuesData: FilteredServiceItem[] = await fetchFilteredServiceItems();
+  const issuesData: FilteredServiceItem[] = await fetchServiceWithImage();
   const openIssues = issuesData.filter((issue) => issue.is_completed === 0);
-
   return (
     <div>
       <Suspense fallback={<LoadingIssuePageSkeleton />}>

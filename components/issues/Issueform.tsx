@@ -94,7 +94,6 @@ export default function IssueForm({
 
   const { execute, result, isExecuting } = useAction(postNewIssueAction, {
     onSuccess: ({ data }) => {
-      console.log("onSuccess", data);
       toast({
         variant: "default",
         title: "Vikailmoitus päivitetty! 🎉",

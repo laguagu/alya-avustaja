@@ -7,6 +7,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "pbs.twimg.com",
       },
+      {
+        protocol: "https",
+        hostname: "lunni360-userdata.s3.eu-west-1.amazonaws.com",
+      },
     ],
   },
   // async headers() {
