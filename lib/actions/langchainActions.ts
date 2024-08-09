@@ -55,7 +55,7 @@ export async function generateAIinstruction({
   try {
     // Vaihe 1: Alustetaan OpenAI-malli ja Supabase-asiakasohjelma
     const model = new ChatOpenAI({
-      modelName: "gpt-4o",
+      modelName: "gpt-4o-2024-08-06",
       temperature: 0.0,
       // verbose: true, // Tulostaa lisätietoja, jos true
       streaming: true,

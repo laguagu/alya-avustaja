@@ -23,7 +23,7 @@ export async function processAudioTranscription(transcription: string) {
 
   (async () => {
     const { partialObjectStream } = await streamObject({
-      model: openai("gpt-4o"),
+      model: openai("gpt-4o-2024-08-06"),
       system:
         "You are an AI assistant helping to fill out a maintenance request form based on an audio transcription.",
       prompt: `Based on the following transcription, generate appropriate values for a maintenance request form: "${transcription}"`,

@@ -11,13 +11,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { generateAIinstruction } from "@/lib/actions/langchainActions";
 import { FurnitureInfo } from "@/data/types";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import AiButtonSkeleton from "./skeletons";
-import { Skeleton } from "./ui/skeleton";
 import { useFormStatus } from "react-dom";
 
 interface CustomButtonProps {
@@ -171,8 +169,22 @@ export function LoginButton() {
   const { pending } = useFormStatus();
 
   return (
-    <Button aria-disabled={pending} type="submit" className="mt-4 w-full">
-      {pending ? "Lähetetään..." : "Kirjaudu"}
+    <Button
+      aria-disabled={pending}
+      type="submit"
+      className="mt-4 w-full"
+      disabled={pending}
+    >
+      {pending ? <ButtonLoading title="Lähetetään..." /> : "Kirjaudu"}
     </Button>
+  );
+}
+
+export function ButtonLoading({ title }: { title: string }) {
+  return (
+    <div className="flex items-center justify-center w-full">
+      <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+      {title}
+    </div>
   );
 }
