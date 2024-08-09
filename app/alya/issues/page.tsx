@@ -14,7 +14,7 @@ export default async function Page() {
     <div>
       <Suspense fallback={<LoadingIssuePageSkeleton />}>
         <div className="flex flex-col md:flex-row justify-between items-center w-full mb-4">
-          <div className="flex flex-col items-center flex-grow">
+          <div className="flex flex-col items-center flex-grow md:space-y-2">
             <h1 className="text-3xl lg:text-4xl text-center mb-2 md:my-2">
               Vikailmoitukset
             </h1>

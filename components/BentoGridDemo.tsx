@@ -63,7 +63,7 @@ export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
           onCheckedChange={toggleShowCompleted}
         ></Switch>
       </form>
-      <BentoGrid className="max-w-4xl mx-auto">
+      <BentoGrid className="max-w-4xl mx-auto md:mt-10 mt-1">
         {issueItems.map((item, i) => (
           <BentoGridItem
             key={item.issue_id}
