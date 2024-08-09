@@ -2,12 +2,12 @@ import IssueForm from "@/components/issues/Issueform";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import InformationCard from "@/components/issues/information-card";
-// import { fetchIssuePageData } from "@/data/mockDataFetch";
 import { fetchIssuePageData } from "@/lib/dataFetching";
 import BackButton from "@/components/issues/back-button";
 import { Suspense } from "react";
 import ChatBot from "@/components/issues/chat-bot";
 import { LoadingIssueSkeleton } from "@/components/skeletons";
+import { verifySession } from "@/app/_auth/sessions";
 export const fetchCache = "force-no-store";
 
 const AsyncDataComponent = async ({
@@ -19,8 +19,11 @@ const AsyncDataComponent = async ({
 }) => {
   const { issueData, deviceData, locationData, partsList } =
     await fetchIssuePageData(issueId, deviceId);
-  const furnitureName = deviceData?.name || "";
 
+  const furnitureName = deviceData?.name || "";
+  const session = await verifySession();
+  const sessionUserId = session ? session.userId : null;
+  
   return (
     <Tabs defaultValue="info">
       <TabsList className="mb-2">
@@ -53,7 +56,7 @@ const AsyncDataComponent = async ({
       </TabsContent>
 
       <TabsContent value="chat">
-        <ChatBot furnitureName={furnitureName} />
+        <ChatBot furnitureName={furnitureName} sessionUserId={sessionUserId} />
       </TabsContent>
     </Tabs>
   );

@@ -49,6 +49,7 @@ export function useChatMessages(initialSessionUserId: number | null) {
   });
 
   useEffect(() => {
+    // Tarkista, onko komponentti ladattu aiemmin
     if (!loadedRef.current) {
       const savedMessages = localStorage.getItem("chatMessages");
       if (savedMessages) {

@@ -21,6 +21,7 @@ const ImageModal = ({ imageUrl, altText }: ImageModalProps) => {
           alt={altText}
           className="rounded-lg cursor-pointer object-cover transition-transform hover:scale-105"
           onClick={() => setIsOpen(true)}
+          priority
         />
         <p className="text-sm text-gray-500 mt-1">
           Klikkaa kuvaa suurentaaksesi
@@ -49,6 +50,7 @@ const ImageModal = ({ imageUrl, altText }: ImageModalProps) => {
                 objectFit="contain"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 50vw"
                 priority
+                className="w-auto h-auto" // Maintain aspect ratio using CSS
               />
             </div>
           </div>

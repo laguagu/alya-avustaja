@@ -52,7 +52,11 @@ export async function POST(req: NextRequest) {
     });
 
     const splitDocuments = await splitter.createDocuments([text]);
-
+    // Metadatan kanssa
+    // const splitDocuments = await splitter.createDocuments(
+    //   [text],
+    //   [{ source: "piiroinen_care_instructions" }]
+    // );
     const vectorstore = await SupabaseVectorStore.fromDocuments(
       splitDocuments,
       new OpenAIEmbeddings(),

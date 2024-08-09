@@ -26,7 +26,7 @@ export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
     description: issue.problem_description,
     priority: issue.priority,
     device_id: issue.device_id,
-    header: <ImagePreview src={"/chairs/arena022.jpg"} />, // Tämä pitäisi saada API:sta
+    header: <ImagePreview src={"/chairs/arena022.jpg"}  />, // Tämä pitäisi saada API:sta
     icon:
       issue.is_completed === 1 ? (
         <div className="flex items-center">

@@ -3,49 +3,80 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useChat } from "@ai-sdk/react";
-import { useRef, useEffect, useState, useCallback, useMemo } from "react";
+import { useRef, useEffect, useMemo, useCallback } from "react";
 import { Message } from "ai";
 import { Send, Mic } from "lucide-react";
-import { getWhisperTranscription } from "@/lib/actions/ai-actions";
 import { TailSpin, Rings } from "react-loader-spinner";
 import ChatMessage from "../chat-message";
 import clsx from "clsx";
+import { insertChatMessageAction } from "@/lib/actions/actions";
+import { useTextToSpeech } from "@/lib/hooks/useTextToSpeech";
+import { useAudioRecording } from "@/lib/hooks/useAudioRecording";
 
-interface TTSResponse {
-  audioURL: string;
-  tempFilePath: string;
+interface ChatBotProps {
+  furnitureName: string;
+  sessionUserId: number | null;
 }
 
-export default function ChatBot({ furnitureName }: { furnitureName: string }) {
-  const [ttsEnabled, setTTSEnabled] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [savedMessages, setSavedMessages] = useState<Message[]>([]);
-  const [recording, setRecording] = useState(false);
-  const [isProcessingAudio, setIsProcessingAudio] = useState(false);
-  const [isPreparingAudio, setIsPreparingAudio] = useState(false);
-
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<BlobPart[]>([]);
-  const loadedRef = useRef(false);
+export default function ChatBot({
+  furnitureName,
+  sessionUserId,
+}: ChatBotProps) {
   const chatParent = useRef<HTMLUListElement>(null);
+  const {
+    isPreparingAudio,
+    isPlaying,
+  } = useTextToSpeech();
+  const {
+    recording,
+    isProcessingAudio,
+    handleStartRecording,
+    handleStopRecording,
+  } = useAudioRecording();
   const {
     messages: primaryMessages,
     input,
     append,
-    setMessages,
     handleInputChange,
     handleSubmit,
-    setInput,
     isLoading,
-    stop,
   } = useChat({
     api: `/api/chatbot`,
-    initialMessages: savedMessages,
     body: { furnitureName },
     onError: (e: any) => {
       console.log(e);
     },
+    onFinish: async (message: { role: string; content: string }) => {
+      if (sessionUserId) {
+        try {
+          const combinedContent = [
+            { role: "user", message: input },
+            { role: message.role, message: message.content },
+          ];
+          await insertChatMessageAction({
+            userId: sessionUserId,
+            role: message.role,
+            content: combinedContent,
+            createdAt: new Date(),
+          });
+        } catch (error) {
+          console.error("Error saving message to database:", error);
+        }
+      } else {
+        console.error("User not authenticated");
+      }
+    },
   });
+
+  const handleAudioSubmit = useCallback(async () => {
+    const transcriptionText = await handleStopRecording();
+    if (transcriptionText) {
+      append({
+        role: "user",
+        content: transcriptionText,
+      });
+    }
+  }, [handleStopRecording, append]);
 
   useEffect(() => {
     const domNode = chatParent.current;
@@ -53,72 +84,6 @@ export default function ChatBot({ furnitureName }: { furnitureName: string }) {
       domNode.scrollTop = domNode.scrollHeight;
     }
   });
-
-  const handleStartRecording = useCallback(() => {
-    audioChunksRef.current = [];
-    navigator.mediaDevices
-      .getUserMedia({ audio: true })
-      .then((stream) => {
-        if (mediaRecorderRef.current) {
-          mediaRecorderRef.current.stop();
-        }
-        const mediaRecorder = new MediaRecorder(stream, {
-          mimeType: "audio/webm",
-        });
-        mediaRecorderRef.current = mediaRecorder;
-        mediaRecorder.ondataavailable = (event) => {
-          if (event.data.size > 0) {
-            audioChunksRef.current.push(event.data);
-          }
-        };
-        mediaRecorder.start();
-        setRecording(true);
-      })
-      .catch((error) => {
-        console.error("Error starting recording:", error);
-      });
-  }, []);
-
-  const handleStopRecording = useCallback(async () => {
-    if (!mediaRecorderRef.current) {
-      console.error("MediaRecorder not initialized");
-      return;
-    }
-    mediaRecorderRef.current.stop();
-    setRecording(false);
-    // Odota hetki, jotta kaikki audioChunks on varmasti lisätty
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    try {
-      const audioBlob = new Blob(audioChunksRef.current, {
-        type: "audio/webm",
-      });
-
-      if (audioBlob.size > 25415) {
-        setIsProcessingAudio(true);
-        const formData = new FormData();
-        formData.append("file", audioBlob, "audio.webm");
-        const transcriptionText = await getWhisperTranscription(formData);
-        setIsProcessingAudio(false);
-        if (transcriptionText) {
-          append({
-            role: "user",
-            content: transcriptionText,
-          });
-        }
-      } else {
-        console.log("Audio too short, not processing");
-      }
-    } catch (error) {
-      console.error("Error processing audio:", error);
-    }
-
-    // Tyhjennä audioChunks seuraavaa nauhoitusta varten
-    audioChunksRef.current = [];
-  }, [append]);
-  const toggleTTS = useCallback(() => {
-    setTTSEnabled((prev) => !prev);
-  }, []);
 
   const isDisabled =
     isLoading || isPlaying || isProcessingAudio || isPreparingAudio;
@@ -138,19 +103,6 @@ export default function ChatBot({ furnitureName }: { furnitureName: string }) {
           <h1 className="text-md text-nowrap sm:text-xl lg:text-2xl font-bold text-center flex-1">
             Chatbot - Älyäavustaja
           </h1>
-          {/* <Button
-              onClick={toggleTTS}
-              type="button"
-              className="ml-auto"
-              variant={"outline"}
-              disabled={isDisabled || recording}
-            >
-              {ttsEnabled ? (
-                <Volume2 className="h-5 w-5" />
-              ) : (
-                <VolumeX className="h-5 w-5" />
-              )}
-            </Button> */}
         </div>
       </div>
       <section className="container flex flex-col flex-grow px-0 pb-10 gap-4 mx-auto w-full max-h-[calc(62vh-4rem)] h-[800px]">
@@ -212,7 +164,7 @@ export default function ChatBot({ furnitureName }: { furnitureName: string }) {
               aria-label={recording ? "Lopeta nauhoitus" : "Aloita nauhoitus"}
               type="button"
               variant={"secondary"}
-              onClick={recording ? handleStopRecording : handleStartRecording}
+              onClick={recording ? handleAudioSubmit : handleStartRecording}
               disabled={isDisabled && !recording}
             >
               {recording ? (

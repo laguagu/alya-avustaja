@@ -8,7 +8,10 @@ import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase"
 import { RunnableSequence } from "@langchain/core/runnables";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { formatDocumentsAsString } from "langchain/util/document";
+import { Document } from "@langchain/core/documents";
+import RelevanceThresholdRetriever from "@/lib/retrievers/CustomRetviever";
 
+export const dynamic = "force-dynamic";
 // Määritellään maksimi keskusteluhistorian pituus
 const MAX_CHAT_HISTORY_LENGTH = 14;
 
@@ -42,8 +45,8 @@ const condenseQuestionPrompt = PromptTemplate.fromTemplate(
 );
 
 // Vastausmalli, joka käyttää aiempaa keskusteluhistoriaa ja kontekstia vastauksen generoimiseen.
-const ENG_ANSWER_TEMPLATE = `
-You are a Finnish-speaking AI assistant specializing in Piiroinen furniture maintenance and repair. You're assisting a caretaker with furniture care instructions. Answer the question based only on the given context and chat history. If you don't know the answer, say so directly.
+const ANSWER_TEMPLATE = `
+You are a Finnish-speaking AI assistant specializing in Piiroinen furniture maintenance and repair. You're assisting a caretaker with furniture care instructions. The user is asking about {furniture_name}. Answer the question based on the given context and chat history, applying the general instructions to the specific furniture when possible. If you don't know the answer or if the information isn't applicable to the specific furniture, say so directly.
 
 Respond concisely and clearly, using simple sentences and lists. Do not use special characters or formatting.
 
@@ -55,11 +58,10 @@ Respond concisely and clearly, using simple sentences and lists. Do not use spec
   {chat_history}
 </chat_history>
 
-Question: {question}
-Answer:
+Question about {furniture_name}: {question}
+Answer in Finnish:
 `;
-
-const answerPrompt = PromptTemplate.fromTemplate(ENG_ANSWER_TEMPLATE);
+const answerPrompt = PromptTemplate.fromTemplate(ANSWER_TEMPLATE);
 
 export async function POST(req: NextRequest) {
   try {
@@ -67,6 +69,7 @@ export async function POST(req: NextRequest) {
     const messages = body.messages ?? []; // Ottaa viestit pyynnön rungosta tai tyhjän taulukon, jos viestejä ei ole
     const previousMessages = messages.slice(0, -1); // Ottaa kaikki viestit paitsi viimeisen
     const currentMessageContent = messages[messages.length - 1].content; // Ottaa viimeisen viestin sisällön
+    const furnitureName = body.furnitureName ?? "unknown furniture";
 
     const checkQuestionClarity = (question: string) => {
       if (question.length < 5) {
@@ -116,12 +119,24 @@ export async function POST(req: NextRequest) {
       new StringOutputParser(),
     ]);
 
-    // Hakee dokumentit Supabase-tietokannasta.
-    const retriever = vectorstore.asRetriever({
-      k: 2,
-    });
+    const getKValue = (question: string) =>
+      question.length < 50 ? 3 : question.length <= 100 ? 4 : 5;
 
-    const retrievalChain = retriever.pipe(formatDocumentsAsString); // Kombinoi haetut dokumentit yhdeksi tekstiksi
+    const customRetriever = new RelevanceThresholdRetriever(
+      vectorstore,
+      getKValue(currentMessageContent),
+      0.75, // Increased threshold for more relevant results
+    );
+
+    const retrievalChain = RunnableSequence.from([
+      (input) => {
+        return typeof input === "string"
+          ? input
+          : `${input.furniture_name}: ${input.question}`;
+      },
+      customRetriever.getRelevantDocuments.bind(customRetriever),
+      formatDocumentsAsString,
+    ]);
 
     // Alustaa ketjun vastauksen generoimiseen.
     const answerChain = RunnableSequence.from([
@@ -132,6 +147,7 @@ export async function POST(req: NextRequest) {
         ]),
         chat_history: (input) => input.chat_history,
         question: (input) => input.question,
+        furniture_name: (input) => input.furniture_name,
       },
       answerPrompt,
       model,
@@ -140,8 +156,9 @@ export async function POST(req: NextRequest) {
     // Suorittaa ketjun, joka tuottaa vastauksen käyttäjän kysymykseen.
     const conversationalRetrievalQAChain = RunnableSequence.from([
       {
-        question: standaloneQuestionChain, // Saa standalone-kysymyksen ketjusta
-        chat_history: (input) => input.chat_history, // Saa keskusteluhistorian syötteenä
+        question: standaloneQuestionChain,
+        chat_history: (input) => input.chat_history,
+        furniture_name: (input) => input.furniture_name,
       },
       answerChain,
     ]);
@@ -150,6 +167,7 @@ export async function POST(req: NextRequest) {
     const stream = await conversationalRetrievalQAChain.stream({
       question: currentMessageContent,
       chat_history: formatVercelMessages(previousMessages), // Muotoilee keskusteluhistorian
+      furniture_name: furnitureName,
     });
 
     return LangChainAdapter.toDataStreamResponse(stream);

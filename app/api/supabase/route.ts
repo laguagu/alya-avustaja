@@ -56,7 +56,7 @@ Respond concisely and clearly, using simple sentences and lists. Do not use spec
 </chat_history>
 
 Question: {question}
-Answer:
+Answer in Finnish:
 `;
 
 const answerPrompt = PromptTemplate.fromTemplate(ENG_ANSWER_TEMPLATE);
@@ -117,10 +117,14 @@ export async function POST(req: NextRequest) {
     ]);
 
     // let resolveWithDocuments: (value: Document[]) => void;
-
+    const getKValue = (question: string) => {
+      if (question.length < 50) return 3;
+      if (question.length <= 100) return 4;
+      return 5;
+    };
     // Hakee dokumentit Supabase-tietokannasta.
     const retriever = vectorstore.asRetriever({
-      k: 2,
+      k: getKValue(currentMessageContent),
       // callbacks: [
       //   {
       //     handleRetrieverEnd(documents: Document<Record<string, any>>[]) {
