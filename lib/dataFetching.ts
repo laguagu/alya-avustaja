@@ -189,7 +189,7 @@ export async function fetchServiceWithImage(): Promise<FilteredServiceItem[]> {
   const fieldsQuery = fields.join(",");
   try {
     const response = await fetch(
-      `${process.env.LUNNI_SERVICES}?fields=${fieldsQuery}&refs[files]=service_id`,
+      `${process.env.LUNNI_SERVICES}?fields=${fieldsQuery}`,
       {
         headers: {
           Authorization: `Bearer ${process.env.LUNNI_API}`,
