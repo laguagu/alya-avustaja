@@ -31,6 +31,7 @@ import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter, usePathname } from "next/navigation";
+import { TextEffect } from "@/components/ui/text-effect";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -188,8 +189,10 @@ export function DataTable<TData, TValue>({
           </Button>
         </div>
         <div className="flex-1 text-sm text-muted-foreground">
-          {/* {table.getFilteredSelectedRowModel().rows.length}/ */}
-          Huonekalujen lukamäärä: {table.getFilteredRowModel().rows.length}
+          <TextEffect per="word" as="h3" preset="blur">
+            {"Huonekalujen lukumäärä: " +
+              String(table.getFilteredRowModel().rows.length)}
+          </TextEffect>
         </div>
       </div>
     </Suspense>
