@@ -7,8 +7,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import ImageModal from "./image-modal";
 import { Suspense } from "react";
+import { DialogBasicOne } from "./dialog-popover";
 
 interface InformationCardProps {
   deviceData: DeviceItemCard | null;
@@ -119,14 +119,10 @@ export default function InformationCard({
                 fullWidth
               />
               <Suspense fallback={<div>Ladataan</div>}>
-                <InfoItem
-                  label="Käyttäjän ottama kuva"
-                  value={
-                    <ImageModal
-                      imageUrl={IssueimageUrl || "/vikailmoitus.png"}
-                      altText="Käyttäjän ottama kuva viasta"
-                    />
-                  }
+                <DialogBasicOne
+                  src={IssueimageUrl || "/vikailmoitus.png"}
+                  deviceName={deviceData.name}
+                  issueDescription={issueData.problem_description}
                 />
               </Suspense>
             </div>
