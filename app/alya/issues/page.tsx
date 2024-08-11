@@ -13,9 +13,9 @@ export default async function Page() {
   return (
     <>
       <Suspense fallback={<LoadingIssuePageSkeleton />}>
-        <div className="flex flex-col md:flex-row justify-between items-center w-full mb-4">
+        <div className="flex flex-col md:flex-row justify-between items-center w-full  shadow-md md:p-8 p-5 rounded-2xl bg-white/50 ">
           <div className="flex flex-col items-center flex-grow md:space-y-2">
-            <h1 className="text-3xl lg:text-4xl text-center mb-2 md:my-2">
+            <h1 className="text-3xl lg:text-4xl text-center mb-2 md:my-2 border-b border-gray-500">
               Vikailmoitukset
             </h1>
             <Badge variant="outline" className="mb-4">
