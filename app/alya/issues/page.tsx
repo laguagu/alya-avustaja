@@ -11,7 +11,7 @@ export default async function Page() {
   const issuesData: FilteredServiceItem[] = await fetchServiceWithImage();
   const openIssues = issuesData.filter((issue) => issue.is_completed === 0);
   return (
-    <div>
+    <>
       <Suspense fallback={<LoadingIssuePageSkeleton />}>
         <div className="flex flex-col md:flex-row justify-between items-center w-full mb-4">
           <div className="flex flex-col items-center flex-grow md:space-y-2">
@@ -29,6 +29,6 @@ export default async function Page() {
         <Separator />
         <BentoGridDemo issues={issuesData} />
       </Suspense>
-    </div>
+    </>
   );
 }

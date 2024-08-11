@@ -45,6 +45,7 @@ import { FormSchema } from "@/lib/schemas";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
 import { Textarea } from "../ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface IssueFormProps {
   data: IssueFormValues | null;
@@ -171,223 +172,234 @@ export default function IssueForm({
   }, [instructionContent]);
 
   return (
-    <div className="max-w-2xl mb-8">
-      <div className="mb-4">
-        <p
-          className={`text-lg font-semibold ${
+    <Card className="w-full max-w-2xl mb-8">
+      <CardHeader>
+        <CardTitle
+          className={`text-lg ${
             isCompleted ? "text-green-600" : "text-red-600"
           }`}
         >
           {isCompleted ? "Vikailmoitus on suljettu" : "Vikailmoitus on avoinna"}
-        </p>
-      </div>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="md:w-2/3 space-y-6"
-        >
-          <FormField
-            control={form.control}
-            name="locationName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Sijainti</FormLabel>
-                <Input placeholder="Sijainti" {...field} disabled={true} />
-                <FormMessage>{errors.locationName?.message}</FormMessage>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="priority"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Prioriteetti</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  disabled={!isEditing}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Valitse priority" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="Ei kiireellinen">
-                      Ei kiireellinen
-                    </SelectItem>
-                    <SelectItem value="Huomioitava">Huomioitava</SelectItem>
-                    <SelectItem value="Kiireelinen">Kiireelinen</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormDescription>Vian priority </FormDescription>
-                <FormMessage>{errors.priority?.message}</FormMessage>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="problem_description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Huoltotarpeen kuvaus</FormLabel>
-                <Input
-                  placeholder="Huoltotarpeen kuvaus"
-                  {...field}
-                  disabled={!isEditing}
-                />
-                <FormMessage>{errors.problem_description?.message}</FormMessage>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="type"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Vikatyyppi</FormLabel>
-                <Select
-                  disabled={!isEditing}
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Valitse vikatyyppi" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Puuttuu liukunasta (t)">
-                      Puuttuu liukunasta (t)
-                    </SelectItem>
-                    <SelectItem value="Kiristysruuvi löysällä">
-                      Kiristysruuvi löysällä
-                    </SelectItem>
-                    <SelectItem value="Kiristysruuvi puuttuu">
-                      Kiristysruuvi puuttuu
-                    </SelectItem>
-                    <SelectItem value="Runko heiluu">Runko heiluu</SelectItem>
-                    <SelectItem value="Selkänoja heiluu">
-                      Selkänoja heiluu
-                    </SelectItem>
-                    <SelectItem value="Istuin heiluu">Istuin heiluu</SelectItem>
-                    <SelectItem value="Materiaali vioittunut">
-                      Materiaali vioittunut
-                    </SelectItem>
-                    <SelectItem value="Ilkivalta">Ilkivalta</SelectItem>
-                    <SelectItem value="Vaatii puhdistuksen">
-                      Vaatii puhdistuksen
-                    </SelectItem>
-                    <SelectItem value="Muu vika">Muu vika</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage>{errors.type?.message}</FormMessage>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="instruction"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Tekoälyn huolto-ohje ehdotus</FormLabel>
-                <Textarea
-                  placeholder="Älyä avustajan huolto-ohje ehdotus"
-                  {...field}
-                  value={instructionContent}
-                  onChange={(e) => {
-                    setInstructionContent(e.target.value);
-                    field.onChange(e);
-                  }}
-                  disabled={!isEditing}
-                  rows={textareaRows}
-                />
-                <div className="mt-2 tracking-tight md:tracking-normal flex items-center">
-                  Kysy AI:n suositusta kalusteen huollosta
-                  <AiInstructionButton
-                    isEditing={isEditing}
-                    instruction={field.value}
-                    updateInstruction={(newInstruction) => {
-                      setInstructionContent(newInstruction);
-                      field.onChange(newInstruction);
-                    }}
-                    furnitureInfo={furnitureInfo}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="locationName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Sijainti</FormLabel>
+                    <Input placeholder="Sijainti" {...field} disabled={true} />
+                    <FormMessage>{errors.locationName?.message}</FormMessage>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="priority"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Prioriteetti</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      disabled={!isEditing}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Valitse priority" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Ei kiireellinen">
+                          Ei kiireellinen
+                        </SelectItem>
+                        <SelectItem value="Huomioitava">Huomioitava</SelectItem>
+                        <SelectItem value="Kiireelinen">Kiireelinen</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>Vian priority</FormDescription>
+                    <FormMessage>{errors.priority?.message}</FormMessage>
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="problem_description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Huoltotarpeen kuvaus</FormLabel>
+                  <Input
+                    placeholder="Huoltotarpeen kuvaus"
+                    {...field}
+                    disabled={!isEditing}
                   />
-                </div>
-                <FormMessage>{errors.instruction?.message}</FormMessage>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="missing_equipments"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Puuttuvat tarvikkeet</FormLabel>
-                <div>
+                  <FormMessage>
+                    {errors.problem_description?.message}
+                  </FormMessage>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Vikatyyppi</FormLabel>
+                  <Select
+                    disabled={!isEditing}
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Valitse vikatyyppi" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Puuttuu liukunasta (t)">
+                        Puuttuu liukunasta (t)
+                      </SelectItem>
+                      <SelectItem value="Kiristysruuvi löysällä">
+                        Kiristysruuvi löysällä
+                      </SelectItem>
+                      <SelectItem value="Kiristysruuvi puuttuu">
+                        Kiristysruuvi puuttuu
+                      </SelectItem>
+                      <SelectItem value="Runko heiluu">Runko heiluu</SelectItem>
+                      <SelectItem value="Selkänoja heiluu">
+                        Selkänoja heiluu
+                      </SelectItem>
+                      <SelectItem value="Istuin heiluu">
+                        Istuin heiluu
+                      </SelectItem>
+                      <SelectItem value="Materiaali vioittunut">
+                        Materiaali vioittunut
+                      </SelectItem>
+                      <SelectItem value="Ilkivalta">Ilkivalta</SelectItem>
+                      <SelectItem value="Vaatii puhdistuksen">
+                        Vaatii puhdistuksen
+                      </SelectItem>
+                      <SelectItem value="Muu vika">Muu vika</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage>{errors.type?.message}</FormMessage>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="instruction"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tekoälyn huolto-ohje ehdotus</FormLabel>
+                  <Textarea
+                    placeholder="Älyä avustajan huolto-ohje ehdotus"
+                    {...field}
+                    value={instructionContent}
+                    onChange={(e) => {
+                      setInstructionContent(e.target.value);
+                      field.onChange(e);
+                    }}
+                    disabled={!isEditing}
+                    rows={textareaRows}
+                  />
+                  <div className="mt-2 flex items-center space-x-2">
+                    <span className="text-sm text-gray-600">
+                      Kysy AI:n suositusta kalusteen huollosta
+                    </span>
+                    <AiInstructionButton
+                      isEditing={isEditing}
+                      instruction={field.value}
+                      updateInstruction={(newInstruction) => {
+                        setInstructionContent(newInstruction);
+                        field.onChange(newInstruction);
+                      }}
+                      furnitureInfo={furnitureInfo}
+                    />
+                  </div>
+                  <FormMessage>{errors.instruction?.message}</FormMessage>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="missing_equipments"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Puuttuvat tarvikkeet</FormLabel>
                   <Input
                     placeholder="Mahdollisesti tarvittavat varaosat"
                     {...field}
                     disabled={!isEditing}
                   />
-                  <div className="mt-2 tracking-tight md:tracking-normal flex items-center">
-                    {/* Kysy AI ehdotusta varaosista
-                    <AiPartsButton
-                      isEditing={isEditing}
-                      problem_description="Rikki"
-                    /> */}
-                  </div>
-                </div>
-                <FormMessage>{errors.missing_equipments?.message}</FormMessage>
-              </FormItem>
-            )}
-          />
+                  <FormMessage>
+                    {errors.missing_equipments?.message}
+                  </FormMessage>
+                </FormItem>
+              )}
+            />
 
-          {isEditing ? (
-            <div className="flex space-x-4 ">
-              <Button type="button" variant={"outline"} onClick={handleCancel}>
-                Peruuta
-              </Button>
-              <Button type="submit" disabled={isExecuting}>
-                Tallenna
-              </Button>
-            </div>
-          ) : (
-            <>
-              <Button type="button" onClick={handleEdit}>
-                Muokkaa
-              </Button>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
+            <div className="flex justify-between items-center pt-4">
+              {isEditing ? (
+                <>
                   <Button
                     type="button"
-                    className="md:ml-4 ml-6"
-                    variant={isCompleted ? "default" : "destructive"}
-                    disabled={isChangingStatus}
+                    variant="outline"
+                    onClick={handleCancel}
                   >
-                    {isCompleted ? "Avaa vikailmoitus" : "Sulje vikailmoitus"}
+                    Peruuta
                   </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Oletko varma?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      {isCompleted
-                        ? "Tämä toiminto avaa vikailmoituksen uudelleen. Haluatko jatkaa?"
-                        : "Tämä toiminto sulkee vikailmoituksen. Haluatko jatkaa?"}
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Peruuta</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleStatusChange}>
-                      {isCompleted ? "Avaa" : "Sulje"}
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </>
-          )}
-        </form>
-      </Form>
-    </div>
+                  <Button type="submit" disabled={isExecuting}>
+                    Tallenna
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button type="button" onClick={handleEdit}>
+                    Muokkaa
+                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        type="button"
+                        variant={isCompleted ? "default" : "destructive"}
+                        disabled={isChangingStatus}
+                      >
+                        {isCompleted
+                          ? "Avaa vikailmoitus"
+                          : "Sulje vikailmoitus"}
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Oletko varma?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          {isCompleted
+                            ? "Tämä toiminto avaa vikailmoituksen uudelleen. Haluatko jatkaa?"
+                            : "Tämä toiminto sulkee vikailmoituksen. Haluatko jatkaa?"}
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Peruuta</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleStatusChange}>
+                          {isCompleted ? "Avaa" : "Sulje"}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </>
+              )}
+            </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }

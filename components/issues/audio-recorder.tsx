@@ -55,7 +55,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({
   }, []);
 
   return (
-    <div>
+    <div className="flex justify-center">
       {isRecording ? (
         <Button className="mt-2" onClick={handleStopRecording}>
           <CirclePause className="h-5 w-5 mr-2" />

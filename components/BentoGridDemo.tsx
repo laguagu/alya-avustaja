@@ -5,6 +5,7 @@ import { IconSquareRoundedCheck, IconAlertSquare } from "@tabler/icons-react";
 import { FilteredServiceItem } from "@/data/types";
 import Image from "next/image";
 import { Switch } from "@/components/ui/switch";
+import { motion } from "framer-motion";
 
 export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
   const [showCompleted, setShowCompleted] = useState(false);
@@ -63,7 +64,7 @@ export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
           onCheckedChange={toggleShowCompleted}
         ></Switch>
       </form>
-      <BentoGrid className="max-w-4xl mx-auto md:mt-10 mt-1">
+      <BentoGrid className="max-w-5xl mx-auto md:mt-10 mt-1">
         {issueItems.map((item, i) => (
           <BentoGridItem
             key={item.issue_id}

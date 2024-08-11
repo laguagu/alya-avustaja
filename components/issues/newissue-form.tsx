@@ -40,6 +40,8 @@ import { useEffect, useState } from "react";
 import { readStreamableValue } from "ai/rsc";
 import { processAudioTranscription } from "@/lib/actions/ai-actions";
 import ModalSpinner from "./modal-spinner";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Mic, Type, Loader2, Send } from "lucide-react";
 
 export default function NewIssueForm() {
   const router = useRouter();
@@ -154,243 +156,294 @@ export default function NewIssueForm() {
   };
 
   return (
-    <div className="max-w-2xl pb-2 md:pb-10 ">
-      <div className="mb-4 p-4 border rounded-md bg-gray-50">
-        <h2 className="text-lg font-bold">
-          Täydennä vikailmoitus huonekalusta AI:n avulla
-        </h2>
-        <p className="text-sm text-gray-600 mb-2">
-          Voit joko sanella vian kuvauksen tai kirjoittaa sen itse.
-        </p>
+    <div className="spaxe-y-8">
+      <Card className="w-full max-w-2xl mb-8 ">
+        <CardHeader>
+          <CardTitle>Uusi vikailmoitus</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="mb-6 p-4 sm:p-6 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
+            <h2 className="text-lg sm:text-xl font-semibold mb-3 text-gray-800">
+              AI-avusteinen vikailmoitus
+            </h2>
+            <p className="text-xs sm:text-sm text-gray-600 mb-4">
+              Voit joko sanella vian kuvauksen tai kirjoittaa sen itse. AI
+              auttaa täyttämään lomakkeen tietojen perusteella.
+            </p>
 
-        {isProcessing && <ModalSpinner />}
-        <div className="flex space-x-2 mb-2">
-          <Button
-            onClick={() => setInputMethod("audio")}
-            variant={inputMethod === "audio" ? "default" : "outline"}
-          >
-            Sanele
-          </Button>
-          <Button
-            onClick={() => setInputMethod("text")}
-            variant={inputMethod === "text" ? "default" : "outline"}
-          >
-            Kirjoita
-          </Button>
-        </div>
-        {inputMethod === "audio" ? (
-          <AudioRecorder
-            onRecordingComplete={(audioBlob) => {
-              // Käsittele äänitys ja avaa Dialog
-              handleRecordingComplete(audioBlob);
-              setIsModalOpen(true);
-            }}
-          />
-        ) : (
-          <>
-            <Textarea
-              value={manualDescription}
-              onChange={(e) => setManualDescription(e.target.value)}
-              placeholder="Kirjoita vian kuvaus tähän..."
-              rows={4}
-            />
-            <Button
-              onClick={() => handleDescriptionSubmit(manualDescription)}
-              className="mt-2"
-              disabled={isProcessing || manualDescription.trim().length === 0}
-            >
-              {isProcessing ? "Käsitellään..." : "Lähetä kuvaus"}
-            </Button>
-          </>
-        )}
-
-        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <DialogContent aria-describedby="dialog-description">
-            <DialogHeader>
-              <DialogTitle>Tarkista sanelemasi kuvaus</DialogTitle>
-              <DialogDescription id="dialog-description">
-                Tarkista sanelemasi vian kuvaus ja tee tarvittavat muutokset
-                ennen lomakkeen täyttämistä.
-              </DialogDescription>
-            </DialogHeader>
-            <Textarea
-              value={transcription}
-              onChange={(e) => setTranscription(e.target.value)}
-              rows={5}
-            />
-            <DialogFooter>
-              <div className="flex justify-between w-full">
-                <Button onClick={() => setIsModalOpen(false)}>Peruuta</Button>
+            {isProcessing && <ModalSpinner />}
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 mb-4">
+              <Button
+                onClick={() => setInputMethod("audio")}
+                variant={inputMethod === "audio" ? "default" : "outline"}
+                className="w-full sm:w-auto"
+              >
+                <Mic className="mr-2 h-4 w-4" />
+                Sanele
+              </Button>
+              <Button
+                onClick={() => setInputMethod("text")}
+                variant={inputMethod === "text" ? "default" : "outline"}
+                className="w-full sm:w-auto"
+              >
+                <Type className="mr-2 h-4 w-4" />
+                Kirjoita
+              </Button>
+            </div>
+            {inputMethod === "audio" ? (
+              <div className="bg-white p-3 sm:p-4 rounded-md shadow-inner">
+                <AudioRecorder
+                  onRecordingComplete={(audioBlob) => {
+                    handleRecordingComplete(audioBlob);
+                    setIsModalOpen(true);
+                  }}
+                />
+              </div>
+            ) : (
+              <div className="bg-white p-3 sm:p-4 rounded-md shadow-inner">
+                <Textarea
+                  value={manualDescription}
+                  onChange={(e) => setManualDescription(e.target.value)}
+                  placeholder="Kirjoita vian kuvaus tähän..."
+                  rows={4}
+                  className="mb-3 border-gray-200 focus:border-gray-400 focus:ring-gray-400"
+                />
                 <Button
-                  onClick={() => handleDescriptionSubmit(transcription)}
-                  disabled={isProcessing}
+                  onClick={() => handleDescriptionSubmit(manualDescription)}
+                  disabled={
+                    isProcessing || manualDescription.trim().length === 0
+                  }
+                  className="w-full"
                 >
-                  {isProcessing ? "Käsitellään..." : "Vahvista ja täytä lomake"}
+                  {isProcessing ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Käsitellään...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="mr-2 h-4 w-4" />
+                      Lähetä kuvaus
+                    </>
+                  )}
                 </Button>
               </div>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
-      <p className="text-sm text-red-500 mb-2">
-        * Pakolliset kentät on merkitty tähdellä
-      </p>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="md:w-2/3 space-y-6"
-        >
-          <FormField
-            control={form.control}
-            name="locationName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Sijainti</FormLabel>
-                <Input placeholder="Sijainti" {...field} disabled={true} />
-                <FormMessage>{errors.locationName?.message}</FormMessage>
-              </FormItem>
             )}
-          />
-          <FormField
-            control={form.control}
-            name="priority"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Prioriteetti*</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  disabled={isExecuting}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Valitse prioriteetti" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="Ei kiireellinen">
-                      Ei kiireellinen
-                    </SelectItem>
-                    <SelectItem value="Huomioitava">Huomioitava</SelectItem>
-                    <SelectItem value="Kiireellinen">Kiireellinen</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormDescription>Vian priority </FormDescription>
-                <FormMessage>{errors.priority?.message}</FormMessage>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="problem_description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Huoltotarpeen kuvaus*</FormLabel>
-                <Textarea
-                  placeholder="Huoltotarpeen kuvaus"
-                  {...field}
-                  disabled={isExecuting}
-                />
-                <p className="text-sm text-muted-foreground">
-                  Vian kuvaus on tärkeä, jotta huoltohenkilöstö osaa
-                  valmistautua oikein huoltoon.
-                </p>
-                <FormMessage>{errors.problem_description?.message}</FormMessage>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="type"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Vikatyyppi*</FormLabel>
-                <Select
-                  disabled={isExecuting}
-                  onValueChange={field.onChange}
-                  value={field.value}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Valitse vikatyyppi" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Puuttuu liukunasta (t)">
-                      Puuttuu liukunasta (t)
-                    </SelectItem>
-                    <SelectItem value="Kiristysruuvi löysällä">
-                      Kiristysruuvi löysällä
-                    </SelectItem>
-                    <SelectItem value="Kiristysruuvi puuttuu">
-                      Kiristysruuvi puuttuu
-                    </SelectItem>
-                    <SelectItem value="Runko heiluu">Runko heiluu</SelectItem>
-                    <SelectItem value="Selkänoja heiluu">
-                      Selkänoja heiluu
-                    </SelectItem>
-                    <SelectItem value="Istuin heiluu">Istuin heiluu</SelectItem>
-                    <SelectItem value="Materiaali vioittunut">
-                      Materiaali vioittunut
-                    </SelectItem>
-                    <SelectItem value="Ilkivalta">Ilkivalta</SelectItem>
-                    <SelectItem value="Vaatii puhdistuksen">
-                      Vaatii puhdistuksen
-                    </SelectItem>
-                    <SelectItem value="Muu vika">Muu vika</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage>{errors.type?.message}</FormMessage>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="instruction"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Tekoälyn huolto-ohje ehdotus</FormLabel>
-                <Textarea
-                  placeholder="Älyä avustajan huolto-ohje ehdotus"
-                  {...field}
-                  disabled={isExecuting}
-                />
-
-                <FormMessage>{errors.instruction?.message}</FormMessage>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="missing_equipments"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Puuttuvat tarvikkeet</FormLabel>
-                <div>
-                  <Input
-                    placeholder="Mahdollisesti tarvittavat varaosat"
-                    {...field}
-                    disabled={isExecuting}
-                  />
-                </div>
-                <FormMessage>{errors.missing_equipments?.message}</FormMessage>
-              </FormItem>
-            )}
-          />
-
-          <div className="flex space-x-4">
-            <Button type="submit" disabled={isExecuting || isProcessing}>
-              Lähetä
-            </Button>
-            <Button
-              type="button"
-              variant={"outline"}
-              onClick={handleCancel}
-              disabled={isProcessing}
-            >
-              Tyhjennä
-            </Button>
           </div>
-        </form>
-      </Form>
+
+          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Tarkista sanelemasi kuvaus</DialogTitle>
+                <DialogDescription>
+                  Tarkista sanelemasi vian kuvaus ja tee tarvittavat muutokset
+                  ennen lomakkeen täyttämistä.
+                </DialogDescription>
+              </DialogHeader>
+              <Textarea
+                value={transcription}
+                onChange={(e) => setTranscription(e.target.value)}
+                rows={5}
+              />
+              <DialogFooter>
+                <div className="flex justify-between w-full">
+                  <Button
+                    onClick={() => setIsModalOpen(false)}
+                    variant="outline"
+                  >
+                    Peruuta
+                  </Button>
+                  <Button
+                    onClick={() => handleDescriptionSubmit(transcription)}
+                    disabled={isProcessing}
+                  >
+                    {isProcessing
+                      ? "Käsitellään..."
+                      : "Vahvista ja täytä lomake"}
+                  </Button>
+                </div>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          <p className="text-sm text-red-500 mb-4">
+            * Pakolliset kentät on merkitty tähdellä
+          </p>
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={form.control}
+                  name="locationName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Sijainti</FormLabel>
+                      <Input
+                        placeholder="Sijainti"
+                        {...field}
+                        disabled={true}
+                      />
+                      <FormMessage>{errors.locationName?.message}</FormMessage>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="priority"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Prioriteetti*</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        disabled={isExecuting}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Valitse prioriteetti" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Ei kiireellinen">
+                            Ei kiireellinen
+                          </SelectItem>
+                          <SelectItem value="Huomioitava">
+                            Huomioitava
+                          </SelectItem>
+                          <SelectItem value="Kiireellinen">
+                            Kiireellinen
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormDescription>Vian prioriteetti</FormDescription>
+                      <FormMessage>{errors.priority?.message}</FormMessage>
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="problem_description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Huoltotarpeen kuvaus*</FormLabel>
+                    <Textarea
+                      placeholder="Huoltotarpeen kuvaus"
+                      {...field}
+                      disabled={isExecuting}
+                    />
+                    <FormDescription>
+                      Vian kuvaus on tärkeä, jotta huoltohenkilöstö osaa
+                      valmistautua oikein huoltoon.
+                    </FormDescription>
+                    <FormMessage>
+                      {errors.problem_description?.message}
+                    </FormMessage>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Vikatyyppi*</FormLabel>
+                    <Select
+                      disabled={isExecuting}
+                      onValueChange={field.onChange}
+                      value={field.value}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Valitse vikatyyppi" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Puuttuu liukunasta (t)">
+                          Puuttuu liukunasta (t)
+                        </SelectItem>
+                        <SelectItem value="Kiristysruuvi löysällä">
+                          Kiristysruuvi löysällä
+                        </SelectItem>
+                        <SelectItem value="Kiristysruuvi puuttuu">
+                          Kiristysruuvi puuttuu
+                        </SelectItem>
+                        <SelectItem value="Runko heiluu">
+                          Runko heiluu
+                        </SelectItem>
+                        <SelectItem value="Selkänoja heiluu">
+                          Selkänoja heiluu
+                        </SelectItem>
+                        <SelectItem value="Istuin heiluu">
+                          Istuin heiluu
+                        </SelectItem>
+                        <SelectItem value="Materiaali vioittunut">
+                          Materiaali vioittunut
+                        </SelectItem>
+                        <SelectItem value="Ilkivalta">Ilkivalta</SelectItem>
+                        <SelectItem value="Vaatii puhdistuksen">
+                          Vaatii puhdistuksen
+                        </SelectItem>
+                        <SelectItem value="Muu vika">Muu vika</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage>{errors.type?.message}</FormMessage>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="instruction"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tekoälyn huolto-ohje ehdotus</FormLabel>
+                    <Textarea
+                      placeholder="Tekoälyn huolto-ohje ehdotus"
+                      {...field}
+                      disabled={isExecuting}
+                    />
+                    <FormMessage>{errors.instruction?.message}</FormMessage>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="missing_equipments"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Puuttuvat tarvikkeet</FormLabel>
+                    <Input
+                      placeholder="Mahdollisesti tarvittavat varaosat"
+                      {...field}
+                      disabled={isExecuting}
+                    />
+                    <FormMessage>
+                      {errors.missing_equipments?.message}
+                    </FormMessage>
+                  </FormItem>
+                )}
+              />
+
+              <div className="flex justify-between pt-4">
+                <Button type="submit" disabled={isExecuting || isProcessing}>
+                  Lähetä
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleCancel}
+                  disabled={isProcessing}
+                >
+                  Tyhjennä
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

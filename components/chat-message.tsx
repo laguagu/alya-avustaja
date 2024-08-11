@@ -101,7 +101,7 @@ function ChatMessage({ message }: ChatMessageProps) {
           },
         )}
       >
-        <p className="text-primary">{formatMessage(message.content)}</p>
+        <div className="text-primary">{formatMessage(message.content)}</div>
       </div>
     </li>
   );

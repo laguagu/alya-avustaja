@@ -94,32 +94,30 @@ export default function ChatBot({
   );
 
   return (
-    <div className="flex flex-col w-full xl:max-w-[900px] h-[calc(62vh-4rem)] md:h-full">
-      <div className="p-4 w-full max-w-3xl mx-auto">
-        <div className="flex items-center">
-          <h1 className="text-md text-nowrap sm:text-xl lg:text-2xl font-bold text-center flex-1">
-            Chatbot - Älyäavustaja
-          </h1>
-        </div>
+    <div className="flex flex-col w-full xl:max-w-[900px] h-[calc(62vh-4rem)] md:h-full border border-gray-200 rounded-lg shadow-md overflow-hidden bg-white">
+      <div className="p-4 w-full max-w-3xl mx-auto border-b border-gray-200">
+        <h1 className="text-2xl font-bold text-center text-gray-800">
+          Älyäavustaja
+        </h1>
       </div>
-      <section className="container flex flex-col flex-grow px-0 pb-10 gap-4 mx-auto w-full max-h-[calc(62vh-4rem)] h-[800px]">
+      <section className="flex-grow flex flex-col">
         <ul
           ref={chatParent}
-          className="p-4 flex-grow bg-muted/50 rounded-lg overflow-y-auto flex flex-col gap-4"
+          className="flex-grow p-4 overflow-y-auto flex flex-col gap-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
         >
           {chatMessages}
 
           {(isProcessingAudio || isLoading || isPreparingAudio) && (
             <li
               className={clsx("flex", {
-                "flex-row-reverse": isLoading || isPreparingAudio,
+                "justify-end": isLoading || isPreparingAudio,
               })}
             >
-              <div className="flex items-center">
+              <div className="flex items-center bg-gray-100 rounded-full px-4 py-2">
                 <TailSpin
-                  height="28"
-                  width="28"
-                  color="black"
+                  height="24"
+                  width="24"
+                  color="#6B7280"
                   ariaLabel="loading"
                 />
                 {isPreparingAudio && (
@@ -133,13 +131,13 @@ export default function ChatBot({
         </ul>
       </section>
 
-      <section className="p-4">
+      <section className="p-4 border-t border-gray-200">
         <form
           onSubmit={handleSubmit}
-          className="flex w-full flex-col sm:flex-row max-w-3xl mx-auto items-center space-y-2 sm:space-y-0"
+          className="flex w-full flex-col sm:flex-row max-w-3xl mx-auto items-center space-y-2 sm:space-y-0 sm:space-x-2"
         >
           <Input
-            className="flex-1 min-h-[40px]"
+            className="flex-1 min-h-[48px] rounded-md px-4 border-gray-300 focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
             placeholder="Kirjoita kysymyksesi tänne..."
             type="text"
             value={input}
@@ -148,34 +146,34 @@ export default function ChatBot({
           />
           <div className="flex gap-2 items-center">
             <Button
-              className="ml-2"
               type="submit"
               disabled={isDisabled || recording}
-              variant={"secondary"}
+              variant="default"
+              className="rounded-md px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white"
             >
               <Send className="h-5 w-5 mr-2" />
               Lähetä
             </Button>
-
             <Button
               aria-label={recording ? "Lopeta nauhoitus" : "Aloita nauhoitus"}
               type="button"
-              variant={"secondary"}
+              variant="outline"
+              className="rounded-md px-4 py-2 border-2 border-gray-300 text-gray-700 hover:bg-gray-100"
               onClick={recording ? handleAudioSubmit : handleStartRecording}
               disabled={isDisabled && !recording}
             >
               {recording ? (
-                <Rings color="white" height={100} width={20} />
+                <Rings color="#6B7280" height={24} width={24} />
               ) : (
                 <Mic className="h-5 w-5 mr-2" />
               )}
-              {recording ? "Lopeta Nauhoitus" : "Aloita Nauhoitus"}
+              {recording ? "Lopeta" : "Nauhoita"}
             </Button>
           </div>
         </form>
       </section>
-      <div className="flex flex-col items-center justify-center">
-        <p className="text-center sm:text-base text-sm tracking-tight sm:mb-5">
+      <div className="p-2 bg-gray-50">
+        <p className="text-center text-xs text-gray-500">
           Älyäavustaja voi tehdä virheitä. Suosittelemme tarkastamaan tärkeät
           tiedot.
         </p>
