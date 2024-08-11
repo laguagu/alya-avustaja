@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { ClipboardPlus } from "lucide-react";
 
-export function NewIssue() {
+export function NewIssuesButton() {
   return (
     <Button asChild className="w-full" variant={"outline"}>
       <Link href="/alya/issues/new-issue">

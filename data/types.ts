@@ -267,7 +267,6 @@ export type FilteredServiceItem = {
   device_id: number;
   location_id: number | null;
   problem_description: string | null;
-
   priority: string | null;
   created: string;
   updated: string;
@@ -278,7 +277,7 @@ export type FilteredServiceItem = {
   device_model: string | null;
   description: string | null; // Työnselostus
   references?: { files?: number[] };
-  content_url?: string;
+  content_url?: string | null;
 };
 
 export interface IssueFormValues {

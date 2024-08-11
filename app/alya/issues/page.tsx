@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { Separator } from "@/components/ui/separator";
-import { NewIssue } from "@/components/issues/newissue-button";
+import { NewIssuesButton } from "@/components/issues/newissue-button";
 import { Badge } from "@/components/ui/badge";
 import { BentoGridDemo } from "@/components/BentoGridDemo";
 import { fetchServiceWithImage } from "@/lib/dataFetching";
@@ -23,7 +23,7 @@ export default async function Page() {
             </Badge>
           </div>
           <div className="md:ml-4">
-            <NewIssue />
+            <NewIssuesButton />
           </div>
         </div>
         <Separator />

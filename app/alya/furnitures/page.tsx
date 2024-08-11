@@ -5,7 +5,6 @@ import { DevicesTableColums } from "@/data/types";
 import { fetchFurnitures } from "@/lib/dataFetching";
 import { Separator } from "@/components/ui/separator";
 
-
 export default async function Page() {
   let data: DevicesTableColums[] = [];
   let error: string | null = null;
@@ -23,7 +22,7 @@ export default async function Page() {
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-xl font-medium leading-non ">Huonekalut</h1>
-      <Separator className="my-3" />
+      <Separator className="my-3 " />
       <p className="text-xs text-gray-500/70 italic md:hidden">
         Vinkki: Käännä laitteesi vaakatasoon nähdäksesi kaikki kentät kerralla.
       </p>
