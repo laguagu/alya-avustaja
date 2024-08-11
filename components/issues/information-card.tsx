@@ -9,7 +9,13 @@ import {
 import Image from "next/image";
 import { Suspense } from "react";
 import { DialogBasicOne } from "./dialog-popover";
-
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { ScrollArea } from "../ui/scroll-area";
 interface InformationCardProps {
   deviceData: DeviceItemCard | null;
   issueData: IssueFormValues | null;
@@ -110,7 +116,24 @@ export default function InformationCard({
               />
               <InfoItem
                 label="Tekoälyn huolto-ohje"
-                value={issueData.instruction}
+                value={
+                  <div className="w-full max-w-2xl">
+                    <Accordion type="single" collapsible className="w-full">
+                      <AccordionItem value="ai-instruction">
+                        <AccordionTrigger className="text-left">
+                          Näytä huolto-ohje
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <ScrollArea className="h-[200px] w-full rounded-md border p-4">
+                            <p className="text-sm leading-relaxed">
+                              {issueData.instruction || "Ei huolto-ohjeita"}
+                            </p>
+                          </ScrollArea>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  </div>
+                }
                 fullWidth
               />
               <InfoItem
