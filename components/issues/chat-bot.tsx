@@ -94,19 +94,18 @@ export default function ChatBot({
   );
 
   return (
-    <div className="flex flex-col w-full xl:max-w-[900px] h-[calc(62vh-4rem)] md:h-full border border-gray-200 rounded-lg shadow-md overflow-hidden bg-white">
+    <div className="flex flex-col w-full xl:max-w-[900px] min-h-[400px] h-[80vh] lg:h-[calc(100vh-15rem)] border border-gray-200 rounded-lg shadow-md overflow-hidden bg-white">
       <div className="p-4 w-full max-w-3xl mx-auto border-b border-gray-200">
         <h1 className="text-2xl font-bold text-center text-gray-800">
           Älyäavustaja
         </h1>
       </div>
-      <section className="flex-grow flex flex-col">
+      <div className="flex-grow flex flex-col overflow-hidden">
         <ul
           ref={chatParent}
-          className="flex-grow p-4 overflow-y-auto flex flex-col gap-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
+          className="flex-grow overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
         >
           {chatMessages}
-
           {(isProcessingAudio || isLoading || isPreparingAudio) && (
             <li
               className={clsx("flex", {
@@ -129,15 +128,15 @@ export default function ChatBot({
             </li>
           )}
         </ul>
-      </section>
+      </div>
 
-      <section className="p-4 border-t border-gray-200">
+      <div className="border-t border-gray-200">
         <form
           onSubmit={handleSubmit}
-          className="flex w-full flex-col sm:flex-row max-w-3xl mx-auto items-center space-y-2 sm:space-y-0 sm:space-x-2"
+          className="flex flex-col sm:flex-row items-center p-4 space-y-2 sm:space-y-0 sm:space-x-2"
         >
           <Input
-            className="flex-1 min-h-[48px] rounded-md px-4 border-gray-300 focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
+            className="flex-grow min-h-[48px] rounded-md px-4 border-gray-300 focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
             placeholder="Kirjoita kysymyksesi tänne..."
             type="text"
             value={input}
@@ -171,7 +170,7 @@ export default function ChatBot({
             </Button>
           </div>
         </form>
-      </section>
+      </div>
       <div className="p-2 bg-gray-50">
         <p className="text-center text-xs text-gray-500">
           Älyäavustaja voi tehdä virheitä. Suosittelemme tarkastamaan tärkeät
