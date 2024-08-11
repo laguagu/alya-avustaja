@@ -9,104 +9,61 @@ import { Package, ClipboardPlus, TriangleAlert, Users } from "lucide-react";
 import { Button } from "./ui/button";
 
 export default function DashboardCards() {
+  const cards = [
+    {
+      title: "Vikalista",
+      description: "Tarkastele kaikkia huonekaluihin liittyviä vikailmoituksia.",
+      icon: TriangleAlert,
+      link: "/alya/issues/",
+      linkText: "Tarkastele vikoja",
+    },
+    {
+      title: "Huonekalut",
+      description: "Tarkastele kaikkia saatavilla olevia huonekaluja.",
+      icon: Package,
+      link: "/alya/furnitures",
+      linkText: "Katso huonekalut",
+    },
+    {
+      title: "Chatbot",
+      description: "Keskustele chatbotin kanssa ja saa apua huonekalun huoltoon.",
+      icon: Users,
+      link: "/alya/chat",
+      linkText: "Aloita chat",
+    },
+    {
+      title: "Uusi vikailmoitus",
+      description: "Luo uusi vikailmoitus huonekalulle.",
+      icon: ClipboardPlus,
+      link: "/alya/issues/new-issue",
+      linkText: "Uusi vikailmoitus",
+    },
+  ];
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      <Card className="bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow flex flex-col">
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <TriangleAlert className="w-6 h-6 text-primary" />
-            <h3 className="text-lg font-semibold">Vikalista</h3>
-          </div>
-        </CardHeader>
-        <CardContent className="flex-grow">
-          <p className="text-muted-foreground">
-            Tarkastele kaikkia huonekaluihin liittyviä vikailmoituksia.
-          </p>
-        </CardContent>
-        <CardFooter className="flex justify-center items-center">
-          <Button asChild className="w-full max-w-xs">
-            <Link
-              href="alya/issues/"
-              className="text-primary hover:underline text-sm text-center"
-              prefetch={false}
-            >
-              Tarkastele vikoja
-            </Link>
-          </Button>
-        </CardFooter>
-      </Card>
-      <Card className="bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow flex flex-col">
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Package className="w-6 h-6 text-primary" />
-            <h3 className="text-lg font-semibold">Huonekalut</h3>
-          </div>
-        </CardHeader>
-        <CardContent className="flex-grow">
-          <p className="text-muted-foreground">
-            Tarkastele kaikkia saatavilla olevia huonekaluja.
-          </p>
-        </CardContent>
-        <CardFooter className="flex justify-center items-center">
-          <Button asChild className="w-full max-w-xs">
-            <Link
-              href="/alya/furnitures"
-              className="text-primary hover:underline text-sm text-center"
-              prefetch={false}
-            >
-              Katso huonekalut
-            </Link>
-          </Button>
-        </CardFooter>
-      </Card>
-      <Card className="bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow flex flex-col">
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Users className="w-6 h-6 text-primary" />
-            <h3 className="text-lg font-semibold">Chatbot</h3>
-          </div>
-        </CardHeader>
-        <CardContent className="flex-grow">
-          <p className="text-muted-foreground">
-            Keskustele chatbotin kanssa ja saa apua huonekalun huoltoon.
-          </p>
-        </CardContent>
-        <CardFooter className="flex justify-center items-center">
-          <Button asChild className="w-full max-w-xs">
-            <Link
-              href="/alya/chat"
-              className="text-primary hover:underline text-sm text-center"
-              prefetch={false}
-            >
-              Aloita chat
-            </Link>
-          </Button>
-        </CardFooter>
-      </Card>
-      <Card className="bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow flex flex-col">
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <ClipboardPlus className="w-6 h-6 text-primary" />
-            <h3 className="text-lg font-semibold">Uusi vikailmoitus</h3>
-          </div>
-        </CardHeader>
-        <CardContent className="flex-grow">
-          <p className="text-muted-foreground">
-            Luo uusi vikailmoitus huonekalulle.
-          </p>
-        </CardContent>
-        <CardFooter className="flex justify-center items-center">
-          <Button asChild className="w-full max-w-xs">
-            <Link
-              href="/alya/issues/new-issue"
-              className="text-primary hover:underline text-sm text-center"
-              prefetch={false}
-            >
-              Uusi vikailmoitus
-            </Link>
-          </Button>
-        </CardFooter>
-      </Card>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {cards.map((card, index) => (
+        <Card key={index} className="bg-card text-card-foreground shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full group">
+          <CardHeader>
+            <div className="flex items-center gap-3">
+              <div className="transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+                <card.icon className="w-8 h-8 text-primary" />
+              </div>
+              <h3 className="text-xl font-bold">{card.title}</h3>
+            </div>
+          </CardHeader>
+          <CardContent className="flex-grow">
+            <p className="text-muted-foreground text-sm">{card.description}</p>
+          </CardContent>
+          <CardFooter className="pt-4">
+            <Button asChild className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-300">
+              <Link href={card.link} prefetch={false}>
+                {card.linkText}
+              </Link>
+            </Button>
+          </CardFooter>
+        </Card>
+      ))}
     </div>
   );
 }
