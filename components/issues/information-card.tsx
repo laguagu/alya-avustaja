@@ -117,22 +117,26 @@ export default function InformationCard({
               <InfoItem
                 label="Tekoälyn huolto-ohje"
                 value={
-                  <div className="w-full max-w-2xl">
-                    <Accordion type="single" collapsible className="w-full">
-                      <AccordionItem value="ai-instruction">
-                        <AccordionTrigger className="text-left">
-                          Näytä huolto-ohje
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <ScrollArea className="h-[200px] w-full rounded-md border p-4">
-                            <p className="text-sm leading-relaxed">
-                              {issueData.instruction || "Ei huolto-ohjeita"}
-                            </p>
-                          </ScrollArea>
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
-                  </div>
+                  !issueData.instruction ? (
+                    <p className="text-gray-600">Ei huolto-ohjeita</p>
+                  ) : (
+                    <div className="w-full max-w-2xl">
+                      <Accordion type="single" collapsible className="w-full">
+                        <AccordionItem value="ai-instruction">
+                          <AccordionTrigger className="text-left">
+                            Näytä huolto-ohje
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            <ScrollArea className="h-[200px] w-full rounded-md border p-4">
+                              <p className="text-sm leading-relaxed">
+                                {issueData.instruction}
+                              </p>
+                            </ScrollArea>
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion>
+                    </div>
+                  )
                 }
                 fullWidth
               />
