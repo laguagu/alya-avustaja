@@ -2,7 +2,7 @@ import SimpleSidenav from "@/components/layout/simple-sidenav";
 import SheetNav from "@/components/layout/sheet";
 import { getIssuesNumber } from "@/lib/dataFetching";
 import { Suspense } from "react";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from 'react-hot-toast';
 import { LoadingLayoutSkeleton } from "@/components/skeletons";
 
 export default async function DashboardLayout({
@@ -22,7 +22,18 @@ export default async function DashboardLayout({
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 overflow-auto bg-gradient-to-br from-gray-50 to-gray-100/50">
           <Suspense fallback={<LoadingLayoutSkeleton />}>{children}</Suspense>
         </main>
-        <Toaster />
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            duration: 5000,
+            style: {
+              background: '#363636',
+              color: '#fff',
+              padding: '16px',
+              borderRadius: '8px',
+            },
+          }}
+        />
       </div>
     </div>
   );

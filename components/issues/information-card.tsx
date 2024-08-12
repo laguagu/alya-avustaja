@@ -16,6 +16,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ScrollArea } from "../ui/scroll-area";
+import { formatMessage } from "../chat-message";
+
 interface InformationCardProps {
   deviceData: DeviceItemCard | null;
   issueData: IssueFormValues | null;
@@ -116,28 +118,7 @@ export default function InformationCard({
               />
               <InfoItem
                 label="Tekoälyn huolto-ohje"
-                value={
-                  !issueData.instruction ? (
-                    <p className="text-gray-600">Ei huolto-ohjeita</p>
-                  ) : (
-                    <div className="w-full max-w-2xl">
-                      <Accordion type="single" collapsible className="w-full">
-                        <AccordionItem value="ai-instruction">
-                          <AccordionTrigger className="text-left">
-                            Näytä huolto-ohje
-                          </AccordionTrigger>
-                          <AccordionContent>
-                            <ScrollArea className="h-[200px] w-full rounded-md border p-4">
-                              <p className="text-sm leading-relaxed">
-                                {issueData.instruction}
-                              </p>
-                            </ScrollArea>
-                          </AccordionContent>
-                        </AccordionItem>
-                      </Accordion>
-                    </div>
-                  )
-                }
+                value={issueData.instruction}
                 fullWidth
               />
               <InfoItem
@@ -169,6 +150,34 @@ function InfoItem({
   value: string | React.ReactNode;
   fullWidth?: boolean;
 }) {
+  if (label === "Tekoälyn huolto-ohje" && typeof value === "string") {
+    return (
+      <div className={fullWidth ? "col-span-full" : ""}>
+        <p className="font-semibold text-gray-700">{label}:</p>
+        {!value ? (
+          <p className="text-gray-600">Ei huolto-ohjeita</p>
+        ) : (
+          <div className="w-full max-w-2xl">
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="ai-instruction">
+                <AccordionTrigger className="text-left">
+                  Näytä huolto-ohje
+                </AccordionTrigger>
+                <AccordionContent>
+                  <ScrollArea className="h-[200px] w-full rounded-md border p-4">
+                    <div className="text-sm leading-relaxed">
+                      {formatMessage(value)}
+                    </div>
+                  </ScrollArea>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className={fullWidth ? "col-span-full" : ""}>
       <p className="font-semibold text-gray-700">{label}:</p>

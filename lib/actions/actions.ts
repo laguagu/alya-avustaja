@@ -17,7 +17,6 @@ export const updateIssueAction = actionClient
     async ({
       parsedInput: {
         id,
-        locationName,
         priority,
         problem_description,
         type,
@@ -25,24 +24,34 @@ export const updateIssueAction = actionClient
         missing_equipments,
       },
     }) => {
-      await fetch(
-        `https://6549f6b1e182221f8d523a44.mockapi.io/api/issues/${id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            locationName,
-            priority,
-            problem_description,
-            type,
-            instruction,
-            missing_equipments,
-          }),
+      const updateData = {
+        priority,
+        problem_description,
+        type,
+        instruction,
+        missing_equipments,
+      };
+
+      const response = await fetch(`${process.env.LUNNI_SERVICES}/${id}`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${process.env.LUNNI_API}`,
+          "Content-Type": "application/json",
         },
-      );
-      return { message: "Vikailmoitus Päivitetty! 🎉" };
+        body: JSON.stringify(updateData),
+      });
+
+      if (!response.ok) {
+        console.error("Update failed:", response.status, await response.text());
+        throw new Error(`Update failed: ${response.status}`);
+      }
+
+      // Revalidate the 'issues' tag
+      revalidateTag("issues");
+
+      return {
+        message: "Vikailmoitus Päivitetty! 🎉",
+      };
     },
   );
 
@@ -75,6 +84,7 @@ export const postNewIssueAction = actionClient
       await fetch(`https://6549f6b1e182221f8d523a44.mockapi.io/api/issues/`, {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${process.env.LUNNI_API}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -91,56 +101,61 @@ export const postNewIssueAction = actionClient
     },
   );
 
-export const closeIssueAction = actionClient
-  .schema(z.object({ issueId: z.number() }), {
-    handleValidationErrorsShape: (ve) =>
-      flattenValidationErrors(ve).fieldErrors,
-  })
-  .action(async ({ parsedInput }) => {
-    const { issueId } = parsedInput;
-    const response = await fetch(
-      `https://6549f6b1e182221f8d523a44.mockapi.io/api/issues/${issueId}`,
-      {
+  const toggleIssueStatus = async (issueId: number, isCompleted: boolean) => {
+    console.log(`Attempting to ${isCompleted ? 'close' : 'open'} issue ${issueId}`);
+    
+    const updateData = { is_completed: isCompleted };
+    
+    console.log("Sending update data:", updateData);
+  
+    try {
+      const response = await fetch(`${process.env.LUNNI_SERVICES}/${issueId}`, {
         method: "PATCH",
         headers: {
+          Authorization: `Bearer ${process.env.LUNNI_API}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ is_completed: true }),
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error("Vikailmoituksen sulkeminen epäonnistui");
+        body: JSON.stringify(updateData),
+      });
+  
+      console.log("Response status:", response.status);
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error response:", errorText);
+        throw new Error(`Failed to ${isCompleted ? "close" : "open"} issue. Server responded with ${response.status}: ${errorText}`);
+      }
+  
+      const responseData = await response.json();
+      console.log("Response data:", responseData);
+  
+      // Check if the update was successful
+      if (responseData.is_completed !== isCompleted) {
+        console.warn("Warning: Server did not update the is_completed status as expected");
+      }
+  
+      revalidateTag("issues");
+      return {
+        message: `Vikailmoitus ${isCompleted ? "suljettu" : "avattu"} onnistuneesti`,
+        data: responseData
+      };
+    } catch (error) {
+      console.error("Error in toggleIssueStatus:", error);
+      throw error;
     }
-    revalidateTag("issues");
-    return { message: "Vikailmoitus suljettu onnistuneesti" };
-  });
+  };
+
+export const closeIssueAction = actionClient
+  .schema(z.object({ issueId: z.number() }))
+  .action(async ({ parsedInput: { issueId } }) =>
+    toggleIssueStatus(issueId, true),
+  );
 
 export const openIssueAction = actionClient
-  .schema(z.object({ issueId: z.number() }), {
-    handleValidationErrorsShape: (ve) =>
-      flattenValidationErrors(ve).fieldErrors,
-  })
-  .action(async ({ parsedInput }) => {
-    const { issueId } = parsedInput;
-    const response = await fetch(
-      `https://6549f6b1e182221f8d523a44.mockapi.io/api/issues/${issueId}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ is_completed: false }),
-      },
-    );
-
-    if (!response.ok) {
-      console.log("response", response);
-      throw new Error("Vikailmoituksen avaaminen epäonnistui");
-    }
-    revalidateTag("issues");
-    return { message: "Vikailmoitus avattu onnistuneesti" };
-  });
+  .schema(z.object({ issueId: z.number() }))
+  .action(async ({ parsedInput: { issueId } }) =>
+    toggleIssueStatus(issueId, false),
+  );
 
 export async function insertChatMessageAction(message: ChatMessage) {
   return await insertChatMessage(message);

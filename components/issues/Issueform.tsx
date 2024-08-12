@@ -1,8 +1,12 @@
 "use client";
 
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useAction } from "next-safe-action/hooks";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -31,21 +35,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { toast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DeviceItemCard, FurnitureInfo, IssueFormValues } from "@/data/types";
-import { useEffect, useState } from "react";
+import { FormSchema } from "@/lib/schemas";
 import {
+  updateIssueAction,
   closeIssueAction,
   openIssueAction,
-  postNewIssueAction,
 } from "@/lib/actions/actions";
 import { AiInstructionButton } from "../Client-Buttons";
-import { FormSchema } from "@/lib/schemas";
-import { useAction } from "next-safe-action/hooks";
-import { useRouter } from "next/navigation";
-import { Textarea } from "../ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface IssueFormProps {
   data: IssueFormValues | null;
@@ -60,66 +60,26 @@ export default function IssueForm({
   deviceData,
 }: IssueFormProps) {
   const router = useRouter();
-  const issueId = data?.id;
-  const [isEditing, setIsEditing] = useState(false);
-  const isCompleted = data?.is_completed ?? false;
   const [textareaRows, setTextareaRows] = useState(2);
   const [instructionContent, setInstructionContent] = useState(
     data?.instruction || "",
   );
+  const [formattedInstruction, setFormattedInstruction] = useState<
+    React.ReactNode[]
+  >([]);
 
-  const { execute: executeStatusChange, isExecuting: isChangingStatus } =
-    useAction(isCompleted ? openIssueAction : closeIssueAction, {
-      onSuccess: ({ data }) => {
-        toast({
-          variant: "default",
-          title: isCompleted
-            ? "Vikailmoitus avattu uudelleen!"
-            : "Vikailmoitus suljettu!",
-          duration: 5000,
-          description: data?.message,
-        });
-        router.refresh();
-      },
-      onError: ({ error }) => {
-        toast({
-          variant: "destructive",
-          title: "Virhe",
-          duration: 5000,
-          description: isCompleted
-            ? "Vikailmoituksen avaaminen epäonnistui"
-            : "Vikailmoituksen sulkeminen epäonnistui",
-        });
-      },
-    });
+  const issueId = data?.id;
+  const isCompleted = data?.is_completed ?? false;
 
-  const { execute, result, isExecuting } = useAction(postNewIssueAction, {
-    onSuccess: ({ data }) => {
-      toast({
-        variant: "default",
-        title: "Vikailmoitus päivitetty! 🎉",
-        duration: 5000,
-        description: data?.message,
-      });
-      router.refresh();
-    },
-    onError: ({ error }) => {
-      console.log("error", error);
-      toast({
-        variant: "destructive",
-        title: "Virhe",
-        duration: 5000,
-        description: "Vikailmoitus ei päivittynyt onnistuneesti",
-      });
-    },
-  });
-
-  const furnitureInfo: FurnitureInfo = {
-    name: deviceData?.name || "",
-    model: deviceData?.model || "",
-    brand: deviceData?.brand || "",
-    problem_description: data?.problem_description || "",
-  };
+  const furnitureInfo = useMemo<FurnitureInfo>(
+    () => ({
+      name: deviceData?.name || "",
+      model: deviceData?.model || "",
+      brand: deviceData?.brand || "",
+      problem_description: data?.problem_description || "",
+    }),
+    [deviceData, data],
+  );
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -133,38 +93,60 @@ export default function IssueForm({
     },
   });
 
-  const { errors } = form.formState;
-  const { reset, setValue } = form;
+  const {
+    handleSubmit,
+    control,
+    reset,
+    formState: { isDirty, isSubmitting },
+  } = form;
 
-  async function onSubmit() {
-    setIsEditing(false);
-    const completeFormData = { id: issueId, ...form.getValues() };
-    await execute(completeFormData);
-    router.refresh();
-  }
-
-  function handleEdit() {
-    setIsEditing(true);
-  }
-
-  function handleCancel() {
-    reset({
-      locationName: locationName ?? "Arabian peruskoulu",
-      priority: data?.priority ?? "",
-      type: data?.type ?? "",
-      problem_description: data?.problem_description ?? "",
-      instruction: data?.instruction ?? "",
-      missing_equipments: data?.missing_equipments ?? "",
+  const { execute: executeStatusChange, isExecuting: isChangingStatus } =
+    useAction(isCompleted ? openIssueAction : closeIssueAction, {
+      onSuccess: () => {
+        toast.success(
+          isCompleted
+            ? "Vikailmoitus avattu uudelleen!"
+            : "Vikailmoitus suljettu!",
+          { duration: 5000 },
+        );
+        router.refresh();
+      },
+      onError: () => {
+        toast.error(
+          isCompleted
+            ? "Vikailmoituksen avaaminen epäonnistui"
+            : "Vikailmoituksen sulkeminen epäonnistui",
+          { duration: 5000 },
+        );
+      },
     });
-    setIsEditing(false);
-  }
 
-  const handleStatusChange = async () => {
+  const { execute: executeUpdate, isExecuting } = useAction(updateIssueAction, {
+    onSuccess: () => {
+      toast.success("Vikailmoitus päivitetty! 🎉", { duration: 5000 });
+      router.refresh();
+    },
+    onError: () => {
+      toast.error("Vikailmoitus ei päivittynyt onnistuneesti", {
+        duration: 5000,
+      });
+    },
+  });
+
+  const onSubmit = useCallback(
+    async (formData: z.infer<typeof FormSchema>) => {
+      const completeFormData = { id: issueId, ...formData };
+      await executeUpdate(completeFormData);
+    },
+    [executeUpdate, issueId],
+  );
+
+  const handleStatusChange = useCallback(async () => {
     const numericIssueId = Number(issueId);
     if (issueId) {
       await executeStatusChange({ issueId: numericIssueId });
     }
-  };
+  }, [executeStatusChange, issueId]);
 
   useEffect(() => {
     const lineCount = instructionContent.split("\n").length;
@@ -175,42 +157,40 @@ export default function IssueForm({
     <Card className="w-full max-w-2xl mb-8">
       <CardHeader>
         <CardTitle
-          className={`text-lg ${
-            isCompleted ? "text-green-600" : "text-red-600"
-          }`}
+          className={`text-lg ${isCompleted ? "text-green-600" : "text-red-600"}`}
         >
           {isCompleted ? "Vikailmoitus on suljettu" : "Vikailmoitus on avoinna"}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
+              <Controller
                 name="locationName"
+                control={control}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Sijainti</FormLabel>
-                    <Input placeholder="Sijainti" {...field} disabled={true} />
-                    <FormMessage>{errors.locationName?.message}</FormMessage>
+                    <Input {...field} disabled />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
+
+              <Controller
                 name="priority"
+                control={control}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Prioriteetti</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
-                      disabled={!isEditing}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Valitse priority" />
+                          <SelectValue placeholder="Valitse prioriteetti" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -221,39 +201,32 @@ export default function IssueForm({
                         <SelectItem value="Kiireelinen">Kiireelinen</SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormDescription>Vian priority</FormDescription>
-                    <FormMessage>{errors.priority?.message}</FormMessage>
+                    <FormDescription>Vian prioriteetti</FormDescription>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
 
-            <FormField
-              control={form.control}
+            <Controller
               name="problem_description"
+              control={control}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Huoltotarpeen kuvaus</FormLabel>
-                  <Input
-                    placeholder="Huoltotarpeen kuvaus"
-                    {...field}
-                    disabled={!isEditing}
-                  />
-                  <FormMessage>
-                    {errors.problem_description?.message}
-                  </FormMessage>
+                  <Input {...field} />
+                  <FormMessage />
                 </FormItem>
               )}
             />
 
-            <FormField
-              control={form.control}
+            <Controller
               name="type"
+              control={control}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Vikatyyppi</FormLabel>
                   <Select
-                    disabled={!isEditing}
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
@@ -287,26 +260,24 @@ export default function IssueForm({
                       <SelectItem value="Muu vika">Muu vika</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormMessage>{errors.type?.message}</FormMessage>
+                  <FormMessage />
                 </FormItem>
               )}
             />
 
-            <FormField
-              control={form.control}
+            <Controller
               name="instruction"
+              control={control}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Tekoälyn huolto-ohje ehdotus</FormLabel>
                   <Textarea
-                    placeholder="Älyä avustajan huolto-ohje ehdotus"
                     {...field}
                     value={instructionContent}
                     onChange={(e) => {
                       setInstructionContent(e.target.value);
                       field.onChange(e);
                     }}
-                    disabled={!isEditing}
                     rows={textareaRows}
                   />
                   <div className="mt-2 flex items-center space-x-2">
@@ -314,7 +285,7 @@ export default function IssueForm({
                       Kysy AI:n suositusta kalusteen huollosta
                     </span>
                     <AiInstructionButton
-                      isEditing={isEditing}
+                      isEditing={true}
                       instruction={field.value}
                       updateInstruction={(newInstruction) => {
                         setInstructionContent(newInstruction);
@@ -323,79 +294,62 @@ export default function IssueForm({
                       furnitureInfo={furnitureInfo}
                     />
                   </div>
-                  <FormMessage>{errors.instruction?.message}</FormMessage>
+                  <FormMessage />
                 </FormItem>
               )}
             />
 
-            <FormField
-              control={form.control}
+            <Controller
               name="missing_equipments"
+              control={control}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Puuttuvat tarvikkeet</FormLabel>
-                  <Input
-                    placeholder="Mahdollisesti tarvittavat varaosat"
-                    {...field}
-                    disabled={!isEditing}
-                  />
-                  <FormMessage>
-                    {errors.missing_equipments?.message}
-                  </FormMessage>
+                  <Input {...field} />
+                  <FormMessage />
                 </FormItem>
               )}
             />
 
-            <div className="flex justify-between items-center pt-4">
-              {isEditing ? (
-                <>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={handleCancel}
-                  >
-                    Peruuta
-                  </Button>
-                  <Button type="submit" disabled={isExecuting}>
-                    Tallenna
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button type="button" onClick={handleEdit}>
-                    Muokkaa
-                  </Button>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        type="button"
-                        variant={isCompleted ? "default" : "destructive"}
-                        disabled={isChangingStatus}
-                      >
-                        {isCompleted
-                          ? "Avaa vikailmoitus"
-                          : "Sulje vikailmoitus"}
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Oletko varma?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          {isCompleted
-                            ? "Tämä toiminto avaa vikailmoituksen uudelleen. Haluatko jatkaa?"
-                            : "Tämä toiminto sulkee vikailmoituksen. Haluatko jatkaa?"}
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Peruuta</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleStatusChange}>
-                          {isCompleted ? "Avaa" : "Sulje"}
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </>
-              )}
+<div className="flex flex-col sm:flex-row justify-between items-center pt-6 space-y-4 sm:space-y-0 sm:space-x-4">
+  <Button
+    type="submit"
+    disabled={!isDirty || isSubmitting || isExecuting}
+    variant="default"
+    className="w-full sm:w-auto text-sm px-3 py-2"
+  >
+    {isExecuting ? "Tallennetaan..." : "Tallenna muutokset"}
+  </Button>
+
+  <AlertDialog>
+    <AlertDialogTrigger asChild>
+      <Button
+        type="button"
+        variant={isCompleted ? "outline" : "destructive"}
+        disabled={isChangingStatus || isExecuting}
+        className="w-full sm:w-auto text-sm px-3 py-2"
+      >
+        {isCompleted ? "Avaa uudelleen" : "Sulje vikailmoitus"}
+      </Button>
+    </AlertDialogTrigger>
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>Oletko varma?</AlertDialogTitle>
+        <AlertDialogDescription>
+          {isCompleted
+            ? "Tämä toiminto avaa vikailmoituksen uudelleen. Haluatko jatkaa?"
+            : "Tämä toiminto sulkee vikailmoituksen. Haluatko jatkaa?"}
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Peruuta</AlertDialogCancel>
+        <AlertDialogAction onClick={handleStatusChange}>
+          {isCompleted ? "Avaa" : "Sulje"}
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
+
             </div>
           </form>
         </Form>

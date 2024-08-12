@@ -7,7 +7,7 @@ type ChatMessageProps = {
 };
 
 // Funktio, joka käsittelee lihavoinnit ja numeroidut listat
-const formatMessage = (content: string) => {
+export const formatMessage = (content: string) => {
   const lines = content.split("\n");
 
   return lines.map((line, lineIndex) => {
