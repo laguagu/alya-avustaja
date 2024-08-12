@@ -77,9 +77,10 @@ export default function ChatComponent({
   );
 
   return (
-    <div className="flex flex-col w-full max-w-3xl mx-auto flex-grow max-h-dvh shadow-md rounded-lg border border-gray-200 overflow-hidden">
-      <div className="p-4 w-full bg-secondary border-b border-gray-200">
-        <div className="flex items-center justify-between">
+    // <div className="flex flex-col w-full max-w-3xl mx-auto h-[calc(100vh-2rem)] min-h-[500px] shadow-md rounded-lg border border-gray-200 overflow-hidden"></div>
+    <div className="flex flex-col w-full max-w-3xl mx-auto h-[calc(100vh-2rem)] min-h-[500px] shadow-md rounded-lg border border-gray-200 overflow-hidden">
+      <div className="p-4 w-full bg-secondary border-b border-gray-200 ">
+        <div className="flex items-center justify-between ">
           <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
             Älyäavustaja
           </h1>
@@ -95,7 +96,7 @@ export default function ChatComponent({
         </div>
       </div>
 
-      <section className="flex-grow flex flex-col overflow-hidden">
+      <section className="flex-grow flex flex-col overflow-hidden ">
         <div className="h-full w-full dark:bg-black bg-white dark:bg-dot-white/[0.1] bg-dot-black/[0.2] overflow-hidden">
           <ul
             ref={chatParent}
