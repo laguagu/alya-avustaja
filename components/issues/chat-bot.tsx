@@ -81,7 +81,7 @@ export default function ChatBot({
     if (domNode) {
       domNode.scrollTop = domNode.scrollHeight;
     }
-  });
+  }, [primaryMessages]);
 
   const isDisabled =
     isLoading || isPlaying || isProcessingAudio || isPreparingAudio;
@@ -96,39 +96,41 @@ export default function ChatBot({
 
   return (
     <div className="flex flex-col w-full xl:max-w-[900px] min-h-[400px] h-[80vh] lg:h-[calc(100vh-15rem)] border border-gray-200 rounded-lg shadow-md overflow-hidden bg-white">
-      <div className="p-4 w-full max-w-3xl mx-auto border-b border-gray-200">
-        <h1 className="text-2xl font-bold text-center text-gray-800">
+      <div className="p-4 w-full bg-secondary border-b border-gray-200">
+        <h1 className="text-xl sm:text-2xl font-bold text-center text-gray-800">
           Älyäavustaja
         </h1>
       </div>
       <div className="flex-grow flex flex-col overflow-hidden">
-        <ul
-          ref={chatParent}
-          className="flex-grow overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
-        >
-          {chatMessages}
-          {(isProcessingAudio || isLoading || isPreparingAudio) && (
-            <li
-              className={clsx("flex", {
-                "justify-end": isLoading || isPreparingAudio,
-              })}
-            >
-              <div className="flex items-center bg-gray-100 rounded-full px-4 py-2">
-                <TailSpin
-                  height="24"
-                  width="24"
-                  color="#6B7280"
-                  ariaLabel="loading"
-                />
-                {isPreparingAudio && (
-                  <span className="ml-2 text-sm text-gray-600">
-                    Valmistellaan ääntä...
-                  </span>
-                )}
-              </div>
-            </li>
-          )}
-        </ul>
+        <div className="h-full w-full dark:bg-black bg-white  dark:bg-dot-white/[0.1] bg-dot-black/[0.2] overflow-hidden">
+          <ul
+            ref={chatParent}
+            className="h-full flex-grow overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
+          >
+            {chatMessages}
+            {(isProcessingAudio || isLoading || isPreparingAudio) && (
+              <li
+                className={clsx("flex", {
+                  "justify-end": isLoading || isPreparingAudio,
+                })}
+              >
+                <div className="flex items-center bg-secondary/65 rounded-full px-4 py-2">
+                  <TailSpin
+                    height="24"
+                    width="24"
+                    color="#6B7280"
+                    ariaLabel="loading"
+                  />
+                  {isPreparingAudio && (
+                    <span className="ml-2 text-sm text-gray-600">
+                      Valmistellaan ääntä...
+                    </span>
+                  )}
+                </div>
+              </li>
+            )}
+          </ul>
+        </div>
       </div>
 
       <div className="border-t border-gray-200">

@@ -22,6 +22,7 @@ export default async function DashboardLayout({
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 overflow-auto bg-gradient-to-br from-gray-50 to-gray-100/50">
           <Suspense fallback={<LoadingLayoutSkeleton />}>{children}</Suspense>
         </main>
+
         <Toaster
           position="top-center"
           toastOptions={{
