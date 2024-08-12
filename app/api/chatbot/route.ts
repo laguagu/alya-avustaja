@@ -8,7 +8,6 @@ import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase"
 import { RunnableSequence } from "@langchain/core/runnables";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { formatDocumentsAsString } from "langchain/util/document";
-import { Document } from "@langchain/core/documents";
 import RelevanceThresholdRetriever from "@/lib/retrievers/CustomRetviever";
 
 export const dynamic = "force-dynamic";
@@ -20,9 +19,9 @@ const formatVercelMessages = (chatHistory: VercelChatMessage[]) => {
   const recentChatHistory = chatHistory.slice(-MAX_CHAT_HISTORY_LENGTH);
   const formattedDialogueTurns = recentChatHistory.map((message) => {
     if (message.role === "user") {
-      return `Human: ${message.content}`;
+      return `Käyttäjä: ${message.content}`;
     } else if (message.role === "assistant") {
-      return `Assistant: ${message.content}`;
+      return `Avustaja: ${message.content}`;
     } else {
       return `${message.role}: ${message.content}`;
     }
