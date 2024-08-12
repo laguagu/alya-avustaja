@@ -28,15 +28,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { toast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import { Input } from "@/components/ui/input";
 import { postNewIssueAction } from "@/lib/actions/actions";
-import { FormSchema } from "@/lib/schemas";
+import { NewIssueFormSchem } from "@/lib/schemas";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
 import AudioRecorder from "./audio-recorder";
 import { getWhisperTranscription } from "@/lib/actions/ai-actions";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { readStreamableValue } from "ai/rsc";
 import { processAudioTranscription } from "@/lib/actions/ai-actions";
 import ModalSpinner from "./modal-spinner";
@@ -51,35 +51,29 @@ export default function NewIssueForm() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [aiSuggestions, setAiSuggestions] = useState<
-    Partial<z.infer<typeof FormSchema>>
+    Partial<z.infer<typeof NewIssueFormSchem>>
   >({});
 
-  const { execute, result, isExecuting } = useAction(postNewIssueAction, {
-    onSuccess: ({ data }) => {
-      toast({
-        variant: "default",
-        title: "Vikailmoitus tallennettu! 🎉",
-        duration: 5000,
-        description: data?.message,
-      });
-      router.refresh();
-      form.reset();
-      setAiSuggestions({});
+  const { execute: executePostNewIssue, isExecuting } = useAction(
+    postNewIssueAction,
+    {
+      onSuccess: ({ data }) => {
+        toast.success("Vikailmoitus tallennettu! 🎉", { duration: 5000 });
+        router.refresh();
+        form.reset();
+        setAiSuggestions({});
+      },
+      onError: () => {
+        toast.error("Vikailmoitus ei tallentunut onnistuneesti", {
+          duration: 5000,
+        });
+      },
     },
-    onError: ({ error }) => {
-      toast({
-        variant: "destructive",
-        title: "Virhe",
-        duration: 5000,
-        description: "Vikailmoitus ei tallentunut onnistuneesti",
-      });
-    },
-  });
+  );
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof NewIssueFormSchem>>({
+    resolver: zodResolver(NewIssueFormSchem),
     defaultValues: {
-      locationName: "Arabian peruskoulu",
       priority: "",
       type: "",
       problem_description: "",
@@ -91,28 +85,28 @@ export default function NewIssueForm() {
   const { errors } = form.formState;
   const { reset } = form;
 
-  async function onSubmit() {
-    await execute(form.getValues());
-    router.refresh();
-    form.reset(form.getValues());
-  }
+  const onSubmit = useCallback(
+    async (formData: z.infer<typeof NewIssueFormSchem>) => {
+      try {
+        await executePostNewIssue(formData);
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        toast.error("Lomakkeen lähetys epäonnistui", { duration: 5000 });
+      }
+    },
+    [executePostNewIssue],
+  );
 
-  function handleCancel() {
-    reset({
-      locationName: "Arabian peruskoulu",
-      priority: "",
-      type: "",
-      problem_description: "",
-      instruction: "",
-      missing_equipments: "",
-    });
-  }
+  const handleCancel = useCallback(() => {
+    reset();
+    setAiSuggestions({});
+  }, [reset]);
 
   useEffect(() => {
     if (Object.keys(aiSuggestions).length > 0) {
       Object.entries(aiSuggestions).forEach(([key, value]) => {
         if (value) {
-          form.setValue(key as keyof z.infer<typeof FormSchema>, value);
+          form.setValue(key as keyof z.infer<typeof NewIssueFormSchem>, value);
         }
       });
     }
@@ -121,38 +115,38 @@ export default function NewIssueForm() {
   const handleDescriptionSubmit = async (description: string) => {
     setIsProcessing(true);
     setIsModalOpen(false);
-    const { object } = await processAudioTranscription(description);
+    try {
+      const { object } = await processAudioTranscription(description);
 
-    for await (const partialObject of readStreamableValue(object)) {
-      if (partialObject) {
-        setAiSuggestions((prevSuggestions) => ({
-          ...prevSuggestions,
-          ...partialObject,
-        }));
+      for await (const partialObject of readStreamableValue(object)) {
+        if (partialObject) {
+          setAiSuggestions((prevSuggestions) => ({
+            ...prevSuggestions,
+            ...partialObject,
+          }));
+        }
       }
+      toast.success("AI-ehdotukset lisätty lomakkeelle", { duration: 3000 });
+    } catch (error) {
+      toast.error("Virhe AI-ehdotusten käsittelyssä", { duration: 5000 });
+    } finally {
+      setIsProcessing(false);
+      setInputMethod("audio");
+      setManualDescription("");
     }
-
-    setIsProcessing(false);
-    setInputMethod("audio");
-    setManualDescription("");
   };
 
   const handleRecordingComplete = async (audioBlob: Blob) => {
-    // 1. Nauhoita ääni
     const formData = new FormData();
     formData.append("file", audioBlob, "audio.wav");
-    // 2. Muuta ääni tekstiksi
     try {
       const text = await getWhisperTranscription(formData);
       setTranscription(text);
       setIsModalOpen(true);
-      // Avaa modali jossa on teksti ja mahdollisuus muokata sitä
     } catch (error) {
       console.error("Error transcribing audio:", error);
+      toast.error("Virhe äänen muuntamisessa tekstiksi", { duration: 5000 });
     }
-    // 3. Näytä Dialog ikkuna jossa on teksti ja mahdollisuus muokata sitä
-    // 4. Lähetä teksti Vercelin aiSDK:lle
-    // 5. Vastaanota vastaus striimattuna ja täytä lomake
   };
 
   return (
@@ -272,57 +266,37 @@ export default function NewIssueForm() {
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormField
-                  control={form.control}
-                  name="locationName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Sijainti</FormLabel>
-                      <Input
-                        placeholder="Sijainti"
-                        {...field}
-                        disabled={true}
-                      />
-                      <FormMessage>{errors.locationName?.message}</FormMessage>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="priority"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Prioriteetti*</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                        disabled={isExecuting}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Valitse prioriteetti" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Ei kiireellinen">
-                            Ei kiireellinen
-                          </SelectItem>
-                          <SelectItem value="Huomioitava">
-                            Huomioitava
-                          </SelectItem>
-                          <SelectItem value="Kiireellinen">
-                            Kiireellinen
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormDescription>Vian prioriteetti</FormDescription>
-                      <FormMessage>{errors.priority?.message}</FormMessage>
-                    </FormItem>
-                  )}
-                />
-              </div>
-
+              <FormField
+                control={form.control}
+                name="priority"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Prioriteetti*</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      disabled={isExecuting}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Valitse prioriteetti" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Ei kiireellinen">
+                          Ei kiireellinen
+                        </SelectItem>
+                        <SelectItem value="Huomioitava">Huomioitava</SelectItem>
+                        <SelectItem value="Kiireellinen">
+                          Kiireellinen
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>Vian prioriteetti</FormDescription>
+                    <FormMessage>{errors.priority?.message}</FormMessage>
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="problem_description"
