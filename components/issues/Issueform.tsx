@@ -311,45 +311,44 @@ export default function IssueForm({
               )}
             />
 
-<div className="flex flex-col sm:flex-row justify-between items-center pt-6 space-y-4 sm:space-y-0 sm:space-x-4">
-  <Button
-    type="submit"
-    disabled={!isDirty || isSubmitting || isExecuting}
-    variant="default"
-    className="w-full sm:w-auto text-sm px-3 py-2"
-  >
-    {isExecuting ? "Tallennetaan..." : "Tallenna muutokset"}
-  </Button>
+            <div className="flex flex-col sm:flex-row justify-between items-center pt-6 space-y-4 sm:space-y-0 sm:space-x-4">
+              <Button
+                type="submit"
+                disabled={!isDirty || isSubmitting || isExecuting}
+                variant="default"
+                className="w-full sm:w-auto text-sm px-3 py-2"
+              >
+                {isExecuting ? "Tallennetaan..." : "Tallenna muutokset"}
+              </Button>
 
-  <AlertDialog>
-    <AlertDialogTrigger asChild>
-      <Button
-        type="button"
-        variant={isCompleted ? "outline" : "destructive"}
-        disabled={isChangingStatus || isExecuting}
-        className="w-full sm:w-auto text-sm px-3 py-2"
-      >
-        {isCompleted ? "Avaa uudelleen" : "Sulje vikailmoitus"}
-      </Button>
-    </AlertDialogTrigger>
-    <AlertDialogContent>
-      <AlertDialogHeader>
-        <AlertDialogTitle>Oletko varma?</AlertDialogTitle>
-        <AlertDialogDescription>
-          {isCompleted
-            ? "Tämä toiminto avaa vikailmoituksen uudelleen. Haluatko jatkaa?"
-            : "Tämä toiminto sulkee vikailmoituksen. Haluatko jatkaa?"}
-        </AlertDialogDescription>
-      </AlertDialogHeader>
-      <AlertDialogFooter>
-        <AlertDialogCancel>Peruuta</AlertDialogCancel>
-        <AlertDialogAction onClick={handleStatusChange}>
-          {isCompleted ? "Avaa" : "Sulje"}
-        </AlertDialogAction>
-      </AlertDialogFooter>
-    </AlertDialogContent>
-  </AlertDialog>
-
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    type="button"
+                    variant={isCompleted ? "outline" : "destructive"}
+                    disabled={isChangingStatus || isExecuting}
+                    className="w-full sm:w-auto text-sm px-3 py-2"
+                  >
+                    {isCompleted ? "Avaa uudelleen" : "Sulje vikailmoitus"}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Oletko varma?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {isCompleted
+                        ? "Tämä toiminto avaa vikailmoituksen uudelleen. Haluatko jatkaa?"
+                        : "Tämä toiminto sulkee vikailmoituksen. Haluatko jatkaa?"}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Peruuta</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleStatusChange}>
+                      {isCompleted ? "Avaa" : "Sulje"}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           </form>
         </Form>

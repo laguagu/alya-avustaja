@@ -47,7 +47,7 @@ export const NewIssueFormSchem = z.object({
     .min(1, { message: "Vikatyyppi ei voi olla tyhjä" }),
   instruction: z.string().optional(),
   missing_equipments: z.string().optional(),
-})
+});
 
 export const repairRequestSchema = z.object({
   priority: z.enum(["Ei kiireellinen", "Huomioitava", "Kiireellinen"]),

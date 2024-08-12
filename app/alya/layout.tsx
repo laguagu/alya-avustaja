@@ -2,7 +2,7 @@ import SimpleSidenav from "@/components/layout/simple-sidenav";
 import SheetNav from "@/components/layout/sheet";
 import { getIssuesNumber } from "@/lib/dataFetching";
 import { Suspense } from "react";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 import { LoadingLayoutSkeleton } from "@/components/skeletons";
 
 export default async function DashboardLayout({
@@ -27,10 +27,10 @@ export default async function DashboardLayout({
           toastOptions={{
             duration: 5000,
             style: {
-              background: '#363636',
-              color: '#fff',
-              padding: '16px',
-              borderRadius: '8px',
+              background: "#363636",
+              color: "#fff",
+              padding: "16px",
+              borderRadius: "8px",
             },
           }}
         />
