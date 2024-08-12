@@ -44,7 +44,7 @@ export default function InformationCard({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-full">
       <Card className="bg-white shadow-md rounded-lg border-gray-200 border transition-all duration-300 hover:shadow-lg lg:col-span-1">
-        <CardHeader className="bg-gray-100 p-6 rounded-t-lg">
+        <CardHeader className="bg-secondary p-6 rounded-t-lg">
           <CardTitle className="text-2xl font-bold text-gray-800">
             Huonekalun tiedot
           </CardTitle>
@@ -89,7 +89,7 @@ export default function InformationCard({
 
       {issueData && (
         <Card className="bg-white shadow-md rounded-lg border-gray-200 border transition-all duration-300 hover:shadow-lg lg:col-span-2 mb-4 md:mb-0">
-          <CardHeader className="bg-gray-100 p-6 rounded-t-lg">
+          <CardHeader className="bg-secondary p-6 rounded-t-lg">
             <CardTitle className="text-2xl font-bold text-gray-800">
               Vikailmoituksen tiedot
             </CardTitle>

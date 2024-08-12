@@ -13,20 +13,22 @@ export default async function Page() {
   return (
     <>
       <Suspense fallback={<LoadingIssuePageSkeleton />}>
-        <div className="flex flex-col md:flex-row justify-between items-center w-full  shadow-md md:p-8 p-5 rounded-2xl bg-white/50 ">
+        <div className="flex flex-col md:flex-row justify-between items-center w-full">
           <div className="flex flex-col items-center flex-grow md:space-y-2">
-            <h1 className="text-3xl lg:text-4xl text-center mb-2 md:my-2 border-b border-gray-500">
-              Vikailmoitukset
-            </h1>
-            <Badge variant="outline" className="mb-4">
-              Avoinna {openIssues.length}
-            </Badge>
+            <div className="flex flex-col items-center shadow-md p-4 bg-secondary rounded-tl-3xl rounded-br-3xl">
+              <h1 className="text-3xl lg:text-4xl text-center mb-2 md:my-2">
+                Vikailmoitukset
+              </h1>
+              <Badge variant="outline" className="text-sm px-2 py-0.5">
+                Avoinna {openIssues.length}
+              </Badge>
+            </div>
           </div>
-          <div className="md:ml-4">
+          <div className="md:ml-4 mt-6 md:mt-0">
             <NewIssuesButton />
           </div>
         </div>
-        <Separator />
+        <Separator className="md:my-4 my-2" />
         <BentoGridDemo issues={issuesData} />
       </Suspense>
     </>

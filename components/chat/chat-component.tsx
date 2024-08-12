@@ -77,7 +77,7 @@ export default function ChatComponent({
 
   return (
     <div className="flex flex-col w-full max-w-3xl mx-auto flex-grow max-h-dvh bg-white shadow-md rounded-lg border border-gray-200 overflow-hidden">
-      <div className="p-4 w-full bg-gray-50 border-b border-gray-200">
+      <div className="p-4 w-full bg-secondary border-b border-gray-200">
         <div className="flex items-center justify-between">
           <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
             Älyäavustaja
@@ -163,7 +163,7 @@ export default function ChatComponent({
           </div>
         </form>
       </section>
-      <div className="p-2 bg-gray-50 border-t border-gray-200">
+      <div className="p-2 bg-secondary border-t border-gray-200">
         <p className="text-center text-xs text-gray-500">
           Älyäavustaja voi tehdä virheitä. Suosittelemme tarkastamaan tärkeät
           tiedot.
