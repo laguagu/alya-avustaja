@@ -136,17 +136,12 @@ export default function NewIssueForm() {
     }
   };
 
-  const handleRecordingComplete = async (audioBlob: Blob) => {
-    const formData = new FormData();
-    formData.append("file", audioBlob, "audio.wav");
-    try {
-      const text = await getWhisperTranscription(formData);
-      setTranscription(text);
-      setIsModalOpen(true);
-    } catch (error) {
-      console.error("Error transcribing audio:", error);
-      toast.error("Virhe äänen muuntamisessa tekstiksi", { duration: 5000 });
-    }
+  const handleRecordingComplete = async (
+    audioBlob: Blob,
+    transcriptionText: string,
+  ) => {
+    setTranscription(transcriptionText);
+    setIsModalOpen(true);
   };
 
   return (
@@ -187,9 +182,8 @@ export default function NewIssueForm() {
             {inputMethod === "audio" ? (
               <div className="bg-white p-3 sm:p-4 rounded-md shadow-inner">
                 <AudioRecorder
-                  onRecordingComplete={(audioBlob) => {
-                    handleRecordingComplete(audioBlob);
-                    setIsModalOpen(true);
+                  onRecordingComplete={(audioBlob, transcriptionText) => {
+                    handleRecordingComplete(audioBlob, transcriptionText);
                   }}
                 />
               </div>

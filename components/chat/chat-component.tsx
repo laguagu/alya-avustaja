@@ -55,11 +55,12 @@ export default function ChatComponent({
   });
 
   const handleAudioSubmit = useCallback(async () => {
-    const transcriptionText = await handleStopRecording();
-    if (transcriptionText) {
+    const result = await handleStopRecording();
+    console.log("Recording result:", result);
+    if (result && result.transcriptionText) {
       append({
         role: "user",
-        content: transcriptionText,
+        content: result.transcriptionText,
       });
     }
   }, [handleStopRecording, append]);

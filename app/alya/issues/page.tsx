@@ -19,7 +19,7 @@ export default async function Page() {
               <h1 className="text-3xl lg:text-4xl text-center mb-2 md:my-2">
                 Vikailmoitukset
               </h1>
-              <Badge variant="outline" className="text-sm px-2 py-0.5">
+              <Badge variant="outline" className="text-sm px-2 py-0.5 bg-white">
                 Avoinna {openIssues.length}
               </Badge>
             </div>

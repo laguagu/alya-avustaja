@@ -24,12 +24,15 @@ export async function processAudioTranscription(transcription: string) {
   (async () => {
     const { partialObjectStream } = await streamObject({
       model: openai("gpt-4o-2024-08-06"),
-      system:
-        "You are an AI assistant helping to fill out a maintenance request form based on an audio transcription.",
-      prompt: `Based on the following transcription, generate appropriate values for a maintenance request form: "${transcription}"`,
+      system: `Olet tekoälyavustaja, joka auttaa täyttämään Piiroisen huonekalujen vikailmoituslomaketta äänitranskription perusteella. 
+      Käytä annettuja kentän kuvauksia ohjenuorana täyttäessäsi lomaketta.
+      Muista, että huolto-ohjeen tulee olla lyhyt ja ytimekäs, korkeintaan parin lauseen mittainen.`,
+      prompt: `Analysoi seuraava äänitranskriptio ja täytä sen perusteella Piiroisen huonekalujen vikailmoituslomake:
+      "${transcription}"
+      
+      Täytä lomake huolellisesti käyttäen annettuja kentän kuvauksia ohjeena.`,
       schema: repairRequestSchema,
     });
-
     for await (const partialObject of partialObjectStream) {
       stream.update(partialObject);
     }
@@ -39,8 +42,16 @@ export async function processAudioTranscription(transcription: string) {
   return { object: stream.value };
 }
 
-export async function getWhisperTranscription(formData: FormData) {
+export async function getWhisperTranscription(
+  formData: FormData,
+): Promise<string> {
   "use server";
+
+  if (!process.env.OPENAI_API_KEY) {
+    console.error("OPENAI_API_KEY is not set");
+    throw new Error("OpenAI API key is not configured");
+  }
+
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
   });
@@ -48,7 +59,7 @@ export async function getWhisperTranscription(formData: FormData) {
   const file = formData.get("file") as File;
   if (!file) {
     console.error("No file found in formData");
-    return "No file found";
+    throw new Error("No file found in the request");
   }
 
   try {
@@ -64,7 +75,7 @@ export async function getWhisperTranscription(formData: FormData) {
     return response.text;
   } catch (error) {
     console.error("Error transcribing audio:", error);
-    return "Error transcribing audio";
+    throw new Error("Failed to transcribe audio");
   }
 }
 

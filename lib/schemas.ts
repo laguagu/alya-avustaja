@@ -50,20 +50,40 @@ export const NewIssueFormSchem = z.object({
 });
 
 export const repairRequestSchema = z.object({
-  priority: z.enum(["Ei kiireellinen", "Huomioitava", "Kiireellinen"]),
-  type: z.enum([
-    "Puuttuu liukunasta (t)",
-    "Kiristysruuvi löysällä",
-    "Kiristysruuvi puuttuu",
-    "Runko heiluu",
-    "Selkänoja heiluu",
-    "Istuin heiluu",
-    "Materiaali vioittunut",
-    "Ilkivalta",
-    "Vaatii puhdistuksen",
-    "Muu vika",
-  ]),
-  problem_description: z.string(),
-  instruction: z.string(),
-  missing_equipments: z.string(),
+  priority: z
+    .enum(["Ei kiireellinen", "Huomioitava", "Kiireellinen"])
+    .describe(
+      "Vian prioriteetti perustuen sen vakavuuteen ja vaikutukseen huonekalun käytettävyyteen ja turvallisuuteen.",
+    ),
+
+  type: z
+    .enum([
+      "Puuttuu liukunasta (t)",
+      "Kiristysruuvi löysällä",
+      "Kiristysruuvi puuttuu",
+      "Runko heiluu",
+      "Selkänoja heiluu",
+      "Istuin heiluu",
+      "Materiaali vioittunut",
+      "Ilkivalta",
+      "Vaatii puhdistuksen",
+      "Muu vika",
+    ])
+    .describe("Vian tyyppi, joka parhaiten kuvaa ongelmaa."),
+
+  problem_description: z
+    .string()
+    .max(100)
+    .describe("Lyhyt ja tarkka kuvaus ongelmasta."),
+
+  instruction: z
+    .string()
+    .max(150)
+    .describe("Lyhyt ja ytimekäs huolto-ohje-ehdotus."),
+
+  missing_equipments: z
+    .string()
+    .max(100)
+    .describe("Lista mahdollisesti tarvittavista varaosista tai työkaluista.")
+    .optional(),
 });
