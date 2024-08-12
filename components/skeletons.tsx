@@ -80,4 +80,37 @@ export function ChatSkeletton() {
     </div>
   );
 }
-// FurnituresSkeleton: Alya/Furnitures
+
+export function DashboardCardsSkeleton() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {[...Array(4)].map((_, index) => (
+        <div
+          key={index}
+          className="bg-card text-card-foreground shadow-sm rounded-lg p-6 flex flex-col"
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <Skeleton className="h-8 w-8 rounded-full" />
+            <Skeleton className="h-6 w-1/2" />
+          </div>
+          <Skeleton className="h-4 w-5/6 mb-2" />
+          <Skeleton className="h-4 w-4/6 mb-4" />
+          <div className="mt-auto">
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function TableSkeleton() {
+  return (
+    <div className="space-y-4">
+      <Skeleton className="h-10 w-full" />
+      {[...Array(5)].map((_, i) => (
+        <Skeleton key={i} className="h-16 w-full" />
+      ))}
+    </div>
+  );
+}
