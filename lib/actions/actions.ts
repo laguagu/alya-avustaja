@@ -92,10 +92,12 @@ const toggleIssueStatus = async (issueId: number, isCompleted: boolean) => {
   console.log(
     `Attempting to ${isCompleted ? "close" : "open"} issue ${issueId}`,
   );
-  return {
-    message: `Vikailmoitus ${isCompleted ? "suljettu" : "avattu"} onnistuneesti`,
-  }; // FIXME: Lunnin järjestelmän vikailmoituksen tilan muuttaminen ei ole vielä käytössä
-  const updateData = { is_completed: isCompleted };
+
+    const updateData = {
+    result: isCompleted
+      ? "picklist_service_result_done"
+      : "picklist_service_result_pending"
+  };
 
   console.log("Sending update data:", updateData);
 
