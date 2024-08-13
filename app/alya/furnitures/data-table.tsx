@@ -82,7 +82,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <Suspense fallback={<div>Ladataan huonekaluja...</div>}>
-      <div>
+      <div className="">
         <div className="flex items-center py-4">
           <Input
             placeholder="Hae nimellä..."
@@ -119,7 +119,7 @@ export function DataTable<TData, TValue>({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div className="rounded-md border">
+        <div className="rounded-md border bg-white">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -174,6 +174,7 @@ export function DataTable<TData, TValue>({
           <Button
             variant="outline"
             size="sm"
+            className=""
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >

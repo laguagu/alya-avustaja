@@ -21,7 +21,7 @@ export default async function Page() {
   }
 
   return (
-    <div className="container mx-auto py-10 space-y-6">
+    <div className="container mx-auto py-10 space-y-6 ">
       <h1 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
         Huonekalut
       </h1>
