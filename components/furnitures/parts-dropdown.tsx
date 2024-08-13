@@ -5,7 +5,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DevicesTableColums } from "@/data/types";
@@ -15,6 +14,7 @@ import { useState } from "react";
 export const PartsDropdown = ({ item }: { item: DevicesTableColums }) => {
   const [parts, setParts] = useState<string[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
   const handleOpenChange = async (open: boolean) => {
     if (open && !parts && !isLoading) {
       setIsLoading(true);
