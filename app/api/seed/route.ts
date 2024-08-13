@@ -66,6 +66,7 @@ export async function POST(req: NextRequest) {
         queryName: "matching_documents",
       },
     );
+
     return NextResponse.json({ ok: true }, { status: 200 });
   } catch (e: any) {
     console.error("Detailed Error: ", e);

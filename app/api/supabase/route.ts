@@ -126,7 +126,7 @@ export async function POST(req: NextRequest) {
     // Alustaa OpenAI-mallin ja Supabase-asiakasohjelman.
     const model = new ChatOpenAI({
       modelName: "gpt-4o-2024-08-06",
-      temperature: 0.0,
+      temperature: 0.3,
       // verbose: true, // Tulostaa lisätietoja, jos true
       streaming: true,
     });
@@ -138,8 +138,8 @@ export async function POST(req: NextRequest) {
 
     const vectorstore = new SupabaseVectorStore(new OpenAIEmbeddings(), {
       client,
-      tableName: "piiroinen_chairs", // Tietokantataulun nimi
-      queryName: "matching_documents", // Kysely funktion nimi
+      tableName: "piiroinen_huolto_ohjeet", // Tietokantataulun nimi
+      queryName: "match_huolto_ohjeet", // Kysely funktion nimi
     });
 
     // Muodostaa LangChain-ketjuja tiedonhaulle ja vastausten generoinnille.

@@ -7,6 +7,12 @@ const protectedRoutes = ["/alya", "/api"];
 const publicRoutes = ["/"];
 
 export default async function middleware(req: NextRequest) {
+  if (
+    process.env.NODE_ENV === "development" &&
+    req.nextUrl.pathname.startsWith("/api")
+  ) {
+    return NextResponse.next();
+  }
   const path = req.nextUrl.pathname;
 
   // Kevyt tarkistus: Tarkista vain, onko session-eväste olemassa
