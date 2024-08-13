@@ -8,6 +8,12 @@ import path from "path";
 
 export const dynamic = "force-dynamic";
 
+function lightPreprocess(text: string): string {
+    return text
+      .replace(/\n{3,}/g, '\n\n')  // Korvaa kolme tai useampi peräkkäinen rivinvaihto kahdella
+      .trim();  // Poista välilyönnit alusta ja lopusta
+  }
+  
 export async function POST(req: NextRequest) {
   try {
     const filePath = path.join(
