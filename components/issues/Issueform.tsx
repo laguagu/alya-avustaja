@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -12,7 +12,6 @@ import {
   Form,
   FormControl,
   FormDescription,
-  FormField,
   FormItem,
   FormLabel,
   FormMessage,
@@ -64,9 +63,6 @@ export default function IssueForm({
   const [instructionContent, setInstructionContent] = useState(
     data?.instruction || "",
   );
-  const [formattedInstruction, setFormattedInstruction] = useState<
-    React.ReactNode[]
-  >([]);
 
   const issueId = data?.id;
   const isCompleted = data?.is_completed ?? false;
@@ -96,7 +92,6 @@ export default function IssueForm({
   const {
     handleSubmit,
     control,
-    reset,
     formState: { isDirty, isSubmitting },
   } = form;
 

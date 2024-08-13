@@ -31,10 +31,7 @@ export default function ChatComponent({
     handleSubmit,
     isLoading,
   } = useChatMessages(initialSessionUserId);
-  const {
-    isPreparingAudio,
-    isPlaying,
-  } = useTextToSpeech();
+  const { isPreparingAudio, isPlaying } = useTextToSpeech();
   const {
     recording,
     isProcessingAudio,

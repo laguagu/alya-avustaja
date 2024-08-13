@@ -89,17 +89,14 @@ export const postNewIssueAction = actionClient
   });
 
 const toggleIssueStatus = async (issueId: number, isCompleted: boolean) => {
-  console.log(
-    `Attempting to ${isCompleted ? "close" : "open"} issue ${issueId}`,
-  );
-
-    const updateData = {
-    result: isCompleted
-      ? "picklist_service_result_done"
-      : "picklist_service_result_pending"
-  };
-
-  console.log("Sending update data:", updateData);
+  const updateData = isCompleted
+    ? {
+        result: "picklist_service_result_done",
+      }
+    : {
+        result: "picklist_service_result_pending",
+        completed: null,
+      };
 
   try {
     const response = await fetch(`${process.env.LUNNI_SERVICES}/${issueId}`, {
@@ -111,8 +108,6 @@ const toggleIssueStatus = async (issueId: number, isCompleted: boolean) => {
       body: JSON.stringify(updateData),
     });
 
-    console.log("Response status:", response.status);
-
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Error response:", errorText);
@@ -122,13 +117,9 @@ const toggleIssueStatus = async (issueId: number, isCompleted: boolean) => {
     }
 
     const responseData = await response.json();
-    console.log("Response data:", responseData);
-
     // Check if the update was successful
-    if (responseData.is_completed !== isCompleted) {
-      console.warn(
-        "Warning: Server did not update the is_completed status as expected",
-      );
+    if (response.status !== 200) {
+      console.warn("Unexpected response status:", response.status);
     }
 
     revalidateTag("issues");
@@ -141,7 +132,6 @@ const toggleIssueStatus = async (issueId: number, isCompleted: boolean) => {
     throw error;
   }
 };
-
 export const closeIssueAction = actionClient
   .schema(z.object({ issueId: z.number() }))
   .action(async ({ parsedInput: { issueId } }) =>
