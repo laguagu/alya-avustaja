@@ -66,7 +66,7 @@ Nämä tiedot tallennetaan käyttökokemuksen parantamiseksi, keskusteluhistoria
 
 ## Kohderyhmä
 
-Tämä sovellus on suunniteltu erityisesti Helsingin kaupungin kohdevastaavien (talonmiesten) käyttöön.
+Tämä sovellus on suunniteltu Helsingin kaupungin kohdevastaavien (talonmiesten) käyttöön.
 
 ## Asennus
 
