@@ -1,4 +1,4 @@
-# Kalustohuollon ja Vikailmoitusten Hallintasovellus
+# Kalustohuollon ja Vikailmoitusten Hallintasovellus - Älyäavustaja
 
 Tämä sovellus tarjoaa kattavan ratkaisun kaluston vikojen katseluun, raportointiin ja päivittämiseen. Se hyödyntää edistynyttä tekoälypohjaista chatbot-teknologiaa tarjotakseen huolto-ohjeita, helpottaen käyttäjien kaluston hallintaa ja korjaamista. Sovellus on rakennettu Next.js:llä ja se käyttää LangChain-kirjastoa, integroituen saumattomasti OpenAI:n malleihin keskustelevan tekoälyn vastausten generoimiseksi.
 
