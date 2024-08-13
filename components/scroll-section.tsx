@@ -6,6 +6,36 @@ import PartnerLogos from "./partners-logos";
 import { useMediaQuery } from "react-responsive";
 import HomeContentSection from "./home-content-sectio";
 import Link from "next/link";
+import { MarqueeComponent } from "./moving.logos";
+import { Separator } from "./ui/separator";
+
+const LogoContainer = ({
+  logos,
+}: {
+  logos: { src: string; alt: string }[];
+}) => {
+  return (
+    <motion.div
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      className="relative z-10 w-full overflow-x-auto"
+    >
+      <div className="flex flex-nowrap justify-center md:justify-center min-w-full">
+        {logos.map((logo, index) => (
+          <div key={index} className="flex-shrink-0 mx-2">
+            <Image
+              src={logo.src}
+              alt={logo.alt}
+              width={80}
+              height={80}
+              className="transition-all duration-300 filter hover:brightness-110"
+            />
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
+};
 
 const sectionContents = [
   {
@@ -37,6 +67,29 @@ const sectionContents = [
       "/homepage-images/huonekalut-2-min.png",
       "/homepage-images/huonekalut-3-min.png",
     ],
+  },
+];
+
+const logos = [
+  {
+    src: "/logos/hh-logo.png",
+    alt: "Haaga-Helia logo",
+  },
+  {
+    src: "/logos/hh-logo.png",
+    alt: "Haaga-Helia logo",
+  },
+  {
+    src: "/logos/hh-logo.png",
+    alt: "Haaga-Helia logo",
+  },
+  {
+    src: "/logos/hh-logo.png",
+    alt: "Haaga-Helia logo",
+  },
+  {
+    src: "/logos/hh-logo.png",
+    alt: "Haaga-Helia logo",
   },
 ];
 
@@ -99,27 +152,12 @@ function ScrollSection() {
             <h2 className="text-center text-2xl font-bold text-gray-800 mb-6 relative z-10">
               Älyä-hanke
             </h2>
-            <p className="text-center text-xl text-gray-700 tracking-tight mb-8 relative z-10">
+            <p className="text-center text-xl text-gray-700 tracking-tight mt-2 mb-4 relative z-10">
               Tämä sovellus on kehitetty osana Älyä-hanketta - älykästä
               teknologiaa kalusteiden elinkaaren pidentämiseen
             </p>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="relative z-10"
-            >
-              <Link href={"https://www.alya-hanke.fi/"}>
-                <Image
-                  src={"/hh-logo.png"}
-                  priority
-                  alt="Haaga-Helia logo"
-                  width={100}
-                  height={100}
-                  className="transition-all duration-300 filter hover:brightness-110"
-                  style={{ width: "auto", height: "auto" }}
-                />
-              </Link>
-            </motion.div>
+            {/* Yhteistyökumppanit */}
+            <MarqueeComponent />
           </div>
         </motion.div>
         {[y1, y2, y3].map((y, index) => (
