@@ -5,7 +5,6 @@ import {
   DevicesTableColums,
   FilteredServiceItem,
   IssueFormValues,
-  ServiceTask,
 } from "@/data/types";
 
 async function getDataForDevice(
@@ -226,8 +225,7 @@ export async function fetchAllFurnitures(): Promise<DeviceItemExample[]> {
   }
 }
 
-// 1. Päätason funktio huoltopyyntöjen hakemiseen
-export async function fetchServices(): Promise<FilteredServiceItem[]> {
+export async function fetchServiceWithImage(): Promise<FilteredServiceItem[]> {
   const fields = [
     "id",
     "name",
@@ -247,6 +245,8 @@ export async function fetchServices(): Promise<FilteredServiceItem[]> {
   ];
 
   const fieldsQuery = fields.join(",");
+
+  // Fetch all issues from Lunni API
   try {
     const response = await fetch(
       `${process.env.LUNNI_SERVICES}?fields=${fieldsQuery}`,
@@ -256,92 +256,38 @@ export async function fetchServices(): Promise<FilteredServiceItem[]> {
           "Content-Type": "application/json",
         },
         next: { tags: ["issues"], revalidate: 150 },
-        // cache: "no-store", // Ei välimuistitusta, jotta kuvat päivittyvät oikein
       },
     );
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    return await response.json();
-  } catch (error) {
-    console.error("Virhe haettaessa palvelutietoja:", error);
-    return [];
-  }
-}
 
-// 2. Funktio tiedostoviittausten hakemiseen
-export async function fetchFileReferences(
-  serviceId: string | number,
-): Promise<string[]> {
-  try {
-    const fileResponse = await fetch(
-      `https://apiv3.lunni.io/services/${serviceId}?refs[files]=service_id`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.LUNNI_API}`,
-          "Content-Type": "application/json",
-        },
-        next: { tags: ["issues"], revalidate: 150 },
-        // cache: "no-store", // Ei välimuistitusta, jotta kuvat päivittyvät oikein
-      },
-    );
+    const services = await response.json();
 
-    if (!fileResponse.ok) {
-      throw new Error(`HTTP error! status: ${fileResponse.status}`);
-    }
-
-    const fileData = await fileResponse.json();
-    return fileData.references?.files || [];
-  } catch (error) {
-    console.error(
-      `Virhe haettaessa tiedostoviittauksia palvelulle ${serviceId}:`,
-      error,
-    );
-    return [];
-  }
-}
-
-// 3. Funktio kuva-URL:n hakemiseen
-export async function fetchImageUrl(fileId: string): Promise<string | null> {
-  try {
-    const imageResponse = await fetch(
-      `https://apiv3.lunni.io/files/${fileId}?url=direct`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.LUNNI_API}`,
-          "Content-Type": "application/json",
-        },
-        next: { tags: ["issues"], revalidate: 150 },
-        // cache: "no-store", // Ei välimuistitusta, jotta kuvat päivittyvät oikein
-      },
-    );
-
-    if (!imageResponse.ok) {
-      throw new Error(`HTTP error! status: ${imageResponse.status}`);
-    }
-
-    const imageData = await imageResponse.json();
-    return imageData.content_url;
-  } catch (error) {
-    console.error(`Virhe haettaessa kuva-URL:ää tiedostolle ${fileId}:`, error);
-    return null;
-  }
-}
-
-// Pääfunktio, joka yhdistää kaikki tiedot
-export async function fetchServiceWithImage(): Promise<FilteredServiceItem[]> {
-  try {
-    const services = await fetchServices();
-
+    // Fetch content_url for each service
     const servicesWithImages = await Promise.all(
-      services.map(async (service) => {
-        const fileReferences = await fetchFileReferences(service.id);
-        if (fileReferences.length > 0) {
-          const imageUrl = await fetchImageUrl(fileReferences[0].toString());
-          return { ...service, content_url: imageUrl };
+      services.map(async (service: any) => {
+        const imageResponse = await fetch(
+          `${process.env.LUNNI_SERVICES}/${service.id}?fields=id&references[files]=service_id&reference_fields[files]=content&url=direct`,
+          {
+            headers: {
+              Authorization: `Bearer ${process.env.LUNNI_API}`,
+              "Content-Type": "application/json",
+            },
+            next: { tags: ["issues"], revalidate: 150 },
+          },
+        );
+
+        if (imageResponse.ok) {
+          const imageData = await imageResponse.json();
+          return {
+            ...service,
+            content_url: imageData.references?.files?.[0]?.content_url || null,
+          };
         }
-        return service;
+        // Return service without content_url if fetching fails
+        return { ...service, content_url: null };
       }),
     );
 
@@ -349,36 +295,6 @@ export async function fetchServiceWithImage(): Promise<FilteredServiceItem[]> {
   } catch (error) {
     console.error("Virhe haettaessa palvelutietoja kuvien kanssa:", error);
     return [];
-  }
-}
-
-async function fetchIssueImage(issueId: string): Promise<string | null> {
-  try {
-    const fileReferences = await fetchFileReferences(issueId);
-
-    if (fileReferences.length > 0) {
-      const fileId = fileReferences[0];
-      const imageResponse = await fetch(
-        `https://apiv3.lunni.io/files/${fileId}?url=direct`,
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.LUNNI_API}`,
-            "Content-Type": "application/json",
-          },
-          next: { tags: ["issues"], revalidate: 300 },
-          // cache: "no-store", // Ei välimuistitusta, jotta kuvat päivittyvät oikein
-        },
-      );
-
-      if (imageResponse.ok) {
-        const imageData = await imageResponse.json();
-        return imageData.content_url;
-      }
-    }
-    return null;
-  } catch (error) {
-    console.error("Error fetching issue image:", error);
-    return null;
   }
 }
 
@@ -392,15 +308,39 @@ export async function fetchIssuePageData(
   partsList: string[] | null;
   imageUrl: string | null;
 }> {
-  const issueFormPromise = issueId
-    ? getIssueFormDataById(issueId)
+  const issueFields = [
+    "location_id",
+    "priority",
+    "problem_description",
+    "type",
+    "instruction",
+    "missing_equipments",
+    "is_completed",
+    "service_contact_name",
+    "service_contact_phone",
+  ];
+
+  const issueFieldsQuery = issueFields.join(",");
+
+  const issueDataPromise = issueId
+    ? fetch(
+        `${process.env.LUNNI_SERVICES}/${issueId}?fields=${issueFieldsQuery}&references[files]=service_id&reference_fields[files]=content&url=direct`,
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.LUNNI_API}`,
+            "Content-Type": "application/json",
+          },
+          next: { tags: ["issues"], revalidate: 300 },
+        },
+      ).then((res) => res.json())
     : Promise.resolve(null);
+
   const deviceDataPromise = deviceId
     ? getDataForDevice(deviceId)
     : Promise.resolve(null);
 
   const [issueData, deviceData] = await Promise.all([
-    issueFormPromise,
+    issueDataPromise,
     deviceDataPromise,
   ]);
 
@@ -412,14 +352,144 @@ export async function fetchIssuePageData(
     ? retrieveFurnitureParts(deviceData.name)
     : Promise.resolve(null);
 
-  const imageUrlPromise = issueId
-    ? fetchIssueImage(issueId)
-    : Promise.resolve(null);
-
-  const [locationData, partsList, imageUrl] = await Promise.all([
+  const [locationData, partsList] = await Promise.all([
     locationDataPromise,
     furniturePartsPromise,
-    imageUrlPromise,
   ]);
+
+  const imageUrl = issueData?.references?.files?.[0]?.content_url || null;
+
   return { issueData, deviceData, locationData, partsList, imageUrl };
 }
+
+// async function fetchIssueImage(issueId: string): Promise<string | null> {
+//   try {
+//     const fileReferences = await fetchFileReferences(issueId);
+
+//     if (fileReferences.length > 0) {
+//       const fileId = fileReferences[0];
+//       const imageResponse = await fetch(
+//         `https://apiv3.lunni.io/files/${fileId}?url=direct`,
+//         {
+//           headers: {
+//             Authorization: `Bearer ${process.env.LUNNI_API}`,
+//             "Content-Type": "application/json",
+//           },
+//           next: { tags: ["issues"], revalidate: 300 },
+//           // cache: "no-store", // Ei välimuistitusta, jotta kuvat päivittyvät oikein
+//         },
+//       );
+
+//       if (imageResponse.ok) {
+//         const imageData = await imageResponse.json();
+//         return imageData.content_url;
+//       }
+//     }
+//     return null;
+//   } catch (error) {
+//     console.error("Error fetching issue image:", error);
+//     return null;
+//   }
+// }
+// 1. Päätason funktio huoltopyyntöjen hakemiseen
+// export async function fetchServices(): Promise<FilteredServiceItem[]> {
+//   const fields = [
+//     "id",
+//     "name",
+//     "device_id",
+//     "device_serial",
+//     "device_brand",
+//     "device_model",
+//     "location_id",
+//     "problem_description",
+//     "priority",
+//     "created",
+//     "updated",
+//     "completed",
+//     "is_completed",
+//     "instruction",
+//     "description",
+//   ];
+
+//   const fieldsQuery = fields.join(",");
+//   try {
+//     const response = await fetch(
+//       `${process.env.LUNNI_SERVICES}?fields=${fieldsQuery}`,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${process.env.LUNNI_API}`,
+//           "Content-Type": "application/json",
+//         },
+//         next: { tags: ["issues"], revalidate: 150 },
+//         // cache: "no-store", // Ei välimuistitusta, jotta kuvat päivittyvät oikein
+//       },
+//     );
+
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! status: ${response.status}`);
+//     }
+//     return await response.json();
+//   } catch (error) {
+//     console.error("Virhe haettaessa palvelutietoja:", error);
+//     return [];
+//   }
+// }
+
+// 2. Funktio tiedostoviittausten hakemiseen
+// export async function fetchFileReferences(
+//   serviceId: string | number,
+// ): Promise<string[]> {
+//   try {
+//     const fileResponse = await fetch(
+//       `https://apiv3.lunni.io/services/${serviceId}?refs[files]=service_id`,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${process.env.LUNNI_API}`,
+//           "Content-Type": "application/json",
+//         },
+//         next: { tags: ["issues"], revalidate: 150 },
+//         // cache: "no-store", // Ei välimuistitusta, jotta kuvat päivittyvät oikein
+//       },
+//     );
+
+//     if (!fileResponse.ok) {
+//       throw new Error(`HTTP error! status: ${fileResponse.status}`);
+//     }
+
+//     const fileData = await fileResponse.json();
+//     return fileData.references?.files || [];
+//   } catch (error) {
+//     console.error(
+//       `Virhe haettaessa tiedostoviittauksia palvelulle ${serviceId}:`,
+//       error,
+//     );
+//     return [];
+//   }
+// }
+
+// 3. Funktio kuva-URL:n hakemiseen
+// export async function fetchImageUrl(fileId: string): Promise<string | null> {
+//   try {
+//     const imageResponse = await fetch(
+//       `https://apiv3.lunni.io/files/${fileId}?url=direct`,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${process.env.LUNNI_API}`,
+//           "Content-Type": "application/json",
+//         },
+//         next: { tags: ["issues"], revalidate: 150 },
+//         // cache: "no-store", // Ei välimuistitusta, jotta kuvat päivittyvät oikein
+//       },
+//     );
+
+//     if (!imageResponse.ok) {
+//       throw new Error(`HTTP error! status: ${imageResponse.status}`);
+//     }
+
+//     const imageData = await imageResponse.json();
+//     return imageData.content_url;
+//   } catch (error) {
+//     console.error(`Virhe haettaessa kuva-URL:ää tiedostolle ${fileId}:`, error);
+//     return null;
+//   }
+// }

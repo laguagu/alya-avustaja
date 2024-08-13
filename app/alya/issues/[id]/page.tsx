@@ -8,9 +8,10 @@ import { Suspense } from "react";
 import ChatBot from "@/components/issues/chat-bot";
 import { LoadingIssueSkeleton } from "@/components/skeletons";
 import { verifySession } from "@/app/_auth/sessions";
-export const fetchCache = "force-no-store";
 
-const AsyncDataComponent = async ({
+export const dynamic = "force-dynamic";
+
+const IssuePageDataComponent = async ({
   issueId,
   deviceId,
 }: {
@@ -88,7 +89,7 @@ export default function Page({
       </div>
       <Separator className="md:my-4 my-3" />
       <Suspense fallback={<LoadingIssueSkeleton />}>
-        <AsyncDataComponent issueId={issueId} deviceId={deviceId} />
+        <IssuePageDataComponent issueId={issueId} deviceId={deviceId} />
       </Suspense>
     </div>
   );
