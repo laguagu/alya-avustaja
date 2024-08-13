@@ -138,8 +138,8 @@ export async function POST(req: NextRequest) {
 
     const vectorstore = new SupabaseVectorStore(new OpenAIEmbeddings(), {
       client,
-      tableName: "piiroinen_huolto_ohjeet", // Tietokantataulun nimi
-      queryName: "match_huolto_ohjeet", // Kysely funktion nimi
+      tableName: "piiroinen_huolto_ohjeet",
+      queryName: "match_huolto_ohjeet",
     });
 
     // Muodostaa LangChain-ketjuja tiedonhaulle ja vastausten generoinnille.
