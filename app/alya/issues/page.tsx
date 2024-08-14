@@ -16,10 +16,11 @@ export default async function Page() {
         <div className="flex flex-col md:flex-row justify-between items-center w-full">
           <div className="flex flex-col items-center flex-grow md:space-y-2">
             <div className="flex flex-col items-center shadow-md p-4 bg-secondary rounded-tl-3xl rounded-br-3xl">
-              <h1 className="text-3xl lg:text-4xl text-center mb-2 md:my-2">
+              {/* <h1 className="text-3xl lg:text-4xl text-center mb-2 md:my-2"> */}
+              <h1 className="scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-4xl">
                 Vikailmoitukset
               </h1>
-              <Badge variant="outline" className="text-sm px-2 py-0.5 bg-white">
+              <Badge variant="outline" className="text-sm px-2 mt-1 py-0.5 bg-white">
                 Avoinna {openIssues.length}
               </Badge>
             </div>
