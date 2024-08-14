@@ -13,7 +13,7 @@ export default async function DashboardLayout({
   const issues = await getIssuesNumber(); // Hae API kutsulla issues määrä
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] overflow-hidden">
+    <div className="grid h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] overflow-hidden">
       <div className="hidden border-r bg-muted/40 md:block">
         <SimpleSidenav issues={issues} />
       </div>
