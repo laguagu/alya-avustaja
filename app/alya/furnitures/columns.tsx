@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DevicesTableColums } from "@/data/types";
 import { PartsDropdown } from "@/components/furnitures/parts-dropdown";
 
-type ArabiaTilaus = {
+export type ArabiaTilaus = {
   nimi: string;
   määrä: number;
   toimitus_pvm: string;
