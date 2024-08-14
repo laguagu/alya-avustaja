@@ -1,6 +1,7 @@
 import React from "react";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
+import { DataTableMock } from "./data-table-mock";
 import { Suspense } from "react";
 import { DevicesTableColums } from "@/data/types";
 import { fetchFurnitures } from "@/lib/dataFetching";
@@ -9,16 +10,19 @@ import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TableSkeleton } from "@/components/skeletons";
+import { arabiaKaikkiTilaukset } from "@/data/arabiaKaikkiTilaukset";
 
 export default async function Page() {
-  let data: DevicesTableColums[] = [];
-  let error: string | null = null;
+  // let data: DevicesTableColums[] = [];
+  // let error: string | null = null;
 
-  try {
-    data = await fetchFurnitures();
-  } catch (err) {
-    error = (err as Error).message;
-  }
+  // try {
+  //   data = await fetchFurnitures();
+  // } catch (err) {
+  //   error = (err as Error).message;
+  // }
+  const data = arabiaKaikkiTilaukset;
+  const error = null;
 
   return (
     <div className="container mx-auto py-10 space-y-6 ">
@@ -42,7 +46,7 @@ export default async function Page() {
             kerralla.
           </p>
           <Suspense fallback={<TableSkeleton />}>
-            <DataTable columns={columns} data={data} />
+            <DataTableMock columns={columns} data={data} />
           </Suspense>
         </>
       )}
