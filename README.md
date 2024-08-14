@@ -80,7 +80,7 @@ Tämä sovellus on suunniteltu Helsingin kaupungin kohdevastaavien (talonmiesten
 - Rakenna sovellus tuotantoa varten komennolla `npm run build`.
 - Käynnistä tuotantopalvelin komennolla `npm start`.
 
-## Teknologiat
+## Keskeiset teknologiat
 
 - Next.js
 - LangChain
