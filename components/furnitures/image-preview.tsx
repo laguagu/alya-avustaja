@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Dialog,
   DialogTrigger,
@@ -11,7 +11,7 @@ import {
   DialogContainer,
 } from "@/components/ui/dialog-pop-modal";
 import { ZoomInIcon, XIcon } from "lucide-react";
-import Image from 'next/image';
+import Image from "next/image";
 
 type ImagePreviewProps = {
   imageSrc: string;
@@ -37,9 +37,9 @@ export function ImagePreview({
       }}
     >
       <DialogTrigger className="cursor-pointer relative w-10 h-10">
-        <Image 
-          src={imageSrc} 
-          alt={alt} 
+        <Image
+          src={imageSrc}
+          alt={alt}
           fill
           sizes="40px"
           className="rounded-md object-cover"
@@ -78,7 +78,8 @@ export function ImagePreview({
               }}
             >
               <p className="mt-2 text-zinc-500 dark:text-zinc-500">
-                Määrä: {määrä}<br />
+                Määrä: {määrä}
+                <br />
                 Toimituspäivämäärä: {toimitus_pvm}
               </p>
             </DialogDescription>

@@ -1,14 +1,10 @@
 import React from "react";
 import { columns } from "./columns";
-import { DataTable } from "./data-table";
 import { DataTableMock } from "./data-table-mock";
 import { Suspense } from "react";
-import { DevicesTableColums } from "@/data/types";
-import { fetchFurnitures } from "@/lib/dataFetching";
 import { Separator } from "@/components/ui/separator";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Skeleton } from "@/components/ui/skeleton";
 import { TableSkeleton } from "@/components/skeletons";
 import { arabiaKaikkiTilaukset } from "@/data/arabiaKaikkiTilaukset";
 

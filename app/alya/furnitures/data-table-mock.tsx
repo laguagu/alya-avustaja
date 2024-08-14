@@ -30,7 +30,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TextEffect } from "@/components/ui/text-effect";
-
+import { ScrollHint } from "@/components/furnitures/scroll-hint";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -76,8 +76,8 @@ export function DataTableMock<TData, TValue>({
   // };
 
   return (
-    <div className="">
-      <div className="flex items-center py-4">
+    <div>
+      <div className="flex items-center py-4 gap-3">
         <Input
           placeholder="Hae nimellä..."
           value={(table.getColumn("nimi")?.getFilterValue() as string) ?? ""}
@@ -113,7 +113,8 @@ export function DataTableMock<TData, TValue>({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="rounded-md border bg-white">
+      <ScrollHint />
+      <div className="rounded-md border bg-white overflow-x-auto">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -157,7 +158,7 @@ export function DataTableMock<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Ei tuloksia.
                 </TableCell>
               </TableRow>
             )}

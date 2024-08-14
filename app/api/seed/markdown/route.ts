@@ -41,7 +41,11 @@ function combineShortChunks(chunks: string[], minLength: number): string[] {
 
 export async function POST(req: NextRequest) {
   try {
-    const filePath = path.join(process.cwd(), "data", "comprehensive-piiroinen-huolto-ohjeet.md");
+    const filePath = path.join(
+      process.cwd(),
+      "data",
+      "comprehensive-piiroinen-huolto-ohjeet.md",
+    );
     const markdownContent = await fs.readFile(filePath, "utf8");
 
     const preprocessedContent = preprocessMarkdown(markdownContent);
@@ -57,12 +61,18 @@ export async function POST(req: NextRequest) {
     // Yhdistä lyhyet chunkit
     splitChunks = combineShortChunks(splitChunks, 500);
     console.log("Yhdistetty chunk count: ", splitChunks.length);
-    const splitDocuments = splitChunks.map(chunk => ({
+    const splitDocuments = splitChunks.map((chunk) => ({
       pageContent: chunk,
-      metadata: { source: "piiroinen_huolto_ohjeet", title: "Piiroisen Huonekalujen Huolto-Ohjeet" }
+      metadata: {
+        source: "piiroinen_huolto_ohjeet",
+        title: "Piiroisen Huonekalujen Huolto-Ohjeet",
+      },
     }));
 
-    const client = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PRIVATE_KEY!);
+    const client = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_PRIVATE_KEY!,
+    );
 
     const vectorstore = await SupabaseVectorStore.fromDocuments(
       splitDocuments,
@@ -71,10 +81,13 @@ export async function POST(req: NextRequest) {
         client,
         tableName: "piiroinen_huolto_ohjeet",
         queryName: "match_huolto_ohjeet",
-      }
+      },
     );
 
-    return NextResponse.json({ ok: true, chunkCount: splitDocuments.length }, { status: 200 });
+    return NextResponse.json(
+      { ok: true, chunkCount: splitDocuments.length },
+      { status: 200 },
+    );
   } catch (e: any) {
     console.error("Detailed Error: ", e);
     return NextResponse.json({ error: e.message }, { status: 500 });

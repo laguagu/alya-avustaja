@@ -26,20 +26,24 @@ Tämä sovellus tarjoaa kattavan ratkaisun kaluston vikojen katseluun, raportoin
 
 Sovellus hyödyntää useita edistyneitä tekoäly- ja koneoppimismenetelmiä:
 
-1. **Retrieval-Augmented Generation (RAG)**: 
+1. **Retrieval-Augmented Generation (RAG)**:
+
    - Yhdistää tiedonhaun ja tekstin generoinnin, mahdollistaen dynaamisen ja kontekstiriippuvaisen tiedon yhdistämisen.
    - Tuottaa tarkempia ja relevantimpia vastauksia verrattuna perinteisiin kysymys-vastausjärjestelmiin.
 
 2. **Vektori-embedding**:
+
    - Käyttää OpenAI:n kehittämää embedding-mallia, joka perustuu syviin neuroverkkoihin.
    - Muuntaa tekstin korkeaulotteisiksi vektoreiksi säilyttäen tekstin semanttisen merkityksen.
    - Hyödyntää transfer learning -tekniikkaa, jossa suuria kielimalleja on esikoulutettu valtavilla tekstimäärillä.
 
 3. **Similariteettihaku vektoritietokannassa**:
+
    - Hyödyntää cosine-similariteettia vektorien vertailuun semanttisen samankaltaisuuden mittaamiseksi.
    - Mahdollistaa "fuzzy matching" -tyylisen haun, joka ymmärtää kontekstin ja merkityksen.
 
 4. **Edistynyt tekstin jakaminen (chunking)**:
+
    - Käyttää RecursiveCharacterTextSplitter-algoritmiä tekstin jakamiseen semanttisesti merkityksellisiin osiin.
    - Optimoi kontekstin säilymisen ja parantaa hakutulosten laatua.
 
@@ -48,6 +52,7 @@ Sovellus hyödyntää useita edistyneitä tekoäly- ja koneoppimismenetelmiä:
    - Sisältää tekniikoita kuten tokenisaatio, lemmatisaatio ja kontekstuaalinen analyysi.
    - NLP-toiminnallisuudet on integroitu sovellukseen LangChain-kirjaston ja OpenAI:n mallien kautta, parantaen merkittävästi chatbotin kykyä ymmärtää ja vastata kysymyksiin Piiroisen huonekalujen huollosta.
 6. **Streaming ja asynkroninen prosessointi**:
+
    - Käyttää moderneja asynkronisia tekniikoita, kuten streamausta, mahdollistaen tehokkaan ja reaaliaikaisen vastausten generoinnin.
 
 7. **Joustava tekoälyarkkitehtuuri**:
@@ -58,6 +63,7 @@ Nämä tekniikat edustavat tekoälyn ja koneoppimisen viimeisimpiä edistysaskel
 ## Tietojen Tallennus
 
 Sovellus käyttää Supabase-tietokantaa seuraavien tietojen tallentamiseen:
+
 - Käyttäjien kirjautumistiedot
 - Chatbotin viestit
 - Vektori-embeddings huolto-ohjeille

@@ -141,7 +141,6 @@ https://www.piiroinen.com/fi/yhteystiedot/
 
 Muista aina tarkistaa materiaalin erityisohjeet ennen huoltot
 
-
 ### Arena 022 Tuolin osat
 
 1. Tuolin metallirunko

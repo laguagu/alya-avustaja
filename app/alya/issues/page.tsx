@@ -20,7 +20,10 @@ export default async function Page() {
               <h1 className="scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-4xl">
                 Vikailmoitukset
               </h1>
-              <Badge variant="outline" className="text-sm px-2 mt-1 py-0.5 bg-white">
+              <Badge
+                variant="outline"
+                className="text-sm px-2 mt-1 py-0.5 bg-white"
+              >
                 Avoinna {openIssues.length}
               </Badge>
             </div>

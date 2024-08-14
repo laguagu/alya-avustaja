@@ -2,8 +2,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { DevicesTableColums } from "@/data/types";
 import { PartsDropdown } from "@/components/furnitures/parts-dropdown";
 import { ImagePreview } from "@/components/furnitures/image-preview";
 
@@ -22,7 +20,7 @@ export const columns: ColumnDef<ArabiaTilaus>[] = [
     cell: ({ row }) => {
       const data = row.original;
       return (
-        <ImagePreview 
+        <ImagePreview
           imageSrc={`/furnitures/${data.kuva}`}
           alt={data.nimi}
           nimi={data.nimi}

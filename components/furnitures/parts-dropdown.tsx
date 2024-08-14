@@ -7,7 +7,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArabiaTilaus } from "@/app/alya/furnitures/columns"; 
+import { ArabiaTilaus } from "@/app/alya/furnitures/columns";
 import { retrieveFurnitureParts } from "@/lib/dataFetching";
 import { useState } from "react";
 
@@ -40,7 +40,6 @@ export const PartsDropdown = ({ item }: { item: ArabiaTilaus }) => {
     </DropdownMenu>
   );
 };
-
 
 // !!
 // HUOM! Käytä tätä komponenttia vain, jos käytät dataa lunnin apista
