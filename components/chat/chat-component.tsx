@@ -71,7 +71,17 @@ export default function ChatComponent({
   );
 
   return (
-    <div className="flex flex-col w-full max-w-3xl mx-auto h-[calc(100vh-9em)] min-h-[500px] shadow-md rounded-lg border border-gray-200 overflow-hidden">
+    <div className="flex mx-auto flex-col w-full xl:max-w-[900px] border border-gray-200 rounded-lg shadow-md overflow-hidden mb-6
+    min-h-[400px] 
+    sm:min-h-[500px] 
+    md:min-h-[600px] 
+    lg:min-h-[700px] 
+    xl:min-h-[750px] 
+    h-[calc(100vh-6rem)] 
+    sm:h-[calc(100vh-8rem)] 
+    md:h-[calc(100vh-10rem)] 
+    lg:h-[calc(100vh-12rem)] 
+    xl:h-[calc(100vh-15rem)]">
       <div className="p-4 w-full bg-secondary border-b border-gray-200 ">
         <div className="flex items-center justify-between ">
           <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
