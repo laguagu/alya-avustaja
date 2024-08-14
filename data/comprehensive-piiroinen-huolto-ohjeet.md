@@ -1,5 +1,3 @@
-# Piiroisen Huonekalujen Huolto-Ohjeet
-
 ## Yleiset Hoito-Ohjeet
 
 Säännöllinen hoito antaa kalusteillesi lisää laadukkaita käyttövuosia. Kalusteiden kunnosta huolehtiminen kannattaa. Pitkäikäiset kalusteet ovat taloudellisia ja ne säästävät ympäristöä.
@@ -60,20 +58,9 @@ Säännöllinen hoito antaa kalusteillesi lisää laadukkaita käyttövuosia. Ka
 - Laminaatti on hyvin kestävä pinta monia nesteitä ajatellen, ei päästä nestettä läpi.
 - Jos nestettä kaatuu esimerkiksi tuolin istuimelle, puhdista ja kuivaa huolella myös istuimen puuviiluiset reunat.
 
-## Arena 022 Tuolin Huolto-Ohjeet ja Osat
+## Tuolin Huolto-Ohjeet
 
-### Arena 022 Tuolin osat
-
-1. Tuolin metallirunko
-2. Nojanupin muovi (2 kpl)
-3. Tuolin selkänoja
-4. Arena-ruuvi (2 kpl)
-5. Etujalkatulppa (2 kpl)
-6. Takajalkatulppa (2 kpl)
-7. Pinontanasta (4 kpl)
-8. Tuolin istuin
-
-### Arena 022 Pinnan kunto
+### Tuolin Pinnan kunto
 
 - Tarkista, onko pintakäsittely kauttaaltaan ehjä.
 - Kirkas kromipinta ja himmeämpi mattakromipinta ovat erittäin kestäviä eivätkä vaurioidu normaalissa käytössä.
@@ -81,30 +68,30 @@ Säännöllinen hoito antaa kalusteillesi lisää laadukkaita käyttövuosia. Ka
 - Jos pintakäsittely on rikkoutunut, ota yhteyttä Piiroiseen korjausta varten.
 - Tyypillisesti koko rungon uudelleen pintakäsittely on tarpeen, näin olemassa olevan ja teknisesti yhä moitteettoman rungon elinkaarta voidaan jatkaa.
 
-### Arena 022 Rungon tekninen kunto
+### Rungon tekninen kunto
 
 - Tarkista, että kaikki neljä jalkaa ovat oikeassa kulmassaan eivätkä ole vääntyneitä.
 - Varmista, että rungon hitsausliitokset ovat kunnossa istuimen alla.
 - Jos runko on teknisesti vioittunut (esim. jalat vääntyneet tai hitsausliitokset revenneet), ota tuoli välittömästi pois käytöstä ja ota yhteyttä Piiroiseen.
 
-### Arena 022 Tuolin istuin ja selkänoja
+### Tuolin istuin ja selkänoja
 
 - Tarkista istuimen ja selkänojan pinnan eheys säännöllisesti.
 - Kovien pintojen (aidot puuviilut, laminaatit, melamiini) kohdalla tarkista, onko pinnassa lohkeamia.
 - Kaikki em. pintamateriaalit voivat lohkeilla kovien iskujen seurauksena. Normaalissa käytössä pintoihin voi tulla naarmuja, jotka eivät kuitenkaan lohkaise materiaalia.
 - Jos pinnastaan lohjenneita tuoleja ei poisteta käytöstä, on riski pinnan alla olevan puumateriaalin rispaantumiseen ja tällöin esimerkiksi tikkujen sormeen saamiseen.
 - Verhoilluissa istuimissa ja selkänojissa tarkista, onko kangas/nahka ehjä.
-- Tämän Arena 022 tuolimallin kohdalla verhoilun painuminen on erittäin harvinaista.
+- Arena 022 tuolimallin kohdalla verhoilun painuminen on erittäin harvinaista.
 - Jos pinta on rikkoutunut, ota yhteyttä Piiroiseen korjausta tai vaihtoa varten.
 - Lohjenneita pintoja on vaikea huoltaa alkuperäisen kaltaiseksi, joten tyypillisin toimenpide on istuimen vaihtaminen uuteen.
-- Rikkoutuneet Arena 022 kangaspinnat voidaan joissain tapauksissa korjata. Jos kyseisen kankaan korjaaminen ei kannata, usein istuin voidaan uudelleenverhoilla hyödyntäen olemassa olevaa istuimen puurunkoa ja mahdollisesti vaahtoja ja vanuja.
+- Rikkoutuneet tuolin kangaspinnat voidaan joissain tapauksissa korjata. Jos kyseisen kankaan korjaaminen ei kannata, usein istuin voidaan uudelleenverhoilla hyödyntäen olemassa olevaa istuimen puurunkoa ja mahdollisesti vaahtoja ja vanuja.
 
-### Arena 022 Puhdistus
+### Tuolin Puhdistus
 
-- Riippumatta Arena 022 rungon pintakäsittelystä (kromi, mattakromi, pulverimaalaus, erikoispinnat), pyyhintä kuivalla tai hieman vedellä kostutetulla pyyhkeellä riittää tyypillisesti poistamaan pienet pintaliat, ml. sormenjäljet.
+- Riippumatta rungon pintakäsittelystä (kromi, mattakromi, pulverimaalaus, erikoispinnat), pyyhintä kuivalla tai hieman vedellä kostutetulla pyyhkeellä riittää tyypillisesti poistamaan pienet pintaliat, ml. sormenjäljet.
 - Tarvittaessa pyyhinnässä voidaan käyttää mietoa pesuainetta. Runko tulee lopuksi kuivata.
 - Ns. kovat pinnat (aidot puuviilut, laminaatit, melamiini) pyyhitään kuivalla tai hieman vedellä kostutetulla pyyhkeellä.
-- Verhoiltu Arena 022 istuin ja selkänoja imuroidaan pölystä ja irtoliasta pehmeää harjasuulaketta käyttäen. Verhoilussa olevat liat voidaan pyyhkiä kostealla kankaalla ja tämän jälkeen pinnan annetaan kuivua.
+- Verhoiltu tuolin istuin ja selkänoja imuroidaan pölystä ja irtoliasta pehmeää harjasuulaketta käyttäen. Verhoilussa olevat liat voidaan pyyhkiä kostealla kankaalla ja tämän jälkeen pinnan annetaan kuivua.
 - Jokaiselle kankaalle on saatavilla tarkempi hoito-ohje kankaan valmistajalta tai Piiroiselta. Ensi sijaisesti kankaan tarkka hoito-ohje tuleekin olla tiedossa huoltotoimet aloitettaessa.
 
 ## Kalusteiden Käyttö
@@ -153,3 +140,14 @@ Näiden ohjeiden ohella Piiroisen myyntihenkilöstö auttaa ja neuvoo Sinua miss
 https://www.piiroinen.com/fi/yhteystiedot/
 
 Muista aina tarkistaa materiaalin erityisohjeet ennen huoltot
+
+### Arena 022 Tuolin osat
+
+1. Tuolin metallirunko
+2. Nojanupin muovi (2 kpl)
+3. Tuolin selkänoja
+4. Arena-ruuvi (2 kpl)
+5. Etujalkatulppa (2 kpl)
+6. Takajalkatulppa (2 kpl)
+7. Pinontanasta (4 kpl)
+8. Tuolin istuin
