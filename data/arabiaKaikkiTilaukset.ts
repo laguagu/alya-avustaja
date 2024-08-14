@@ -11,6 +11,7 @@ export const arabiaKaikkiTilaukset = [
       "Grand canyon 3B L Kvadrat",
       "Flora2 847 sinivihreä U02",
     ],
+    kuva: "Grand-Canyon-3b.jpeg",
   },
   {
     nimi: "Grand Canyon Sohva 3B R",
@@ -24,6 +25,7 @@ export const arabiaKaikkiTilaukset = [
       "Grand canyon 3B R Kvadrat",
       "Flora2 847 sinivihreä U02",
     ],
+    kuva: "Grand-Canyon-3b.jpeg",
   },
   {
     nimi: "Arena 013S/800 baarituoli",
@@ -36,18 +38,21 @@ export const arabiaKaikkiTilaukset = [
       "pulverimaalattu QZ4781",
       "huopanasta 011, suora",
     ],
+    kuva: "arena-033-bar.jpg",
   },
   {
     nimi: "Istuin 033 verhoilu U02",
     määrä: 8,
     toimitus_pvm: "11.08.2009",
     osat: ["Kvadrat Flora2 826 turkoosi"],
+    kuva: "Arena-033-normal.jpg",
   },
   {
     nimi: "Istuin 033 verhoilu U02",
     määrä: 8,
     toimitus_pvm: "11.08.2009",
     osat: ["Kvadrat Flora2 217 keltainen"],
+    kuva: "Arena-033-normal.jpg",
   },
   {
     nimi: "XO kevyt sohvapöytä Ø60",
@@ -59,6 +64,7 @@ export const arabiaKaikkiTilaukset = [
       "Runko XO-pöytä 600 Ø60",
       "pulverimaalattu QZ4781",
     ],
+    kuva: "xo-table.jpeg",
   },
   {
     nimi: "Pöytä Arena C72 60x60",
@@ -71,6 +77,7 @@ export const arabiaKaikkiTilaukset = [
       "KORKEUS 550mm 60x60",
       "pulverimaalattu QZ4781",
     ],
+    kuva: "arena-C72.png",
   },
   {
     nimi: "Pöytä Arena C72",
@@ -83,6 +90,7 @@ export const arabiaKaikkiTilaukset = [
       "KORKEUS 1100mm 60x60",
       "pulverimaalattu QZ4781",
     ],
+    kuva: "arena-C72.png",
   },
   {
     nimi: "Arena 022",
@@ -97,6 +105,7 @@ export const arabiaKaikkiTilaukset = [
       "Selkä 022 Melamiini",
       "Melamii*Valk",
     ],
+    kuva: "arena022.jpg",
   },
   {
     nimi: "Tuoli Arena 022",
@@ -111,6 +120,7 @@ export const arabiaKaikkiTilaukset = [
       "022 huopanasta, suora",
       "022 huopanasta vino",
     ],
+    kuva: "arena022.jpg",
   },
   {
     nimi: "Tuoli Arena 022",
@@ -127,6 +137,7 @@ export const arabiaKaikkiTilaukset = [
       "022 huopanasta, suora",
       "022 huopanasta vino",
     ],
+    kuva: "arena022.jpg",
   },
   {
     nimi: "Tuoli Arena 033 C",
@@ -139,6 +150,7 @@ export const arabiaKaikkiTilaukset = [
       "033 huopanasta, suora",
       "033 huopanasta, vino",
     ],
+    kuva: "Arena-033-normal.jpg",
   },
   {
     nimi: "Tuoli Arena 022 S",
@@ -153,6 +165,7 @@ export const arabiaKaikkiTilaukset = [
       "Selkä 022 Melamiini",
       "Melamii*Valk",
     ],
+    kuva: "arena022.jpg",
   },
   {
     nimi: "Tuoli Arena 033",
@@ -167,6 +180,7 @@ export const arabiaKaikkiTilaukset = [
       "033 huopanasta, suora",
       "033 huopanasta, vino",
     ],
+    kuva: "Arena-033-normal.jpg",
   },
   {
     nimi: "Tuoli Arena 033",
@@ -179,6 +193,7 @@ export const arabiaKaikkiTilaukset = [
       "033 huopanasta, suora",
       "033 huopanasta, vino",
     ],
+    kuva: "Arena-033-normal.jpg",
   },
   {
     nimi: "Pöytä Arena 800 Ø100",
@@ -191,6 +206,7 @@ export const arabiaKaikkiTilaukset = [
       "Ø100",
       "pulverimaalattu QZ4781",
     ],
+    kuva: "arena-800.jpeg",
   },
   {
     nimi: "Pöytä Arena 800 Ø80",
@@ -203,6 +219,7 @@ export const arabiaKaikkiTilaukset = [
       "Ø80",
       "pulverimaalattu QZ4781",
     ],
+    kuva: "arena-800.jpeg",
   },
   {
     nimi: "Pöytä Arena 800 Ø120",
@@ -215,6 +232,7 @@ export const arabiaKaikkiTilaukset = [
       "Ø120",
       "pulverimaalattu QZ4781",
     ],
+    kuva: "arena-800.jpeg",
   },
   {
     nimi: "Grand Canyon Sohva 3B R",
@@ -228,6 +246,7 @@ export const arabiaKaikkiTilaukset = [
       "Grand canyon 3B R Xorel",
       "Meteor 216 sinivihreä (Vallila) U02",
     ],
+    kuva: "Grand-Canyon-3b.jpeg",
   },
   {
     nimi: "Grand Canyon Sohva 1B L",
@@ -241,6 +260,7 @@ export const arabiaKaikkiTilaukset = [
       "Grand canyon 1B L Xorel",
       "Meteor 216 sinivihreä (Vallila) U02",
     ],
+    kuva: "Grand-Canyon-3b.jpeg",
   },
   {
     nimi: "Grand Canyon Sohva 1B R",
@@ -254,5 +274,6 @@ export const arabiaKaikkiTilaukset = [
       "Grand canyon 1B R Xorel",
       "Meteor 216 sinivihreä (Vallila) U02",
     ],
+    kuva: "Grand-Canyon-3b.jpeg",
   },
 ];
