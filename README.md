@@ -44,13 +44,14 @@ Sovellus hyödyntää useita edistyneitä tekoäly- ja koneoppimismenetelmiä:
 
 4. **Edistynyt tekstin jakaminen (chunking)**:
 
-   - Käyttää RecursiveCharacterTextSplitter-algoritmiä tekstin jakamiseen semanttisesti merkityksellisiin osiin.
+   - Käyttää LagnChainin RecursiveCharacterTextSplitter-algoritmiä tekstin jakamiseen semanttisesti merkityksellisiin osiin.
    - Optimoi kontekstin säilymisen ja parantaa hakutulosten laatua.
 
 5. **Luonnollisen kielen käsittely (NLP)**:
    - Hyödyntää edistyneitä NLP-tekniikoita kysymysten ymmärtämiseen ja kontekstin säilyttämiseen.
    - Sisältää tekniikoita kuten tokenisaatio, lemmatisaatio ja kontekstuaalinen analyysi.
    - NLP-toiminnallisuudet on integroitu sovellukseen LangChain-kirjaston ja OpenAI:n mallien kautta, parantaen merkittävästi chatbotin kykyä ymmärtää ja vastata kysymyksiin Piiroisen huonekalujen huollosta.
+
 6. **Streaming ja asynkroninen prosessointi**:
 
    - Käyttää moderneja asynkronisia tekniikoita, kuten streamausta, mahdollistaen tehokkaan ja reaaliaikaisen vastausten generoinnin.
