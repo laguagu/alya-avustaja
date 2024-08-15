@@ -48,6 +48,7 @@ Sovellus hyödyntää useita edistyneitä tekoäly- ja koneoppimismenetelmiä:
    - Optimoi kontekstin säilymisen ja parantaa hakutulosten laatua.
 
 5. **Luonnollisen kielen käsittely (NLP)**:
+
    - Hyödyntää edistyneitä NLP-tekniikoita kysymysten ymmärtämiseen ja kontekstin säilyttämiseen.
    - Sisältää tekniikoita kuten tokenisaatio, lemmatisaatio ja kontekstuaalinen analyysi.
    - NLP-toiminnallisuudet on integroitu sovellukseen LangChain-kirjaston ja OpenAI:n mallien kautta, parantaen merkittävästi chatbotin kykyä ymmärtää ja vastata kysymyksiin Piiroisen huonekalujen huollosta.

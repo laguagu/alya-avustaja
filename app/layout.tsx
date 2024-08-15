@@ -23,7 +23,10 @@ export default function RootLayout({
   return (
     <html lang="fi">
       <body
-        className={cn("bg-background font-sans antialiased", fontSans.variable)}
+        className={cn(
+          "overflow-y-hidden bg-background font-sans antialiased",
+          fontSans.variable,
+        )}
       >
         {children}
       </body>
