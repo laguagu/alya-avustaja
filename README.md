@@ -18,7 +18,7 @@ Tämä sovellus tarjoaa kattavan ratkaisun kaluston vikojen katseluun, raportoin
 - **Autentikointi**
   - Sovellus käyttää Supabasea autentikointiin JSON Web Token (JWT) -teknologialla.
 - **AI SDK Integraatio**
-  - Sovellus hyödyntää Vercel AI SDK:n useChat-koukkua chatbot-toiminnallisuuden integroimiseen.
+  - Sovellus hyödyntää mm. Vercel AI SDK:n useChat-koukkua chatbot-toiminnallisuuden integroimiseen.
 - **Lunni API Integraatio**
   - Integroitu Lunni API -järjestelmän kanssa vikailmoitusten ja kaluston tietojen hakemiseen.
 
