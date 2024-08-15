@@ -24,10 +24,11 @@ export default function RootLayout({
     <html lang="fi">
       <body
         className={cn(
-          "overflow-y-auto bg-background font-sans antialiased",
+          "min-h-full bg-background font-sans antialiased",
           fontSans.variable,
         )}
       >
+
         {children}
       </body>
     </html>
