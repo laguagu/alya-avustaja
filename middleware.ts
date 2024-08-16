@@ -7,13 +7,24 @@ const protectedRoutes = ["/alya", "/api"];
 const publicRoutes = ["/"];
 
 export default async function middleware(req: NextRequest) {
+  const path = req.nextUrl.pathname;
+  const requestHeaders = new Headers(req.headers);
+
+  // Set x-body-class header based on the route
+  if (path === "/") {
+    requestHeaders.set("x-body-class", "");
+  } else {
+    requestHeaders.set("x-body-class", "overflow-hidden");
+  }
+
   if (
     process.env.NODE_ENV === "development" &&
     req.nextUrl.pathname.startsWith("/api")
   ) {
-    return NextResponse.next();
+    return NextResponse.next({
+      request: { headers: requestHeaders },
+    });
   }
-  const path = req.nextUrl.pathname;
 
   // Kevyt tarkistus: Tarkista vain, onko session-eväste olemassa
   const sessionCookie = req.cookies.get("session");
@@ -49,7 +60,9 @@ export default async function middleware(req: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  return NextResponse.next({
+    request: { headers: requestHeaders },
+  });
 }
 
 // export default async function middleware(req: NextRequest) {
