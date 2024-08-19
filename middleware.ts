@@ -11,11 +11,11 @@ export default async function middleware(req: NextRequest) {
   const requestHeaders = new Headers(req.headers);
 
   // Set x-body-class header based on the route
-  if (path === "/") {
-    requestHeaders.set("x-body-class", "");
-  } else {
-    requestHeaders.set("x-body-class", "overflow-hidden");
-  }
+  // if (path === "/") {
+  //   requestHeaders.set("x-body-class", "");
+  // } else {
+  //   requestHeaders.set("x-body-class", "overflow-hidden");
+  // }
 
   if (
     process.env.NODE_ENV === "development" &&

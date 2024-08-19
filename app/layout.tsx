@@ -20,8 +20,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const headersList = headers();
-  const bodyClass = headersList.get("x-body-class") || "";
+  // const headersList = headers();
+  // const bodyClass = headersList.get("x-body-class") || "";
 
   return (
     <html lang="fi">
@@ -29,7 +29,6 @@ export default function RootLayout({
         className={cn(
           "min-h-full bg-background font-sans antialiased",
           fontSans.variable,
-          bodyClass,
         )}
       >
         {children}
