@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default function Page() {
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full w-full">
       <div className="flex items-center gap-2 mb-4">
         <BackButton />
         <h1 className="text-2xl">Uusi vikailmoitus</h1>
