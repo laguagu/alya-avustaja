@@ -282,7 +282,7 @@ export type FilteredServiceItem = {
 
 export interface IssueFormValues {
   id?: number;
-  location_id?: number | string | undefined; // Huoltotarpeen kuvaus
+  location_id?: number | string; // Huoltotarpeen kuvaus
   priority: string | null; // priority
   problem_description: string | null; // Huoltotarpeen kuvaus
   type: string | null; // type

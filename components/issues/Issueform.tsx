@@ -1,10 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useAction } from "next-safe-action/hooks";
+import { useAction, useOptimisticAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
@@ -47,7 +53,7 @@ import {
 import { AiInstructionButton } from "../Client-Buttons";
 
 interface IssueFormProps {
-  data: IssueFormValues | null;
+  data: IssueFormValues;
   locationName: string | null;
   deviceData: DeviceItemCard | null;
   params?: { id?: string };
@@ -59,13 +65,13 @@ export default function IssueForm({
   deviceData,
 }: IssueFormProps) {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const [textareaRows, setTextareaRows] = useState(2);
   const [instructionContent, setInstructionContent] = useState(
     data?.instruction || "",
   );
-
+  const [isCompleted, setIsCompleted] = useState(data?.is_completed);
   const issueId = data?.id;
-  const isCompleted = data?.is_completed ?? false;
 
   const furnitureInfo = useMemo<FurnitureInfo>(
     () => ({
@@ -95,38 +101,59 @@ export default function IssueForm({
     formState: { isDirty, isSubmitting },
   } = form;
 
-  const { execute: executeStatusChange, isExecuting: isChangingStatus } =
-    useAction(isCompleted ? openIssueAction : closeIssueAction, {
-      onSuccess: () => {
-        toast.success(
-          isCompleted
-            ? "Vikailmoitus avattu uudelleen!"
-            : "Vikailmoitus suljettu!",
-          { duration: 5000 },
-        );
-        router.refresh();
+  const {
+    execute: executeStatusChange,
+    isExecuting: isChangingStatus,
+    optimisticState,
+  } = useOptimisticAction(
+    data.is_completed ? openIssueAction : closeIssueAction,
+    {
+      currentState: data,
+      updateFn: (state, input) => ({
+        ...state,
+        is_completed: !state.is_completed,
+      }),
+      onSuccess: (result) => {
+        if (result.data?.is_completed !== undefined) {
+          toast.success(
+            result.data.is_completed
+              ? "Vikailmoitus suljettu!"
+              : "Vikailmoitus avattu uudelleen!",
+            { duration: 5000 },
+          );
+          setIsCompleted(result.data.is_completed);
+          startTransition(() => {
+            router.refresh();
+          });
+        }
       },
       onError: () => {
         toast.error(
-          isCompleted
+          data.is_completed
             ? "Vikailmoituksen avaaminen epäonnistui"
             : "Vikailmoituksen sulkeminen epäonnistui",
           { duration: 5000 },
         );
       },
-    });
+    },
+  );
 
-  const { execute: executeUpdate, isExecuting } = useAction(updateIssueAction, {
-    onSuccess: () => {
-      toast.success("Vikailmoitus päivitetty! 🎉", { duration: 5000 });
-      router.refresh();
+  const { execute: executeUpdate, isExecuting: isUpdating } = useAction(
+    updateIssueAction,
+    {
+      onSuccess: () => {
+        toast.success("Vikailmoitus päivitetty! 🎉", { duration: 5000 });
+        startTransition(() => {
+          router.refresh();
+        });
+      },
+      onError: () => {
+        toast.error("Vikailmoitus ei päivittynyt onnistuneesti", {
+          duration: 5000,
+        });
+      },
     },
-    onError: () => {
-      toast.error("Vikailmoitus ei päivittynyt onnistuneesti", {
-        duration: 5000,
-      });
-    },
-  });
+  );
 
   const onSubmit = useCallback(
     async (formData: z.infer<typeof FormSchema>) => {
@@ -136,12 +163,9 @@ export default function IssueForm({
     [executeUpdate, issueId],
   );
 
-  const handleStatusChange = useCallback(async () => {
-    const numericIssueId = Number(issueId);
-    if (issueId) {
-      await executeStatusChange({ issueId: numericIssueId });
-    }
-  }, [executeStatusChange, issueId]);
+  const handleStatusChange = useCallback(() => {
+    executeStatusChange({ issueId: Number(data.id) });
+  }, [executeStatusChange, data.id]);
 
   useEffect(() => {
     const lineCount = instructionContent.split("\n").length;
@@ -309,11 +333,13 @@ export default function IssueForm({
             <div className="flex flex-col sm:flex-row justify-between items-center pt-6 space-y-4 sm:space-y-0 sm:space-x-4">
               <Button
                 type="submit"
-                disabled={!isDirty || isSubmitting || isExecuting}
+                disabled={!isDirty || isSubmitting || isUpdating || isPending}
                 variant="default"
                 className="w-full sm:w-auto text-sm px-3 py-2"
               >
-                {isExecuting ? "Tallennetaan..." : "Tallenna muutokset"}
+                {isUpdating || isPending
+                  ? "Tallennetaan..."
+                  : "Tallenna muutokset"}
               </Button>
 
               <AlertDialog>
@@ -321,7 +347,7 @@ export default function IssueForm({
                   <Button
                     type="button"
                     variant={isCompleted ? "outline" : "destructive"}
-                    disabled={isChangingStatus || isExecuting}
+                    disabled={isChangingStatus || isUpdating || isPending}
                     className="w-full sm:w-auto text-sm px-3 py-2"
                   >
                     {isCompleted ? "Avaa uudelleen" : "Sulje vikailmoitus"}

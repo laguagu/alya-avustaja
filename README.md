@@ -18,7 +18,7 @@ Tämä sovellus tarjoaa kattavan ratkaisun kaluston vikojen katseluun, raportoin
 - **Autentikointi**
   - Sovellus käyttää Supabasea autentikointiin JSON Web Token (JWT) -teknologialla.
 - **AI SDK Integraatio**
-  - Sovellus hyödyntää Vercel AI SDK:n useChat-koukkua chatbot-toiminnallisuuden integroimiseen.
+  - Sovellus hyödyntää mm. Vercel AI SDK:n useChat-koukkua chatbot-toiminnallisuuden integroimiseen.
 - **Lunni API Integraatio**
   - Integroitu Lunni API -järjestelmän kanssa vikailmoitusten ja kaluston tietojen hakemiseen.
 
@@ -44,13 +44,15 @@ Sovellus hyödyntää useita edistyneitä tekoäly- ja koneoppimismenetelmiä:
 
 4. **Edistynyt tekstin jakaminen (chunking)**:
 
-   - Käyttää RecursiveCharacterTextSplitter-algoritmiä tekstin jakamiseen semanttisesti merkityksellisiin osiin.
+   - Käyttää LagnChainin RecursiveCharacterTextSplitter-algoritmiä tekstin jakamiseen semanttisesti merkityksellisiin osiin.
    - Optimoi kontekstin säilymisen ja parantaa hakutulosten laatua.
 
 5. **Luonnollisen kielen käsittely (NLP)**:
+
    - Hyödyntää edistyneitä NLP-tekniikoita kysymysten ymmärtämiseen ja kontekstin säilyttämiseen.
    - Sisältää tekniikoita kuten tokenisaatio, lemmatisaatio ja kontekstuaalinen analyysi.
    - NLP-toiminnallisuudet on integroitu sovellukseen LangChain-kirjaston ja OpenAI:n mallien kautta, parantaen merkittävästi chatbotin kykyä ymmärtää ja vastata kysymyksiin Piiroisen huonekalujen huollosta.
+
 6. **Streaming ja asynkroninen prosessointi**:
 
    - Käyttää moderneja asynkronisia tekniikoita, kuten streamausta, mahdollistaen tehokkaan ja reaaliaikaisen vastausten generoinnin.

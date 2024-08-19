@@ -95,7 +95,8 @@ export default function ChatBot({
   );
 
   return (
-    <div className="flex flex-col w-full xl:max-w-[900px] border border-gray-200 rounded-lg shadow-md overflow-hidden mb-6
+    <div
+      className="flex flex-col w-full xl:max-w-[900px] border border-gray-200 rounded-lg shadow-md overflow-hidden mb-6
     min-h-[400px] 
     sm:min-h-[500px] 
     md:min-h-[600px] 
@@ -105,7 +106,8 @@ export default function ChatBot({
     sm:h-[calc(100vh-8rem)] 
     md:h-[calc(100vh-10rem)] 
     lg:h-[calc(100vh-12rem)] 
-    xl:h-[calc(100vh-15rem)]">
+    xl:h-[calc(100vh-15rem)]"
+    >
       <div className="p-4 w-full bg-secondary border-b border-gray-200">
         <h1 className="text-xl sm:text-2xl font-bold text-center text-gray-800">
           Älyäavustaja

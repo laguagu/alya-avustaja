@@ -302,7 +302,7 @@ export async function fetchIssuePageData(
   issueId: string,
   deviceId: string,
 ): Promise<{
-  issueData: IssueFormValues | null;
+  issueData: IssueFormValues;
   deviceData: DeviceItemCard | null;
   locationData: string | null;
   partsList: string[] | null;

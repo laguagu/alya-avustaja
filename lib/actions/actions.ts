@@ -126,6 +126,7 @@ const toggleIssueStatus = async (issueId: number, isCompleted: boolean) => {
     return {
       message: `Vikailmoitus ${isCompleted ? "suljettu" : "avattu"} onnistuneesti`,
       data: responseData,
+      is_completed: isCompleted,
     };
   } catch (error) {
     console.error("Error in toggleIssueStatus:", error);
