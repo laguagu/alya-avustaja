@@ -100,7 +100,6 @@ export async function POST(req: NextRequest) {
     const messages = body.messages ?? []; // Ottaa viestit pyynnön rungosta tai tyhjän taulukon, jos viestejä ei ole
     const previousMessages = messages.slice(0, -1); // Ottaa kaikki viestit paitsi viimeisen
     const currentMessageContent = messages[messages.length - 1].content; // Ottaa viimeisen viestin sisällön
-    console.log("Kaikki viestit:", formatVercelMessages(previousMessages));
     const checkQuestionClarity = (question: string) => {
       if (question.length < 5) {
         return "Voisitko tarkentaa kysymystäsi? Yritä muotoilla se kokonaisena kysymyslauseena ja mainitse, mitä Piiroisen huonekalua kysymys koskee.";

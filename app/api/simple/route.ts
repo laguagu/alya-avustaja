@@ -29,7 +29,6 @@ export async function POST(req: Request) {
   try {
     // Extract the `messages` from the body of the request
     const { messages } = await req.json();
-    console.log(messages);
     const formattedPreviousMessages = messages.slice(0, -1).map(formatMessage);
 
     const currentMessageContent = messages[messages.length - 1].content;
