@@ -82,17 +82,25 @@ export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
   );
 }
 
-const ImagePreview = ({ src, index }: { src: string; index: number }) => (
-  <div className="relative flex justify-center items-center w-full  min-h-[6rem] rounded-xl md:h-full h-64">
-    <Image
-      src={src}
-      alt="Vikailmoituksen kuva"
-      fill
-      quality={48}
-      priority={index < 4} // Priorisoi vain ensimmäiset 4 kuvaa
-      style={{ objectFit: "cover" }}
-      className="rounded-xl sm:object-cover md:object-contain"
-      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-    />
-  </div>
-);
+
+const ImagePreview = ({ src, index }: { src: string; index: number }) => {
+  const [imgSrc, setImgSrc] = useState(src);
+
+  return (
+    <div className="relative flex justify-center items-center w-full min-h-[6rem] rounded-xl md:h-full h-64">
+      <Image
+        src={imgSrc}
+        alt="Vikailmoituksen kuva"
+        fill
+        quality={48}
+        priority={index < 4} // Priorisoi vain ensimmäiset 4 kuvaa
+        style={{ objectFit: "cover" }}
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        className="rounded-xl sm:object-cover md:object-contain"
+        onError={() => {
+          setImgSrc("/vikailmoitus.png"); // Fallback-kuva
+        }}
+      />
+    </div>
+  );
+};

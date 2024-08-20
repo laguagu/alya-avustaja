@@ -66,7 +66,7 @@ export function DialogBasicOne({
           <DialogImage
             src={src}
             alt="Vikailmoituksen kuva"
-            className="h-full w-full"
+            className="h-auto max-h-[36rem] w-full"
           />
           <div className="p-6">
             <DialogTitle className="text-2xl text-zinc-950 dark:text-zinc-50">
