@@ -7,7 +7,7 @@ import { AlertTriangleIcon } from "lucide-react";
 
 export default function Page() {
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full new-issue-page">
       <div className="flex-shrink-0">
         <div className="flex items-center gap-2 mb-4">
           <BackButton />
