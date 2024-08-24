@@ -25,6 +25,7 @@ export const BentoGrid = ({
 export const BentoGridItem = ({
   className,
   title,
+  createdAt,
   description,
   header,
   icon,
@@ -32,6 +33,7 @@ export const BentoGridItem = ({
   issue_id,
 }: {
   className?: string;
+  createdAt?: string;
   title?: string | React.ReactNode;
   description?: string | React.ReactNode;
   header?: React.ReactNode;
@@ -46,6 +48,18 @@ export const BentoGridItem = ({
     params.set(name, value);
     return params.toString();
   };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("fi-FI", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   return (
     <div
       className={cn(
@@ -66,6 +80,10 @@ export const BentoGridItem = ({
         {icon}
         <div className="font-sans font-bold text-neutral-600 dark:text-neutral-200 mb-2 mt-2">
           {title}
+        </div>
+        <div className="font-sans text-xs text-neutral-500 dark:text-neutral-400 mb-2">
+          <span className="font-medium ">Luotu: </span>
+          {createdAt && formatDate(createdAt)}
         </div>
         <div className="font-sans font-normal text-neutral-600 text-xs dark:text-neutral-300">
           {description}

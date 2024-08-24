@@ -242,6 +242,7 @@ export async function fetchServiceWithImage(): Promise<FilteredServiceItem[]> {
     "is_completed",
     "instruction",
     "description",
+    "created",
   ];
 
   const fieldsQuery = fields.join(",");

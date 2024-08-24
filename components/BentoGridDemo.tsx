@@ -5,7 +5,6 @@ import { IconSquareRoundedCheck, IconAlertSquare } from "@tabler/icons-react";
 import { FilteredServiceItem } from "@/data/types";
 import Image from "next/image";
 import { Switch } from "@/components/ui/switch";
-import { motion } from "framer-motion";
 
 export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
   const [showCompleted, setShowCompleted] = useState(false);
@@ -22,6 +21,7 @@ export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
       filteredIssues.map((issue, i) => ({
         issue_id: issue.id,
         title: issue.name,
+        createdAt: issue.created,
         description: issue.problem_description,
         priority: issue.priority,
         device_id: issue.device_id,
@@ -69,6 +69,7 @@ export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
           <BentoGridItem
             key={item.issue_id}
             title={item.title}
+            createdAt={item.createdAt}
             issue_id={item.issue_id}
             device_id={item.device_id}
             description={item.description}
@@ -81,7 +82,6 @@ export function BentoGridDemo({ issues }: { issues: FilteredServiceItem[] }) {
     </div>
   );
 }
-
 
 const ImagePreview = ({ src, index }: { src: string; index: number }) => {
   const [imgSrc, setImgSrc] = useState(src);
