@@ -5,6 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import piiroinenHuoltoOhjeet from "@/data/piiroinen-huolto-ohjeet";
+import arena022HuoltoOhjeet from "@/data/arena-022-ohjeet";
 import { getUser } from "@/app/_auth/dal";
 
 export const dynamic = "force-dynamic";
@@ -26,18 +27,18 @@ function preprocessText(text: string): string {
 }
 
 export async function POST(req: NextRequest) {
-  const user = await getUser();
-
-  if (!user || user.role !== "admin") {
-    return Response.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  // const user = await getUser();
+  
+  // if (!user || user.role !== "admin") {
+  //   return Response.json({ error: "Unauthorized" }, { status: 401 });
+  // }
   //   function replaceMarkdownLinks(careInstructionsText: string) {
   //     // This will replace markdown links with the format "Link Text (URL)"
   //     return careInstructionsText.replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1 ($2)");
   //   }
   //   const replacedMarkdownText = replaceMarkdownLinks(careInstructionsText);
 
-  const text = piiroinenHuoltoOhjeet;
+  const text = arena022HuoltoOhjeet;
 
   try {
     const client = createClient(
@@ -46,12 +47,17 @@ export async function POST(req: NextRequest) {
     );
 
     const splitter = new RecursiveCharacterTextSplitter({
-      chunkSize: 1600,
+      chunkSize: 1800,
       chunkOverlap: 0,
       separators: ["\n\n", "\n", " ", ""],
     });
 
     const splitDocuments = await splitter.createDocuments([text]);
+
+    // console.log("Split documents: ", splitDocuments);
+    // console.log("Number of split documents: ", splitDocuments.length);
+    // return NextResponse.json({ ok: true }, { status: 200 });
+
     // Metadatan kanssa
     // const splitDocuments = await splitter.createDocuments(
     //   [text],
