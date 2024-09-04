@@ -28,7 +28,7 @@ function preprocessText(text: string): string {
 
 export async function POST(req: NextRequest) {
   // const user = await getUser();
-  
+
   // if (!user || user.role !== "admin") {
   //   return Response.json({ error: "Unauthorized" }, { status: 401 });
   // }

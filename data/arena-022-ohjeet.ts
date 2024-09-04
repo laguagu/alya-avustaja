@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-anonymous-default-export
-export default`
+export default `
 Piiroinen Arena 022 Tuolin Huolto-ohjeet
 
 Yleiset Huolto-ohjeet:
