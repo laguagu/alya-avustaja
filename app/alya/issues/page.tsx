@@ -1,11 +1,11 @@
 import { Suspense } from "react";
 import { Separator } from "@/components/ui/separator";
-import { NewIssuesButton } from "@/components/issues/newissue-button";
 import { Badge } from "@/components/ui/badge";
 import { BentoGridDemo } from "@/components/BentoGridDemo";
 import { fetchServiceWithImage } from "@/lib/dataFetching";
 import { FilteredServiceItem } from "@/data/types";
 import { LoadingIssuePageSkeleton } from "@/components/skeletons";
+import { RevalideButton } from "@/components/issues/revalidate-button";
 
 export default async function Page() {
   const issuesData: FilteredServiceItem[] = await fetchServiceWithImage();
@@ -29,7 +29,7 @@ export default async function Page() {
             </div>
           </div>
           <div className="md:ml-4 mt-6 md:mt-0">
-            <NewIssuesButton />
+            <RevalideButton />
           </div>
         </div>
         <Separator className="md:my-4 my-2" />

@@ -157,3 +157,7 @@ export async function getSessionAction() {
     return null;
   }
 }
+
+export async function revalidateIssues() {
+  revalidateTag("issues");
+}
