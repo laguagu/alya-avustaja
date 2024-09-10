@@ -1,12 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
-// import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
-import { createClient } from "@supabase/supabase-js";
+import { getUser } from "@/app/_auth/dal";
+import arena033HuoltoOhje from "@/data/arena-033-ohje";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 import { OpenAIEmbeddings } from "@langchain/openai";
-import piiroinenHuoltoOhjeet from "@/data/piiroinen-huolto-ohjeet";
-import { getUser } from "@/app/_auth/dal";
-
+import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
+import { createClient } from "@supabase/supabase-js";
+import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 // Before running, follow set-up instructions at
@@ -37,7 +35,8 @@ export async function POST(req: NextRequest) {
   //   }
   //   const replacedMarkdownText = replaceMarkdownLinks(careInstructionsText);
 
-  const text = piiroinenHuoltoOhjeet;
+  // const text = piiroinenHuoltoOhjeet;
+  const text = arena033HuoltoOhje;
 
   try {
     const client = createClient(
@@ -46,7 +45,7 @@ export async function POST(req: NextRequest) {
     );
 
     const splitter = new RecursiveCharacterTextSplitter({
-      chunkSize: 1600,
+      chunkSize: 1900,
       chunkOverlap: 0,
       separators: ["\n\n", "\n", " ", ""],
     });
@@ -57,6 +56,8 @@ export async function POST(req: NextRequest) {
     //   [text],
     //   [{ source: "piiroinen_care_instructions" }]
     // );
+    console.log("Split documents: ", splitDocuments);
+    console.log("Split documents length: ", splitDocuments.length);
     const vectorstore = await SupabaseVectorStore.fromDocuments(
       splitDocuments,
       new OpenAIEmbeddings(),

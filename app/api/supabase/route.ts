@@ -1,14 +1,13 @@
 // Tämä koodi käyttää LangChaini uutta LangChain Expression Language (LCEL) raknnetta https://js.langchain.com/docs/expression_language/
-import { NextRequest, NextResponse } from "next/server";
-import { Message as VercelChatMessage, LangChainAdapter } from "ai";
-import { createClient } from "@supabase/supabase-js";
-import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
-import { PromptTemplate } from "@langchain/core/prompts";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
-import { RunnableSequence } from "@langchain/core/runnables";
 import { StringOutputParser } from "@langchain/core/output_parsers";
+import { PromptTemplate } from "@langchain/core/prompts";
+import { RunnableSequence } from "@langchain/core/runnables";
+import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
+import { createClient } from "@supabase/supabase-js";
+import { LangChainAdapter, Message as VercelChatMessage } from "ai";
 import { formatDocumentsAsString } from "langchain/util/document";
-import { Document } from "@langchain/core/documents";
+import { NextRequest, NextResponse } from "next/server";
 // Määritellään maksimi keskusteluhistorian pituus
 const MAX_CHAT_HISTORY_LENGTH = 14;
 
@@ -137,7 +136,7 @@ export async function POST(req: NextRequest) {
 
     const vectorstore = new SupabaseVectorStore(new OpenAIEmbeddings(), {
       client,
-      tableName: "piiroinen_huolto_ohjeet",
+      tableName: "piiroinen_chairs",
       queryName: "match_huolto_ohjeet",
     });
 
