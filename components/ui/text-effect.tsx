@@ -1,5 +1,5 @@
 "use client";
-import { motion, Variants } from "framer-motion";
+import { HTMLMotionProps, motion, Variants } from "framer-motion";
 import React from "react";
 
 type PresetType = "blur" | "shake" | "scale" | "fade" | "slide";
@@ -125,8 +125,12 @@ export function TextEffect({
   const containerVariants = variants?.container || selectedVariants.container;
   const itemVariants = variants?.item || selectedVariants.item;
 
+  const MotionComponent = motion[
+    as as keyof typeof motion
+  ] as React.ComponentType<HTMLMotionProps<any>>;
+
   return (
-    <MotionTag
+    <MotionComponent
       initial="hidden"
       animate="visible"
       aria-label={children}
@@ -141,6 +145,6 @@ export function TextEffect({
           per={per}
         />
       ))}
-    </MotionTag>
+    </MotionComponent>
   );
 }

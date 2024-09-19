@@ -6,8 +6,8 @@ import { insertUser } from "./db";
 async function main() {
   // const plainPassword = process.env.ADMIN_PASSWORD;
   // const userEmail = process.env.ADMIN_EMAIL;
-  const plainPassword = process.env.USER_PASSWORD;
-  const userEmail = process.env.USER_EMAIL;
+  const userEmail = process.env.ADMIN_EMAIL;
+  const plainPassword = process.env.ADMIN_PASSWORD;
 
   if (!plainPassword || !userEmail) {
     console.error(
