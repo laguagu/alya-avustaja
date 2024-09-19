@@ -1,5 +1,5 @@
-import { VectorStore } from "@langchain/core/vectorstores";
 import { Document } from "@langchain/core/documents";
+import { VectorStore } from "@langchain/core/vectorstores";
 
 export default class RelevanceThresholdRetriever {
   private vectorStore: VectorStore;
@@ -29,7 +29,6 @@ export default class RelevanceThresholdRetriever {
       return this.cache.get(query)!;
     }
 
-    console.log("Query in getRelevantDocuments:", query);
     if (!query) {
       console.error("Received empty query in getRelevantDocuments");
       return [];

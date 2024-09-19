@@ -141,11 +141,14 @@ export async function POST(req: NextRequest) {
       process.env.SUPABASE_PRIVATE_KEY!,
     );
 
-    const vectorstore = new SupabaseVectorStore(new OpenAIEmbeddings(), {
-      client,
-      tableName: "piiroinen_chairs",
-      queryName: "match_huolto_ohjeet",
-    });
+    const vectorstore = new SupabaseVectorStore(
+      new OpenAIEmbeddings({ model: "text-embedding-3-small" }),
+      {
+        client,
+        tableName: "piiroinen_chairs",
+        queryName: "match_huolto_ohjeet",
+      },
+    );
 
     // Muodostaa LangChain-ketjuja tiedonhaulle ja vastausten generoinnille.
     const standaloneQuestionChain = RunnableSequence.from([

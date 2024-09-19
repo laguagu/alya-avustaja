@@ -1,4 +1,4 @@
-import arena033HuoltoOhje from "@/data/arena-033-ohje";
+import piiroinenHuoltoOhjeet from "@/data/piiroinen-huolto-ohjeet";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
   //   const replacedMarkdownText = replaceMarkdownLinks(careInstructionsText);
 
   // const text = piiroinenHuoltoOhjeet;
-  const text = arena033HuoltoOhje;
+  const text = piiroinenHuoltoOhjeet;
 
   try {
     const client = createClient(
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
     console.log("Split documents length: ", splitDocuments.length);
     const vectorstore = await SupabaseVectorStore.fromDocuments(
       splitDocuments,
-      new OpenAIEmbeddings(),
+      new OpenAIEmbeddings({ model: "text-embedding-3-small" }),
       {
         client,
         tableName: "piiroinen_chairs",

@@ -58,27 +58,33 @@ const condenseQuestionPrompt = PromptTemplate.fromTemplate(
 // Answer in Finnish:
 // `;
 const FI_ANSWER_TEMPLATE = `
-Olet suomenkielinen tekoälyavustaja, joka on erikoistunut Piiroisen huonekalujen huoltoon ja korjaukseen. Tehtäväsi on auttaa huoltohenkilöstöä huonekalujen hoito-ohjeissa. 
+Olet suomenkielinen tekoälyavustaja, joka on erikoistunut Piiroisen huonekalujen huoltoon ja korjaukseen. Tehtäväsi on auttaa huoltohenkilöstöä huonekalujen hoito-ohjeissa.
 
 Ohjeet vastaamiseen:
 1. Lue huolellisesti annettu konteksti ja keskusteluhistoria.
-2. Huomioi käyttäjän aiemmat kysymykset ja antamasi vastaukset.
-3. Älä koskaan mainitse tai viittaa tiettyyn tuolimalliin (kuten Arena 022), ellei käyttäjä ole sitä erikseen maininnut.
-4. Aloita vastaus aina yleisillä ohjeilla tai tiedoilla, jotka pätevät useimpiin Piiroisen tuoleihin.
-5. Vastaa kysymykseen selkeästi ja ytimekkäästi käyttäen yksinkertaisia lauseita ja tarvittaessa listoja.
-6. Tarjoa aina konkreettisia, yleisiä ohjeita seuraavasti:
-   a) Anna vähintään 3-4 yleistä askelta tai vinkkiä kysyttyyn huoltotoimenpiteeseen.
-   b) Mainitse yleisiä työkaluja tai materiaaleja, joita toimenpiteessä saatetaan tarvita.
-   c) Kerro mahdollisista varotoimenpiteistä tai huomioitavista asioista.
-7. Jos et tiedä tarkkaa vastausta:
-   a) Ilmaise se kohteliaasti, mutta tarjoa silti hyödyllisiä yleisiä ohjeita.
-   b) Ehdota, mistä käyttäjä voisi saada lisätietoa (esim. Piiroisen verkkosivut tai asiakaspalvelu).
-8. Kannusta käyttäjää ottamaan yhteyttä Piiroisen asiakaspalveluun vain, jos toimenpide vaikuttaa monimutkaiselta tai vaaralliselta tehdä itse.
-9. Päätä vastauksesi aina rohkaisevaan kommenttiin tai tarjoukseen auttaa lisää tarvittaessa.
+2. Huomioi käyttäjän aiemmat kysymykset ja antamasi vastaukset välttääksesi toistoa.
+3. Älä mainitse tai viittaa tiettyyn tuolimalliin (kuten Arena 022), ellei käyttäjä ole sitä erikseen maininnut.
+4. Aloita vastaus tilanteeseen sopivalla tavalla. Vaihtele aloitustapojasi, esimerkiksi:
+   a) Esitä tarkentava kysymys: "Tarkistetaanpa ensin, onko kyseessä [tietty ongelma]?"
+   b) Tarjoa välitön toimintaehdotus: "Aloitetaan tarkistamalla [ensimmäinen askel]."
+   c) Anna lyhyt yleiskatsaus: "Huonekalun [osa] huollossa on muutama tärkeä vaihe."
+5. Vastaa kysymykseen selkeästi ja ytimekkäästi. Käytä yksinkertaisia lauseita ja tarvittaessa listoja.
+6. Tarjoa konkreettisia ohjeita seuraavasti:
+   a) Anna 3-4 täsmällistä askelta tai vinkkiä kysyttyyn huoltotoimenpiteeseen.
+   b) Mainitse tarvittavat työkalut tai materiaalit.
+   c) Korosta erityisiä varotoimenpiteitä tai huomioitavia asioita.
+7. Jos et löydä tarkkaa vastausta annetusta kontekstista:
+   a) Ilmaise se rehellisesti, mutta tarjoa silti hyödyllisiä yleisiä ohjeita.
+   b) Ehdota luovia ratkaisuja perustuen yleisiin huonekalujen huolto-ohjeisiin.
+   c) Suosittele lisätiedon lähteitä (esim. Piiroisen verkkosivut tai asiakaspalvelu).
+8. Käytä ammattimaista, mutta ystävällistä kieltä. Vältä liian teknistä jargonia.
+9. Sisällytä vastaukseen käytännön esimerkkejä tai vertauksia helpottamaan ymmärtämistä.
+10. Päätä vastauksesi vaihtoehtoisilla tavoilla:
+    a) Kysy, tarvitseeko käyttäjä lisätietoja jostakin tietystä vaiheesta.
+    b) Rohkaise kokeilemaan annettuja ohjeita ja pyydä palautetta tuloksista.
+    c) Ehdota seuraavaa askelta tai ennakoi mahdollisia jatkokysymyksiä.
 
-Muista: Älä koskaan sano "valitettavasti en voi antaa tarkkoja ohjeita". Sen sijaan, tarjoa aina yleisiä, hyödyllisiä ohjeita.
-
-Älä käytä erikoismerkkejä tai muotoiluja. Vastaa aina suomeksi.
+Muista: Jokaisen vastauksen tulee olla yksilöllinen ja tilanteeseen räätälöity. Vältä geneerisiä vastauksia ja keskity käyttäjän spesifiseen ongelmaan.
 
 <annettu_konteksti>
 {context}
@@ -134,11 +140,14 @@ export async function POST(req: NextRequest) {
       process.env.SUPABASE_PRIVATE_KEY!,
     );
 
-    const vectorstore = new SupabaseVectorStore(new OpenAIEmbeddings(), {
-      client,
-      tableName: "piiroinen_chairs",
-      queryName: "match_huolto_ohjeet",
-    });
+    const vectorstore = new SupabaseVectorStore(
+      new OpenAIEmbeddings({ model: "text-embedding-3-small" }),
+      {
+        client,
+        tableName: "piiroinen_chairs",
+        queryName: "match_huolto_ohjeet",
+      },
+    );
 
     // Muodostaa LangChain-ketjuja tiedonhaulle ja vastausten generoinnille.
     const standaloneQuestionChain = RunnableSequence.from([
@@ -153,14 +162,20 @@ export async function POST(req: NextRequest) {
       return 5;
     };
     // Hakee dokumentit Supabase-tietokannasta.
-    // let resolveWithDocuments: (value: Document[]) => void;
+    // let resolveWithDocuments: (value: {
+    // documents: Document[];
+    //   topScore: number;
+    // }) => void;
     const retriever = vectorstore.asRetriever({
       k: getKValue(currentMessageContent),
       // callbacks: [
       //   {
       //     handleRetrieverEnd(documents: Document<Record<string, any>>[]) {
-      //       console.log("documents", documents); // Tulostaa kaikki haetut dokumentit
-      //       resolveWithDocuments(documents); // Kun dokumentit on haettu, ratkaisee lupauksen dokumenteilla
+      //       console.log("Retrieved documents:", documents);
+      //       const topScore = Math.max(
+      //         ...documents.map((doc) => doc.metadata.similarity || 0),
+      //       );
+      //       console.log("Top similarity score:", topScore);
       //     },
       //   },
       // ],
