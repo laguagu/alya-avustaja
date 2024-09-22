@@ -1,9 +1,13 @@
-import clsx from "clsx";
 import { Message } from "ai";
-import React from "react";
+import clsx from "clsx";
+import { ThumbsDown, ThumbsUp } from "lucide-react";
+import { useState } from "react";
+import { Button } from "./ui/button";
 
 type ChatMessageProps = {
   message: Message;
+  onFeedback?: (isPositive: string) => void;
+  showFeedback?: boolean;
 };
 
 // Funktio, joka käsittelee lihavoinnit ja numeroidut listat
@@ -83,8 +87,30 @@ export const formatMessage = (content: string) => {
   });
 };
 
-function ChatMessage({ message }: ChatMessageProps) {
+function ChatMessage({
+  message,
+  onFeedback,
+  showFeedback = false,
+}: ChatMessageProps) {
   const isUser = message.role === "user";
+  const [feedbackGiven, setFeedbackGiven] = useState<boolean | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleFeedback = async (isPositive: boolean) => {
+    if (onFeedback && !isSubmitting) {
+      setIsSubmitting(true);
+      try {
+        await onFeedback(isPositive.toString());
+        setFeedbackGiven(isPositive);
+      } catch (error) {
+        console.error("Error submitting feedback:", error);
+      } finally {
+        setIsSubmitting(false);
+      }
+    }
+  };
+
+  // formatMessage-funktio pysyy samana
 
   return (
     <li
@@ -92,17 +118,56 @@ function ChatMessage({ message }: ChatMessageProps) {
         "justify-end": !isUser,
       })}
     >
-      <div
-        className={clsx(
-          "rounded-xl p-4 bg-background shadow-md",
-          "max-w-[75%] break-words", // Lisätty maksimileveys ja sanojen rivitys
-          {
-            "ml-auto": !isUser, // Siirtää viestin oikealle, jos ei ole käyttäjä
-          },
-        )}
-      >
-        <div className="text-primary">{formatMessage(message.content)}</div>
-      </div>
+      {isUser ? (
+        <div
+          className={clsx(
+            "rounded-xl p-4 bg-background shadow-md",
+            "max-w-[75%] break-words",
+          )}
+        >
+          <div className="text-primary">{formatMessage(message.content)}</div>
+        </div>
+      ) : (
+        <div className="flex flex-col items-end">
+          <div
+            className={clsx(
+              "rounded-xl p-4 bg-background shadow-md",
+              "max-w-[75%] break-words",
+            )}
+          >
+            <div className="text-primary">{formatMessage(message.content)}</div>
+          </div>
+          {showFeedback && feedbackGiven === null && (
+            <div className="mt-2 flex space-x-2">
+              <Button
+                onClick={() => handleFeedback(true)}
+                variant="outline"
+                size="sm"
+                disabled={isSubmitting}
+              >
+                <ThumbsUp className="h-4 w-4 mr-2" />
+                Hyvä vastaus
+              </Button>
+              <Button
+                onClick={() => handleFeedback(false)}
+                variant="outline"
+                size="sm"
+                disabled={isSubmitting}
+              >
+                <ThumbsDown className="h-4 w-4 mr-2" />
+                Huono vastaus
+              </Button>
+            </div>
+          )}
+          {feedbackGiven !== null && (
+            <div className="mt-2 text-sm text-gray-500">
+              {feedbackGiven
+                ? "Kiitos positiivisesta palautteesta!"
+                : "Kiitos palautteesta. Pahoittelemme, että vastaus ei ollut hyödyllinen."}
+            </div>
+          )}
+        </div>
+      )}
     </li>
   );
 }

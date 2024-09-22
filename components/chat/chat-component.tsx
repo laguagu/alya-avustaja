@@ -1,16 +1,16 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useRef, useEffect, useMemo, useCallback } from "react";
-import { Message } from "ai";
-import { Send, Mic, X } from "lucide-react";
-import { TailSpin, Rings } from "react-loader-spinner";
-import clsx from "clsx";
 import ChatMessage from "@/components/chat-message";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useAudioRecording } from "@/lib/hooks/useAudioRecording";
 import { useChatMessages } from "@/lib/hooks/UseChatMessages";
 import { useTextToSpeech } from "@/lib/hooks/useTextToSpeech";
-import { useAudioRecording } from "@/lib/hooks/useAudioRecording";
+import { Message } from "ai";
+import clsx from "clsx";
+import { Mic, Send, X } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
+import { Rings, TailSpin } from "react-loader-spinner";
 
 interface TTSResponse {
   audioURL: string;
@@ -30,6 +30,7 @@ export default function ChatComponent({
     handleInputChange,
     handleSubmit,
     isLoading,
+    handleFeedback,
   } = useChatMessages(initialSessionUserId);
   const { isPreparingAudio, isPlaying } = useTextToSpeech();
   const {
@@ -63,10 +64,17 @@ export default function ChatComponent({
 
   const chatMessages = useMemo(
     () =>
-      primaryMessages.map((m: Message) => (
-        <ChatMessage key={m.id} message={m} />
+      primaryMessages.map((m: Message, index: number) => (
+        <ChatMessage
+          key={m.id}
+          message={m}
+          onFeedback={(isPositive) => handleFeedback(isPositive)}
+          showFeedback={
+            index === primaryMessages.length - 1 && m.role === "assistant"
+          }
+        />
       )),
-    [primaryMessages],
+    [handleFeedback, primaryMessages],
   );
 
   return (

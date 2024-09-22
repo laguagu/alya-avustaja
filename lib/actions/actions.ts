@@ -1,12 +1,12 @@
 "use server";
-import { ChatMessage, IssueFormValues } from "@/data/types";
+import { insertChatFeedback, insertChatMessage } from "@/app/_auth/dal";
+import { verifySession } from "@/app/_auth/sessions";
+import { ChatMessage } from "@/data/types";
 import { actionClient } from "@/lib/safe-actions";
 import { FormSchema, NewIssueFormSchem } from "@/lib/schemas";
 import { flattenValidationErrors } from "next-safe-action";
-import { z } from "zod";
 import { revalidateTag } from "next/cache";
-import { verifySession } from "@/app/_auth/sessions";
-import { insertChatMessage } from "@/app/_auth/dal";
+import { z } from "zod";
 
 export const updateIssueAction = actionClient
   .schema(FormSchema, {
@@ -147,6 +147,14 @@ export const openIssueAction = actionClient
 
 export async function insertChatMessageAction(message: ChatMessage) {
   return await insertChatMessage(message);
+}
+
+export async function insertChatFeedbackAction(feedback: {
+  userId: number;
+  isPositive: boolean;
+  content: string;
+}) {
+  return await insertChatFeedback(feedback);
 }
 
 export async function getSessionAction() {

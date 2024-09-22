@@ -307,6 +307,14 @@ export interface ChatMessage {
   createdAt: Date;
 }
 
+export interface ChatFeedback {
+  id: number;
+  messageId: number;
+  userId: number;
+  isPositive: boolean;
+  createdAt: Date;
+}
+
 export const issuesData: ServiceTask[] = [
   {
     id: 5,

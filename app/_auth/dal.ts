@@ -1,15 +1,17 @@
-import "server-only";
+import { ChatMessage } from "@/data/types";
 import { db } from "@/db/drizzle/db";
+import {
+  chatFeedback,
+  chatMessages,
+  NewChatFeedback,
+  NewChatMessage,
+  NewUser,
+  users,
+} from "@/db/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { cache } from "react";
-import {
-  NewChatMessage,
-  users,
-  chatMessages,
-  NewUser,
-} from "@/db/drizzle/schema";
+import "server-only";
 import { verifySession } from "./sessions";
-import { ChatMessage } from "@/data/types";
 
 export const getUser = cache(async () => {
   const session = await verifySession();
@@ -55,4 +57,8 @@ export const insertChatMessage = async (message: ChatMessage) => {
   };
 
   return db.insert(chatMessages).values(newMessage).returning();
+};
+
+export const insertChatFeedback = async (feedback: NewChatFeedback) => {
+  return db.insert(chatFeedback).values(feedback).returning();
 };

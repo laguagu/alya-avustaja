@@ -1,7 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Message } from "ai";
 import { useChat } from "@ai-sdk/react";
-import { insertChatMessageAction } from "../actions/actions";
+import { Message } from "ai";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  insertChatFeedbackAction,
+  insertChatMessageAction,
+} from "../actions/actions";
 
 const MAX_STORAGE_SIZE = 4 * 1024 * 1024; // 4 MB
 const MESSAGE_EXPIRATION_TIME = 2 * 24 * 60 * 60 * 1000; // 2 days in milliseconds
@@ -60,6 +63,28 @@ export function useChatMessages(initialSessionUserId: number | null) {
       loadedRef.current = true;
     }
   }, [setMessages]);
+
+  const handleFeedback = useCallback(
+    async (isPositive: string) => {
+      if (!sessionUserId || primaryMessages.length === 0) return;
+
+      const lastAssistantMessage = primaryMessages[primaryMessages.length - 1];
+      if (lastAssistantMessage.role !== "assistant") return;
+
+      try {
+        await insertChatFeedbackAction({
+          userId: sessionUserId,
+          isPositive: isPositive === "true",
+          content: lastAssistantMessage.content,
+        });
+        return { success: true, message: "Feedback submitted successfully" };
+      } catch (error) {
+        console.error("Error saving feedback:", error);
+        return { success: false, message: "Failed to submit feedback" };
+      }
+    },
+    [sessionUserId, primaryMessages],
+  );
 
   // Poista vanhimpia viestejä, jos viestihistoria ylittää tallennuskoon rajan
   const trimMessages = useCallback((messages: Message[], maxSize: number) => {
@@ -135,5 +160,6 @@ export function useChatMessages(initialSessionUserId: number | null) {
     handleInputChange,
     handleSubmit,
     isLoading,
+    handleFeedback,
   };
 }

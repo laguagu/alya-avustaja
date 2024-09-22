@@ -1,16 +1,15 @@
+import { InferInsertModel, sql } from "drizzle-orm";
 import {
+  boolean,
+  integer,
+  jsonb,
+  pgEnum,
+  pgTable,
   serial,
   text,
-  pgTable,
-  uniqueIndex,
-  integer,
   timestamp,
-  time,
-  jsonb,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
-import { InferInsertModel } from "drizzle-orm";
-import { pgEnum } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
 
 export const userRole = pgEnum("user_role", ["user", "admin"]);
 
@@ -50,6 +49,15 @@ export const chatMessages = pgTable("chat_messages", {
     .notNull(),
 });
 
+export const chatFeedback = pgTable("chat_feedback", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  isPositive: boolean("is_positive").notNull(),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type NewChatFeedback = InferInsertModel<typeof chatFeedback>;
 export type NewUser = InferInsertModel<typeof users>;
 export type NewSession = InferInsertModel<typeof sessions>;
 export type NewChatMessage = InferInsertModel<typeof chatMessages>;
