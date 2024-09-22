@@ -1,3 +1,4 @@
+"use client";
 import { Message } from "ai";
 import clsx from "clsx";
 import { ThumbsDown, ThumbsUp } from "lucide-react";

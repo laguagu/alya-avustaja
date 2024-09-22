@@ -1,17 +1,18 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useChat } from "@ai-sdk/react";
-import { useRef, useEffect, useMemo, useCallback } from "react";
-import { Message } from "ai";
-import { Send, Mic } from "lucide-react";
-import { TailSpin, Rings } from "react-loader-spinner";
-import ChatMessage from "../chat-message";
-import clsx from "clsx";
+import { Input } from "@/components/ui/input";
 import { insertChatMessageAction } from "@/lib/actions/actions";
-import { useTextToSpeech } from "@/lib/hooks/useTextToSpeech";
 import { useAudioRecording } from "@/lib/hooks/useAudioRecording";
+import { useChatMessages } from "@/lib/hooks/UseChatMessages";
+import { useTextToSpeech } from "@/lib/hooks/useTextToSpeech";
+import { useChat } from "@ai-sdk/react";
+import { Message } from "ai";
+import clsx from "clsx";
+import { Mic, Send } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
+import { Rings, TailSpin } from "react-loader-spinner";
+import ChatMessage from "../chat-message";
 
 interface ChatBotProps {
   furnitureName: string;
@@ -24,6 +25,7 @@ export default function ChatBot({
 }: ChatBotProps) {
   const chatParent = useRef<HTMLUListElement>(null);
   const { isPreparingAudio, isPlaying } = useTextToSpeech();
+  const { handleFeedback } = useChatMessages(sessionUserId);
   const {
     recording,
     isProcessingAudio,
@@ -87,10 +89,17 @@ export default function ChatBot({
 
   const chatMessages = useMemo(
     () =>
-      primaryMessages.map((m: Message) => (
-        <ChatMessage key={m.id} message={m} />
+      primaryMessages.map((m: Message, index: number) => (
+        <ChatMessage
+          key={m.id}
+          message={m}
+          onFeedback={(isPositive) => handleFeedback(isPositive)}
+          showFeedback={
+            index === primaryMessages.length - 1 && m.role === "assistant"
+          }
+        />
       )),
-    [primaryMessages],
+    [handleFeedback, primaryMessages],
   );
 
   return (
