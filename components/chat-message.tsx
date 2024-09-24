@@ -4,10 +4,11 @@ import clsx from "clsx";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
 
 type ChatMessageProps = {
   message: Message;
-  onFeedback?: (isPositive: string) => void;
+  onFeedback?: (isPositive: boolean, details: string) => Promise<void>;
   showFeedback?: boolean;
 };
 
@@ -96,13 +97,20 @@ function ChatMessage({
   const isUser = message.role === "user";
   const [feedbackGiven, setFeedbackGiven] = useState<boolean | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [feedbackDetails, setFeedbackDetails] = useState("");
+  const [showDetailsInput, setShowDetailsInput] = useState(false);
 
-  const handleFeedback = async (isPositive: boolean) => {
-    if (onFeedback && !isSubmitting) {
+  const handleFeedback = (isPositive: boolean) => {
+    setFeedbackGiven(isPositive);
+    setShowDetailsInput(true);
+  };
+
+  const submitFeedback = async () => {
+    if (onFeedback && feedbackGiven !== null) {
       setIsSubmitting(true);
       try {
-        await onFeedback(isPositive.toString());
-        setFeedbackGiven(isPositive);
+        await onFeedback(feedbackGiven, feedbackDetails);
+        setShowDetailsInput(false);
       } catch (error) {
         console.error("Error submitting feedback:", error);
       } finally {
@@ -110,8 +118,6 @@ function ChatMessage({
       }
     }
   };
-
-  // formatMessage-funktio pysyy samana
 
   return (
     <li
@@ -144,7 +150,6 @@ function ChatMessage({
                 onClick={() => handleFeedback(true)}
                 variant="outline"
                 size="sm"
-                disabled={isSubmitting}
               >
                 <ThumbsUp className="h-4 w-4 mr-2" />
                 Hyvä vastaus
@@ -153,14 +158,26 @@ function ChatMessage({
                 onClick={() => handleFeedback(false)}
                 variant="outline"
                 size="sm"
-                disabled={isSubmitting}
               >
                 <ThumbsDown className="h-4 w-4 mr-2" />
                 Huono vastaus
               </Button>
             </div>
           )}
-          {feedbackGiven !== null && (
+          {showDetailsInput && (
+            <div className="mt-2 w-full max-w-md">
+              <Textarea
+                placeholder="Kerro lisää palautteestasi..."
+                value={feedbackDetails}
+                onChange={(e) => setFeedbackDetails(e.target.value)}
+                className="mb-2"
+              />
+              <Button onClick={submitFeedback} disabled={isSubmitting}>
+                Lähetä palaute
+              </Button>
+            </div>
+          )}
+          {!showDetailsInput && feedbackGiven !== null && (
             <div className="mt-2 text-sm text-gray-500">
               {feedbackGiven
                 ? "Kiitos positiivisesta palautteesta!"

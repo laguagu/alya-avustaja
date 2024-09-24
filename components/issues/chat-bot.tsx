@@ -93,7 +93,9 @@ export default function ChatBot({
         <ChatMessage
           key={m.id}
           message={m}
-          onFeedback={(isPositive) => handleFeedback(isPositive)}
+          onFeedback={(isPositive: boolean, details: string) =>
+            handleFeedback(isPositive, details)
+          }
           showFeedback={
             index === primaryMessages.length - 1 && m.role === "assistant"
           }

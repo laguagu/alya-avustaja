@@ -54,6 +54,7 @@ export const chatFeedback = pgTable("chat_feedback", {
   userId: integer("user_id").notNull(),
   isPositive: boolean("is_positive").notNull(),
   content: text("content").notNull(),
+  feedbackDetails: text("feedback_details"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

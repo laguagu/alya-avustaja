@@ -1,0 +1,1 @@
+ALTER TABLE "chat_feedback" ADD COLUMN "feedback_details" text;

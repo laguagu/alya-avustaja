@@ -65,7 +65,7 @@ export function useChatMessages(initialSessionUserId: number | null) {
   }, [setMessages]);
 
   const handleFeedback = useCallback(
-    async (isPositive: string) => {
+    async (isPositive: boolean, details: string) => {
       if (!sessionUserId || primaryMessages.length === 0) return;
 
       const lastAssistantMessage = primaryMessages[primaryMessages.length - 1];
@@ -74,13 +74,13 @@ export function useChatMessages(initialSessionUserId: number | null) {
       try {
         await insertChatFeedbackAction({
           userId: sessionUserId,
-          isPositive: isPositive === "true",
+          isPositive: isPositive,
           content: lastAssistantMessage.content,
+          feedbackDetails: details,
         });
-        return { success: true, message: "Feedback submitted successfully" };
       } catch (error) {
         console.error("Error saving feedback:", error);
-        return { success: false, message: "Failed to submit feedback" };
+        throw error; // Heitetään virhe eteenpäin, jotta se voidaan käsitellä ChatBot-komponentissa
       }
     },
     [sessionUserId, primaryMessages],

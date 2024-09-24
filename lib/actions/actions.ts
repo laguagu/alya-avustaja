@@ -153,6 +153,7 @@ export async function insertChatFeedbackAction(feedback: {
   userId: number;
   isPositive: boolean;
   content: string;
+  feedbackDetails: string;
 }) {
   return await insertChatFeedback(feedback);
 }
