@@ -1,4 +1,9 @@
-import { DeviceItemCard, IssueFormValues } from "@/data/types";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import {
   Card,
   CardContent,
@@ -6,17 +11,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { DeviceItemCard, IssueFormValues } from "@/data/types";
 import Image from "next/image";
 import { Suspense } from "react";
-import { DialogBasicOne } from "./dialog-popover";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { ScrollArea } from "../ui/scroll-area";
 import { formatMessage } from "../chat-message";
+import { ScrollArea } from "../ui/scroll-area";
+import { DialogBasicOne } from "./dialog-popover";
 
 interface InformationCardProps {
   deviceData: DeviceItemCard | null;
