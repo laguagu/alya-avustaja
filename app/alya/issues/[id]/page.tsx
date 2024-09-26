@@ -80,10 +80,6 @@ export default function Page({
   const deviceId = searchParams?.["device_id"];
   const issueId = params?.id.toString();
 
-  if (!deviceId) {
-    return <div>Device ID is missing.</div>;
-  }
-
   return (
     <div className="flex flex-col h-screen">
       <div className="flex items-center gap-2">
@@ -92,7 +88,7 @@ export default function Page({
       </div>
       <Separator className="md:my-4 my-3" />
       <Suspense fallback={<LoadingIssueSkeleton />}>
-        <IssuePageDataComponent issueId={issueId} deviceId={deviceId} />
+        <IssuePageDataComponent issueId={issueId} deviceId={deviceId || ""} />
       </Suspense>
     </div>
   );
