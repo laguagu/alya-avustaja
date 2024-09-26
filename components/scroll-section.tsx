@@ -26,6 +26,7 @@ const LogoContainer = ({
               alt={logo.alt}
               width={80}
               height={80}
+              sizes="80px"
               className="transition-all duration-300 filter hover:brightness-110"
             />
           </div>

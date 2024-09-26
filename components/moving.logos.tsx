@@ -27,7 +27,14 @@ const logos = [
 const LogoCard = ({ img, alt }: { img: string; alt: string }) => {
   return (
     <div className="relative w-32 h-36 mx-4">
-      <Image className="object-contain" fill alt={alt} src={img} />
+      <Image
+        className="object-contain"
+        fill
+        sizes="128px"
+        alt={alt}
+        src={img}
+        priority
+      />
     </div>
   );
 };
