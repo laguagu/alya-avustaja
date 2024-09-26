@@ -1,13 +1,11 @@
 "use client";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
 import Image from "next/image";
-import PartnerLogos from "./partners-logos";
+import { useRef } from "react";
 import { useMediaQuery } from "react-responsive";
 import HomeContentSection from "./home-content-sectio";
-import Link from "next/link";
 import { MarqueeComponent } from "./moving.logos";
-import { Separator } from "./ui/separator";
+import PartnerLogos from "./partners-logos";
 
 const LogoContainer = ({
   logos,
