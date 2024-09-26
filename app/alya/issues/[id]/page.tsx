@@ -1,13 +1,13 @@
-import IssueForm from "@/components/issues/Issueform";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
-import InformationCard from "@/components/issues/information-card";
-import { fetchIssuePageData } from "@/lib/dataFetching";
-import BackButton from "@/components/issues/back-button";
-import { Suspense } from "react";
-import ChatBot from "@/components/issues/chat-bot";
-import { LoadingIssueSkeleton } from "@/components/skeletons";
 import { verifySession } from "@/app/_auth/sessions";
+import BackButton from "@/components/issues/back-button";
+import ChatBot from "@/components/issues/chat-bot";
+import InformationCard from "@/components/issues/information-card";
+import IssueForm from "@/components/issues/Issueform";
+import { LoadingIssueSkeleton } from "@/components/skeletons";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { fetchIssuePageData } from "@/lib/dataFetching";
+import { Suspense } from "react";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +25,10 @@ const IssuePageDataComponent = async ({
   const session = await verifySession();
   const sessionUserId = session ? session.userId : null;
 
+  if (!issueData) {
+    return <div>Error: Issue data not found.</div>;
+  }
+
   return (
     <Tabs defaultValue="info">
       <TabsList className="mb-2">
@@ -41,10 +45,10 @@ const IssuePageDataComponent = async ({
 
       <TabsContent value="info">
         <InformationCard
-          partsList={partsList}
+          partsList={partsList || []}
           issueData={issueData}
-          deviceData={deviceData}
-          locationName={locationData}
+          deviceData={deviceData || null}
+          locationName={locationData || ""}
           IssueimageUrl={imageUrl || ""}
         />
       </TabsContent>
@@ -52,8 +56,8 @@ const IssuePageDataComponent = async ({
       <TabsContent value="edit">
         <IssueForm
           data={issueData}
-          locationName={locationData}
-          deviceData={deviceData}
+          locationName={locationData || ""}
+          deviceData={deviceData || null}
         />
       </TabsContent>
 
@@ -63,7 +67,6 @@ const IssuePageDataComponent = async ({
     </Tabs>
   );
 };
-
 export default function Page({
   params,
   searchParams,

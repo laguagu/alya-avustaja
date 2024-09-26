@@ -291,6 +291,12 @@ export interface IssueFormValues {
   is_completed: number | boolean | null; // Onko vikailmoitus avoinna
   service_contact_name: string | null; // Yhteyshenkilö
   service_contact_phone: string | null; // Yhteyshenkilön puhelinnumero
+  references?: {
+    files?: Array<{
+      content_url: string;
+      // Lisää muut tarvittavat kentät tähän
+    }>;
+  };
 }
 
 export interface FurnitureInfo {

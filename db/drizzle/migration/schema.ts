@@ -1,16 +1,17 @@
 import {
   pgTable,
-  uniqueIndex,
-  unique,
   pgEnum,
-  serial,
-  text,
   bigserial,
+  text,
   jsonb,
   vector,
   foreignKey,
+  serial,
   integer,
   timestamp,
+  uniqueIndex,
+  unique,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -23,7 +24,7 @@ export const factor_status = pgEnum("factor_status", [
   "unverified",
   "verified",
 ]);
-export const factor_type = pgEnum("factor_type", ["totp", "webauthn"]);
+export const factor_type = pgEnum("factor_type", ["totp", "webauthn", "phone"]);
 export const one_time_token_type = pgEnum("one_time_token_type", [
   "confirmation_token",
   "reauthentication_token",
@@ -69,6 +70,21 @@ export const equality_op = pgEnum("equality_op", [
   "in",
 ]);
 
+export const piiroinen_chairs = pgTable("piiroinen_chairs", {
+  id: bigserial("id", { mode: "bigint" }).primaryKey().notNull(),
+  content: text("content"),
+  metadata: jsonb("metadata"),
+  embedding: vector("embedding", { dimensions: 1536 }),
+});
+
+export const sessions = pgTable("sessions", {
+  id: serial("id").primaryKey().notNull(),
+  userId: integer("userId")
+    .notNull()
+    .references(() => users.id),
+  expires_at: timestamp("expires_at", { mode: "string" }).notNull(),
+});
+
 export const users = pgTable(
   "users",
   {
@@ -86,17 +102,25 @@ export const users = pgTable(
   },
 );
 
-export const piiroinen_chairs = pgTable("piiroinen_chairs", {
-  id: bigserial("id", { mode: "bigint" }).primaryKey().notNull(),
-  content: text("content"),
-  metadata: jsonb("metadata"),
-  embedding: vector("embedding", { dimensions: 1536 }),
-});
-
-export const sessions = pgTable("sessions", {
+export const chat_messages = pgTable("chat_messages", {
   id: serial("id").primaryKey().notNull(),
-  userId: integer("userId")
+  role: text("role").notNull(),
+  content: jsonb("content").notNull(),
+  created_at: timestamp("created_at", { withTimezone: true, mode: "string" })
+    .defaultNow()
+    .notNull(),
+  user_id: integer("user_id")
     .notNull()
     .references(() => users.id),
-  expires_at: timestamp("expires_at", { mode: "string" }).notNull(),
+});
+
+export const chat_feedback = pgTable("chat_feedback", {
+  id: serial("id").primaryKey().notNull(),
+  user_id: integer("user_id").notNull(),
+  is_positive: boolean("is_positive").notNull(),
+  content: text("content").notNull(),
+  created_at: timestamp("created_at", { mode: "string" })
+    .defaultNow()
+    .notNull(),
+  feedback_details: text("feedback_details"),
 });

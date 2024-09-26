@@ -45,7 +45,7 @@ export const chatMessages = pgTable("chat_messages", {
   role: text("role").notNull(),
   content: jsonb("content").notNull(),
   created_at: timestamp("created_at", { withTimezone: true })
-    .default(sql`timezone('utc', now())`)
+    .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
 });
 

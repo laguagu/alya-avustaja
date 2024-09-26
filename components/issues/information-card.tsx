@@ -1,3 +1,4 @@
+import { formatMessage } from "@/components/format-message";
 import {
   Accordion,
   AccordionContent,
@@ -14,7 +15,6 @@ import {
 import { DeviceItemCard, IssueFormValues } from "@/data/types";
 import Image from "next/image";
 import { Suspense } from "react";
-import { formatMessage } from "../chat-message";
 import { ScrollArea } from "../ui/scroll-area";
 import { DialogBasicOne } from "./dialog-popover";
 
@@ -150,7 +150,7 @@ function InfoItem({
   value: string | React.ReactNode;
   fullWidth?: boolean;
 }) {
-  if (label === "Tekoälyn huolto-ohje" && typeof value === "string") {
+  if (label === "Tekoälyn huolto-ohje") {
     return (
       <div className={fullWidth ? "col-span-full" : ""}>
         <p className="font-semibold text-gray-700">{label}:</p>
@@ -166,7 +166,7 @@ function InfoItem({
                 <AccordionContent>
                   <ScrollArea className="h-[200px] w-full rounded-md border p-4">
                     <div className="text-sm leading-relaxed">
-                      {formatMessage(value)}
+                      {typeof value === "string" ? formatMessage(value) : value}
                     </div>
                   </ScrollArea>
                 </AccordionContent>
