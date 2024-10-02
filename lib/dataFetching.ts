@@ -127,7 +127,7 @@ async function retrieveLocationName(
 export async function getIssuesNumber(): Promise<string> {
   if (!process.env.LUNNI_SERVICES) {
     console.error("LUNNI_SERVICES environment variable is not set");
-    return 0;
+    return "0";
   }
 
   try {
@@ -145,7 +145,7 @@ export async function getIssuesNumber(): Promise<string> {
 
     if (!response.ok) {
       console.error("Failed to fetch issues");
-      return 0;
+      return "0";
     }
     const data = await response.json();
     // Suodatetaan data niin, että lasketaan vain aktiiviset (is_active === 1) vikailmoitukset
@@ -155,7 +155,7 @@ export async function getIssuesNumber(): Promise<string> {
     return activeIssuesCount.toString();
   } catch (error) {
     console.error("Error fetching issues:", error);
-    return 0;
+    return "0";
   }
 }
 

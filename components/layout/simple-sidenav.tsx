@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LogoutButton from "./logout-button";
 
-export default function SimpleSidenav({ issues }: { issues: number }) {
+export default function SimpleSidenav({ issues }: { issues: string }) {
   const pathName = usePathname();
   // Tällä tarkistuksella saadaan oikea baseSegment, joka on joko /alya tai /alya/issues esimerkiksi. Tämä on tarpeellista, jotta saadaan korostettua oikea linkki sivupalkissa.
   const pathSegments = pathName.split("/");

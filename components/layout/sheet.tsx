@@ -1,20 +1,20 @@
 "use client";
-import Link from "next/link";
-import { Home, Package, TriangleAlert, Users, Menu } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetTitle,
   SheetTrigger,
-  SheetDescription,
 } from "@/components/ui/sheet";
-import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import { Home, Menu, Package, TriangleAlert, Users } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import LogoutButton from "./logout-button";
 
-export default function SheetNav({ issues }: { issues: number }) {
+export default function SheetNav({ issues }: { issues: string }) {
   const pathName = usePathname();
   // Tällä tarkistuksella saadaan oikea baseSegment, joka on joko /alya tai /alya/issues esimerkiksi. Tämä on tarpeellista, jotta saadaan korostettua oikea linkki sivupalkissa.
   const pathSegments = pathName.split("/");
