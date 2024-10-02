@@ -1,9 +1,9 @@
-import SimpleSidenav from "@/components/layout/simple-sidenav";
 import SheetNav from "@/components/layout/sheet";
+import SimpleSidenav from "@/components/layout/simple-sidenav";
+import { LoadingLayoutSkeleton } from "@/components/skeletons";
 import { getIssuesNumber } from "@/lib/dataFetching";
 import { Suspense } from "react";
 import { Toaster } from "react-hot-toast";
-import { LoadingLayoutSkeleton } from "@/components/skeletons";
 
 export default async function DashboardLayout({
   children,

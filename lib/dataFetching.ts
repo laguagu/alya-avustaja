@@ -124,7 +124,7 @@ async function retrieveLocationName(
 }
 
 // Haetaan vikailmoitusten määrä lunniapista joka tullaan näyttämään sidebarissa
-export async function getIssuesNumber(): Promise<number> {
+export async function getIssuesNumber(): Promise<string> {
   if (!process.env.LUNNI_SERVICES) {
     console.error("LUNNI_SERVICES environment variable is not set");
     return 0;
@@ -152,7 +152,7 @@ export async function getIssuesNumber(): Promise<number> {
     const activeIssuesCount = data.filter(
       (issue: { is_completed: number }) => issue.is_completed === 0,
     ).length;
-    return activeIssuesCount;
+    return activeIssuesCount.toString();
   } catch (error) {
     console.error("Error fetching issues:", error);
     return 0;

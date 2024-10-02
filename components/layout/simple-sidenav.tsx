@@ -1,9 +1,9 @@
 "use client";
-import Link from "next/link";
-import { Home, Package, Bot, TriangleAlert, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import { Bot, Home, Package, TriangleAlert, Users } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import LogoutButton from "./logout-button";
 
 export default function SimpleSidenav({ issues }: { issues: number }) {

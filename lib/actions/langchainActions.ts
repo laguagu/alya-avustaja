@@ -1,13 +1,13 @@
 "use server";
-import { createClient } from "@supabase/supabase-js";
-import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
-import { PromptTemplate } from "@langchain/core/prompts";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
-import {
-  RunnableSequence,
-  RunnablePassthrough,
-} from "@langchain/core/runnables";
 import { StringOutputParser } from "@langchain/core/output_parsers";
+import { PromptTemplate } from "@langchain/core/prompts";
+import {
+  RunnablePassthrough,
+  RunnableSequence,
+} from "@langchain/core/runnables";
+import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
+import { createClient } from "@supabase/supabase-js";
 import { formatDocumentsAsString } from "langchain/util/document";
 
 const FI_ANSWER_TEMPLATE = `
@@ -69,7 +69,7 @@ export async function generateAIinstruction({
     const vectorstore = new SupabaseVectorStore(new OpenAIEmbeddings(), {
       client,
       tableName: "piiroinen_chairs", // Tietokantataulun nimi
-      queryName: "matching_documents", // Kysely funktion nimi
+      queryName: "match_huolto_ohjeet", // Kysely funktion nimi
     });
 
     // Vaihe 2: Muodostetaan standalone-kysymys
