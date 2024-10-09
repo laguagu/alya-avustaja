@@ -388,7 +388,7 @@ export async function fetchIssueInstruction(
           Authorization: `Bearer ${process.env.LUNNI_API}`,
           "Content-Type": "application/json",
         },
-        next: { tags: ["issues"], revalidate: 300 },
+        next: { tags: ["issues"], revalidate: 0 },
       },
     );
 
