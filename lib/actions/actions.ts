@@ -1,5 +1,9 @@
 "use server";
-import { insertChatFeedback, insertChatMessage } from "@/app/_auth/dal";
+import {
+  insertChatFeedback,
+  insertChatMessage,
+  insertIssueFeedback,
+} from "@/app/_auth/dal";
 import { verifySession } from "@/app/_auth/sessions";
 import { ChatMessage } from "@/data/types";
 import { actionClient } from "@/lib/safe-actions";
@@ -24,11 +28,27 @@ export const updateIssueAction = actionClient
         missing_equipments,
       },
     }) => {
+      let updatedInstruction = instruction || "";
+
+      // Jos ohje ei ole tyhjä, lisää palautekehote
+      if (updatedInstruction.trim() !== "") {
+        const feedbackUrl = `https://hki-piiroinen-alyakokeilut.2.rahtiapp.fi/feedback/${id}`;
+
+        // Poista mahdollinen aiempi palautekehote
+        updatedInstruction = updatedInstruction.replace(
+          /\n\nAnna palautetta.*$/,
+          "",
+        );
+
+        // Lisää uusi palautekehote
+        updatedInstruction += `\n\nAnna palautetta tästä huolto-ohjeesta: ${feedbackUrl}`;
+      }
+
       const updateData = {
         priority,
         problem_description,
         type,
-        instruction,
+        instruction: updatedInstruction,
         missing_equipments,
       };
 
@@ -170,3 +190,22 @@ export async function getSessionAction() {
 export async function revalidateIssues() {
   revalidateTag("issues");
 }
+
+export const submitFeedback = actionClient
+  .schema(
+    z.object({
+      issueId: z.number(),
+      instruction: z.string(),
+      isPositive: z.boolean(),
+      feedbackDetails: z.string().optional(),
+    }),
+  )
+  .action(async ({ parsedInput }) => {
+    try {
+      await insertIssueFeedback(parsedInput);
+      return { message: "Feedback submitted successfully!" };
+    } catch (error) {
+      console.error("Error in submitFeedback:", error);
+      throw error;
+    }
+  });

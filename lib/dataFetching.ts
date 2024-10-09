@@ -376,3 +376,30 @@ export async function fetchIssuePageData(
 
   return { issueData, deviceData, locationData, partsList, imageUrl };
 }
+
+export async function fetchIssueInstruction(
+  issueId: string,
+): Promise<string | null> {
+  try {
+    const response = await fetch(
+      `${process.env.LUNNI_SERVICES}/${issueId}?fields=instruction`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.LUNNI_API}`,
+          "Content-Type": "application/json",
+        },
+        next: { tags: ["issues"], revalidate: 300 },
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.instruction || null;
+  } catch (error) {
+    console.error("Error fetching issue instruction:", error);
+    return null;
+  }
+}

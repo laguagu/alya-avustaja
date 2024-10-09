@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "./app/_auth/sessions";
-import { cookies } from "next/headers";
 
 // 1. Specify protected and public routes
 const protectedRoutes = ["/alya", "/api"];
-const publicRoutes = ["/"];
+const publicRoutes = ["/", "feedback"];
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;

@@ -43,6 +43,13 @@
       "when": 1727183433046,
       "tag": "0005_massive_supernaut",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1728476803515,
+      "tag": "0006_same_captain_midlands",
+      "breakpoints": true
     }
   ]
 }

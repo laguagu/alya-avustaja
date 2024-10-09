@@ -58,6 +58,17 @@ export const chatFeedback = pgTable("chat_feedback", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const issueFeedback = pgTable("issue_feedback", {
+  id: serial("id").primaryKey(),
+  issueId: integer("issue_id").notNull(),
+  instruction: text("instruction").notNull(),
+  isPositive: boolean("is_positive").notNull(),
+  feedbackDetails: text("feedback_details"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export type NewIssueFeedback = InferInsertModel<typeof issueFeedback>;
+
 export type NewChatFeedback = InferInsertModel<typeof chatFeedback>;
 export type NewUser = InferInsertModel<typeof users>;
 export type NewSession = InferInsertModel<typeof sessions>;

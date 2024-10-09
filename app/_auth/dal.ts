@@ -3,8 +3,10 @@ import { db } from "@/db/drizzle/db";
 import {
   chatFeedback,
   chatMessages,
+  issueFeedback,
   NewChatFeedback,
   NewChatMessage,
+  NewIssueFeedback,
   NewUser,
   users,
 } from "@/db/drizzle/schema";
@@ -62,3 +64,7 @@ export const insertChatMessage = async (message: ChatMessage) => {
 export const insertChatFeedback = async (feedback: NewChatFeedback) => {
   return db.insert(chatFeedback).values(feedback).returning();
 };
+
+export async function insertIssueFeedback(feedback: NewIssueFeedback) {
+  return await db.insert(issueFeedback).values(feedback);
+}
