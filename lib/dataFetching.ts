@@ -397,7 +397,14 @@ export async function fetchIssueInstruction(
     }
 
     const data = await response.json();
-    return data.instruction || null;
+    let instruction = data.instruction || null;
+
+    // Poista palautekehote, jos se on olemassa
+    if (instruction) {
+      instruction = instruction.replace(/\n\nAnna palautetta.*$/, "").trim();
+    }
+
+    return instruction;
   } catch (error) {
     console.error("Error fetching issue instruction:", error);
     return null;
