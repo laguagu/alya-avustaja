@@ -33,14 +33,6 @@ export default function InformationCard({
   issueData,
   IssueimageUrl,
 }: InformationCardProps) {
-  if (!deviceData) {
-    return (
-      <div className="text-center text-gray-500">
-        Ei saatavilla olevia huonekalutietoja
-      </div>
-    );
-  }
-
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-full  mb-6">
       <Card className="bg-white shadow-md rounded-lg border-gray-200 border transition-all duration-300 hover:shadow-lg lg:col-span-1">
@@ -53,35 +45,43 @@ export default function InformationCard({
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 space-y-4">
-          <div className="grid grid-cols-1 gap-4">
-            <InfoItem label="Nimi" value={deviceData.name} />
-            <InfoItem label="Malli" value={deviceData.model} />
-            <InfoItem label="Merkki" value={deviceData.brand} />
-            <InfoItem label="Sarjanumero" value={deviceData.serial} />
-            <InfoItem label="Sijainti" value={locationName} />
-          </div>
-          {deviceData.image_url && ( // FIXME kuvaa ei haettua API:n kautta vielä palauttaa null siis
-            <div className="mt-4">
-              <Image
-                width={350}
-                height={350}
-                src={"/chairs/arena022.jpg"}
-                alt={deviceData.name}
-                priority
-                className="rounded-lg object-cover w-full h-auto"
-              />
-            </div>
-          )}
-          {partsList && partsList.length > 0 && (
-            <div className="mt-4">
-              <h3 className="text-lg font-semibold mb-2">Osaluettelo:</h3>
-              <ul className="list-disc pl-5 space-y-1">
-                {partsList.map((partName, index) => (
-                  <li key={index} className="text-gray-700">
-                    {partName}
-                  </li>
-                ))}
-              </ul>
+          {deviceData ? (
+            <>
+              <div className="grid grid-cols-1 gap-4">
+                <InfoItem label="Nimi" value={deviceData.name} />
+                <InfoItem label="Malli" value={deviceData.model} />
+                <InfoItem label="Merkki" value={deviceData.brand} />
+                <InfoItem label="Sarjanumero" value={deviceData.serial} />
+                <InfoItem label="Sijainti" value={locationName} />
+              </div>
+              {deviceData.image_url && ( // FIXME kuvaa ei haettua API:n kautta vielä palauttaa null siis
+                <div className="mt-4">
+                  <Image
+                    width={350}
+                    height={350}
+                    src={"/chairs/arena022.jpg"}
+                    alt={deviceData.name}
+                    priority
+                    className="rounded-lg object-cover w-full h-auto"
+                  />
+                </div>
+              )}
+              {partsList && partsList.length > 0 && (
+                <div className="mt-4">
+                  <h3 className="text-lg font-semibold mb-2">Osaluettelo:</h3>
+                  <ul className="list-disc pl-5 space-y-1">
+                    {partsList.map((partName, index) => (
+                      <li key={index} className="text-gray-700">
+                        {partName}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="text-center text-gray-500">
+              Ei saatavilla olevia huonekalutietoja
             </div>
           )}
         </CardContent>
@@ -129,7 +129,7 @@ export default function InformationCard({
               <Suspense fallback={<div>Ladataan</div>}>
                 <DialogBasicOne
                   src={IssueimageUrl || "/vikailmoitus.png"}
-                  deviceName={deviceData.name}
+                  deviceName={deviceData?.name || "Tuntematon laite"}
                   issueDescription={issueData.problem_description}
                 />
               </Suspense>

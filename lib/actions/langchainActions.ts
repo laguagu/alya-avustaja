@@ -2,22 +2,46 @@
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { PromptTemplate } from "@langchain/core/prompts";
-import {
-  RunnablePassthrough,
-  RunnableSequence,
-} from "@langchain/core/runnables";
+import { RunnableSequence } from "@langchain/core/runnables";
 import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 import { createClient } from "@supabase/supabase-js";
 import { formatDocumentsAsString } from "langchain/util/document";
 
+// const FI_ANSWER_TEMPLATE = `
+// Olet tekoälyavustaja, jonka tehtävänä on auttaa huonekalujen kunnossapidossa ja korjaamisessa. Kaikki vastaukset tulee antaa suomeksi. Tehtäväsi on tarjota tarkkoja ja käytännöllisiä huolto- ja korjausohjeita eri huonekaluille sekä tietoa niiden käytetyistä osista.
+
+// Muotoile vastauksesi tarkasti ja selkeästi. Tarjoa käytännön neuvoja, jotka auttavat pidentämään huonekalujen käyttöikää ja toimivuutta. Käytä ammattimaista mutta lähestyttävää sävyä, varmistaen, että ohjeet ovat helposti ymmärrettävissä. Vastaus saa olla enintään 200 sanaa pitkä.
+
+// Anna vastaus pelkkänä tekstinä ilman mitään Markdown-muotoilua, kuten tähtiä *, alaviivoja tai muita erikoismerkkejä.
+
+// Keskity tarkasti esitettyyn ongelmaan. Jos tarkkaa ohjetta ei ole saatavilla, anna paras mahdollinen neuvo annetun kontekstin pohjalta. Jos et tiedä vastausta, ilmaise se kohteliaasti.
+
+// Vastaa annetun kontekstin perusteella:
+
+// <context>
+//   {context}
+// </context>
+
+// Alkuperäinen ongelma: {issue_description}
+
+// Kysymys: {question}
+// `;
+
 const FI_ANSWER_TEMPLATE = `
-Olet tekoälyavustaja, jonka tehtävänä on auttaa huonekalujen kunnossapidossa ja korjaamisessa. Kaikki vastaukset tulee antaa suomeksi. Tehtäväsi on tarjota tarkkoja ja käytännöllisiä huolto- ja korjausohjeita eri huonekaluille sekä tietoa niiden käytetyistä osista.
+Olet Piiroisen huonekalujen asiantuntijajärjestelmä, jonka tehtävänä on auttaa Helsingin koulujen kohdevastaavia tekemään alustava arvio kalusteiden kunnosta ja korjaustarpeesta. Kaikki vastaukset tulee antaa suomeksi.
 
-Muotoile vastauksesi tarkasti ja selkeästi. Tarjoa käytännön neuvoja, jotka auttavat pidentämään huonekalujen käyttöikää ja toimivuutta. Käytä ammattimaista mutta lähestyttävää sävyä, varmistaen, että ohjeet ovat helposti ymmärrettävissä. Vastaus saa olla enintään 200 sanaa pitkä.
+Tehtäväsi on:
+1. Tarkistaa annetusta kontekstista kyseisen huonekalun viralliset huolto- ja tarkistusohjeet
+2. Arvioida ongelman vakavuus ja kiireellisyys huolto-ohjeiden perusteella
+3. Määritellä, pitääkö huonekalu poistaa käytöstä välittömästi
+4. Opastaa kohdevastaavaa tekemään vain huolto-ohjeissa määritellyt tarkistukset
 
-**Anna vastaus pelkkänä tekstinä ilman mitään Markdown-muotoilua, kuten tähtiä *, alaviivoja tai muita erikoismerkkejä.**
-
-Keskity tarkasti esitettyyn ongelmaan. Jos tarkkaa ohjetta ei ole saatavilla, anna paras mahdollinen neuvo annetun kontekstin pohjalta. Jos et tiedä vastausta, ilmaise se kohteliaasti.
+Huomioi seuraavat asiat:
+- Anna ohjeita vain huolto-ohjeissa mainittuihin tarkistuksiin
+- Jos vika vaatii Piiroisen huoltoa ohjeiden mukaan, ohjaa suoraan huoltopalveluun
+- Painota käyttöturvallisuutta
+- Mainitse selkeästi, jos kyseinen vika vaatii ohjeiden mukaan välitöntä käytöstä poistoa
+- Jos et ole varma jostain yksityiskohdasta, suosittele ammattilaisen arviota
 
 Vastaa annetun kontekstin perusteella:
 
@@ -25,8 +49,17 @@ Vastaa annetun kontekstin perusteella:
   {context}
 </context>
 
+Alkuperäinen ongelma: {issue_description}
+
 Kysymys: {question}
-`;
+
+Kiinnitä vastauksessa huomiota esimerkiksi seuraaviin asioihin:
+1. Ongelman vakavuusaste ja mahdollinen käytöstä poiston tarve
+2. Huolto-ohjeiden mukaiset tarkistustoimenpiteet (vain jos sallittu ohjeissa)
+3. Tieto siitä, kuuluuko vian korjaus Piiroisen huoltopalvelulle
+4. Ohjeet väliaikaisiin toimenpiteisiin (merkitseminen, siirtäminen pois käytöstä jne.)
+
+Anna vastaus pelkkänä tekstinä ilman mitään Markdown-muotoilua tai erikoismerkkejä. Vastaus saa olla enintään 200 sanaa pitkä.`;
 
 const answerPrompt = PromptTemplate.fromTemplate(FI_ANSWER_TEMPLATE);
 
@@ -52,14 +85,28 @@ export async function generateAIinstruction({
   furniture_name,
   furnitureProblem,
 }: GenerateInstructionParams): Promise<string> {
+  if (!furniture_name || furniture_name.trim() === "") {
+    return "Huonekalun nimeä ei ole annettu. Tarvitsen huonekalun mallin (esim. Arena 022) voidakseni antaa tarkkoja huolto-ohjeita. Ole hyvä ja tarkenna huonekalun tiedoissa, mistä Piiroisen huonekalumallista on kyse.";
+  }
+
+  // Tarkistetaan furnitureProblem
+  if (!furnitureProblem || furnitureProblem.trim() === "") {
+    return "Vikailmoituksessa ei ole kerrottu Huoltotarpeen kuvausta. Kerro tarkemmin, mikä huonekalussa on vialla, kohdassa 'Huoltotarpeen kuvaus' niin voin auttaa ongelman ratkaisussa. Huom! Muista painaa 'Tallenna muutokset' vikailmoituksesta kun olet täydentänyt kuvauksen ennen kuin voin auttaa.";
+  }
+
   try {
-    // Vaihe 1: Alustetaan OpenAI-malli ja Supabase-asiakasohjelma
     const model = new ChatOpenAI({
-      modelName: "gpt-4o-2024-08-06",
-      temperature: 0.0,
+      modelName: "gpt-4o",
+      temperature: 0.1,
       // verbose: true, // Tulostaa lisätietoja, jos true
       streaming: true,
     });
+
+    // Alustetaan StringOutputParser mallille
+    const modelWithParser = RunnableSequence.from([
+      model,
+      new StringOutputParser(),
+    ]);
 
     const client = createClient(
       process.env.SUPABASE_URL!,
@@ -68,55 +115,47 @@ export async function generateAIinstruction({
 
     const vectorstore = new SupabaseVectorStore(new OpenAIEmbeddings(), {
       client,
-      tableName: "piiroinen_chairs", // Tietokantataulun nimi
-      queryName: "match_huolto_ohjeet", // Kysely funktion nimi
+      tableName: "piiroinen_chairs",
+      queryName: "match_huolto_ohjeet",
     });
 
-    // Vaihe 2: Muodostetaan standalone-kysymys
     const standaloneQuestionChain = RunnableSequence.from([
       standAloneQuestionPrompt,
-      model,
-      new StringOutputParser(),
+      modelWithParser,
     ]);
 
-    // let resolveWithDocuments: (value: Document[]) => void;
-    // Vaihe 3: Hakee dokumentit Supabase-tietokannasta
-    const retriever = vectorstore.asRetriever({
-      k: 2,
-      // callbacks: [
-      //   {
-      //     handleRetrieverEnd(documents: Document<Record<string, any>>[]) {
-      //       console.log("documents", documents); // Tulostaa kaikki haetut dokumentit
-      //       resolveWithDocuments(documents); // Kun dokumentit on haettu, ratkaisee lupauksen dokumenteilla
-      //     },
-      //   },
-      // ],
-    });
-
-    // Muotoillaan haetut dokumentit
-    const retrievalChain = retriever.pipe(formatDocumentsAsString);
-
-    // Vaihe 4: Alustetaan ketju vastauksen generoimiseen
-    const answerChain = RunnableSequence.from([
-      standaloneQuestionChain,
-      {
-        context: RunnableSequence.from([(input) => input, retrievalChain]),
-        question: new RunnablePassthrough(),
-      },
-      answerPrompt,
-      model,
-      new StringOutputParser(),
-    ]);
-
-    // Kutsutaan vastausketjua ja saadaan lopullinen vastaus
-    const finalAnswer = await answerChain.invoke({
+    // 1. Luodaan standalone-kysymys
+    const standalone_question = await standaloneQuestionChain.invoke({
       furniture_name,
       issue_description: furnitureProblem,
     });
 
-    return finalAnswer;
+    // 2. Haetaan dokumentit
+    const retriever = vectorstore.asRetriever({
+      k: 8,
+      // callbacks: [
+      //   {
+      //     handleRetrieverEnd(documents: Document<Record<string, any>>[]) {
+      //       console.log("Haetut dokumentit:", documents.length);
+      //     },
+      //   },
+      // ],
+    });
+    const docs = await retriever.invoke(standalone_question);
+    const context = formatDocumentsAsString(docs);
+
+    // 3. Generoidaan vastaus
+    const answerChain = await answerPrompt.format({
+      context,
+      issue_description: furnitureProblem,
+      question: standalone_question,
+    });
+
+    const answer = await modelWithParser.invoke(answerChain);
+
+    return answer;
   } catch (e: any) {
-    console.error(e);
-    return e;
+    console.error("Virhe huolto-ohje suosituksen generoinnissa:", e);
+    return "Huolto-ohje suosituksen luonti epäonnistui. Tarkista vikailmoituksen tiedot ja yritä uudelleen. Jos ongelma jatkuu, ota yhteyttä järjestelmän ylläpitoon.";
   }
 }

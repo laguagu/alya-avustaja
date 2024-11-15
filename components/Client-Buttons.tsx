@@ -1,6 +1,3 @@
-import React, { useState, useTransition } from "react";
-import { Button } from "./ui/button";
-import { Bot } from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -12,11 +9,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { generateAIinstruction } from "@/lib/actions/langchainActions";
 import { FurnitureInfo } from "@/data/types";
+import { generateAIinstruction } from "@/lib/actions/langchainActions";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import AiButtonSkeleton from "./skeletons";
+import { Bot } from "lucide-react";
+import React, { useState, useTransition } from "react";
 import { useFormStatus } from "react-dom";
+import AiButtonSkeleton from "./skeletons";
+import { Button } from "./ui/button";
 
 interface CustomButtonProps {
   isEditing: boolean;
