@@ -1,3 +1,4 @@
+// Huonekalutilaukset Piiroiselta
 export const arabiaKaikkiTilaukset = [
   {
     nimi: "Grand Canyon Sohva 3B L",
