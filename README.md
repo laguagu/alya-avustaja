@@ -86,7 +86,7 @@ SUPABASE_URL=https://[YOUR-PROJECT-REF].supabase.co
 npm run push
 ```
 
-2. Aja hakufunktio tietokantaan Supabasen 'SQL Editor' (`db/match_huolto_ohjeet_db_function.sql`):
+2. Aja hakufunktio tietokantaan Supabasen 'SQL Editor':
 
 ```sql
 -- Enable the pgvector extension to work with embedding vectors
@@ -120,6 +120,7 @@ END;
 $$;
 
 ```
+Paina supabase käyttöliittymässä `Run`
 
 match_huolto_ohjeet funktio löytyy myös `db/match_huolto_ohjeet_db_function.sql`
 
