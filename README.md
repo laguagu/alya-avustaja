@@ -68,6 +68,8 @@ SUPABASE_URL=https://[YOUR-PROJECT-REF].supabase.co
 - `SUPABASE_PRIVATE_KEY`: Löytyy kohdasta "API" -> "anon/public"
 - `SUPABASE_URL`: Löytyy kohdasta "API" -> "Project URL"
 
+4. - Käynnistä kehityspalvelin komennolla `npm run dev`.
+
 ## Tietokannan alustus (Vain jos sinulla ei ole olemassa olevaa Supabase tietokantaa alustettuna älyä-avustajalle)
 
 1. Luo tietokantataulut:
@@ -76,7 +78,7 @@ SUPABASE_URL=https://[YOUR-PROJECT-REF].supabase.co
 npm run push
 ```
 
-2. Aja hakufunktio tietokantaan (`db/match_huolto_ohjeet_db_function.sql`):
+2. Aja hakufunktio tietokantaan Supabasen 'SQL Editor' (`db/match_huolto_ohjeet_db_function.sql`):
 
 ```sql
 -- Enable the pgvector extension to work with embedding vectors
@@ -111,7 +113,7 @@ $$;
 
 ```
 
-Tämä löytyy myös `db/match_huolto_ohjeet_db_function.sql`
+match_huolto_ohjeet funktio löytyy myös `db/match_huolto_ohjeet_db_function.sql`
 
 3. Lisää testikäyttäjä (valinnainen):
 
