@@ -31,8 +31,8 @@ Tämä sovellus on suunniteltu Helsingin kaupungin kohdevastaavien (talonmiesten
 1. Kloonaa repositorio:
 
 ```bash
-git clone [repository-url]
-cd [project-name]
+git clone https://github.com/laguagu/alya-avustaja
+cd alya-avustaja
 ```
 
 2. Asenna riippuvuudet:
@@ -250,3 +250,7 @@ Sovellus hyödyntää useita edistyneitä tekoäly- ja koneoppimismenetelmiä:
 
 7. **Joustava tekoälyarkkitehtuuri**:
    - LangChain-pohjainen toteutus mahdollistaa eri komponenttien (kuten embeddings-mallin tai LLM:n) helpon vaihtamisen.
+
+## Lisenssi
+
+MIT License - katso [LICENCE](LICENCE) tiedosto lisätietoja varten.
