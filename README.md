@@ -53,7 +53,8 @@ cp .env.example .env.local
 
 1. Luo uusi projekti [Supabase](https://supabase.com/):sta
 2. Hae projektin ympäristömuuttujat Supabase-hallintapaneelista:
-   ![Supabase ympäristömuuttujat](./public/supabase.png)
+
+![Supabase ympäristömuuttujat](./public/supabase.png)
 
 3. Lisää seuraavat muuttujat `.env.local` tiedostoon:
 
