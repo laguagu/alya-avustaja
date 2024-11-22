@@ -99,6 +99,7 @@ Vastaus:
 `;
 const answerPrompt = PromptTemplate.fromTemplate(SUOMI_VASTAUS_MALLI);
 
+// Tämä eroaa supabase/route.ts ottamalla vastaan huonekalun nimen ja prompt on räätälöity vastaamaan kyseisen huonekalun huolto-ohjeita.
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -158,6 +159,7 @@ export async function POST(req: NextRequest) {
       new StringOutputParser(),
     ]);
 
+    // How many docs to retrieve based on the length of the question
     const getKValue = (question: string) =>
       question.length < 50 ? 3 : question.length <= 100 ? 4 : 5;
 

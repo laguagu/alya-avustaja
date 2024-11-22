@@ -22,6 +22,192 @@ Tämä sovellus tarjoaa kattavan ratkaisun kaluston vikojen katseluun, raportoin
 - **Lunni API Integraatio**
   - Integroitu Lunni API -järjestelmän kanssa vikailmoitusten ja kaluston tietojen hakemiseen.
 
+## Kohderyhmä
+
+Tämä sovellus on suunniteltu Helsingin kaupungin kohdevastaavien (talonmiesten) käyttöön.
+
+## Asennus
+
+1. Kloonaa repositorio:
+
+```bash
+git clone [repository-url]
+cd [project-name]
+```
+
+2. Asenna riippuvuudet:
+
+```bash
+npm install
+```
+
+3. Kopioi `.env.example` tiedosto nimellä `.env.local`:
+
+```bash
+cp .env.example .env.local
+```
+
+4. Täytä ympäristömuuttujat `.env.local` tiedostoon.
+
+## Supabase asetukset (Vain jos sinulla ei ole olemassa olevaa supabase tiliä luotuna älyä-avustajalle)
+
+1. Luo uusi projekti [Supabase](https://supabase.com/):sta
+2. Hae projektin ympäristömuuttujat Supabase-hallintapaneelista:
+   ![Supabase ympäristömuuttujat](./public/supabase.png)
+
+3. Lisää seuraavat muuttujat `.env.local` tiedostoon:
+
+```
+DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres
+SUPABASE_PRIVATE_KEY=[YOUR-PRIVATE-KEY]
+SUPABASE_URL=https://[YOUR-PROJECT-REF].supabase.co
+```
+
+## Tietokannan alustus (Vain jos sinulla ei ole olemassa olevaa supabase tiliä luotuna älyä-avustajalle)
+
+1. Luo tietokantataulut:
+
+```bash
+npm run push
+```
+
+2. Aja hakufunktio tietokantaan (`db/match_huolto_ohjeet_db_function.sql`):
+
+```sql
+-- Enable the pgvector extension to work with embedding vectors
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- Create a function to search for documents
+CREATE OR REPLACE FUNCTION match_huolto_ohjeet(
+  query_embedding vector(1536),
+  match_count int DEFAULT 5,
+  filter jsonb DEFAULT '{}'::jsonb
+) RETURNS TABLE (
+  id bigint,
+  content text,
+  metadata jsonb,
+  similarity float
+) LANGUAGE plpgsql AS $$
+BEGIN
+  RETURN QUERY
+  SELECT
+    piiroinen_chairs.id,
+    piiroinen_chairs.content,
+    jsonb_build_object(
+      'similarity', 1 - (piiroinen_chairs.embedding <=> query_embedding)
+    ) || piiroinen_chairs.metadata AS metadata,
+    1 - (piiroinen_chairs.embedding <=> query_embedding) as similarity
+  FROM piiroinen_chairs
+  WHERE piiroinen_chairs.metadata @> filter
+  ORDER BY piiroinen_chairs.embedding <=> query_embedding
+  LIMIT match_count;
+END;
+$$;
+
+```
+
+Tämä löytyy myös `db/match_huolto_ohjeet_db_function.sql`
+
+3. Lisää testikäyttäjä (valinnainen):
+
+```bash
+npm run seed-db
+```
+
+## Sovelluksen Käynnistäminen
+
+- Käynnistä kehityspalvelin komennolla `npm run dev`.
+
+## Keskeiset teknologiat
+
+- Next.js
+- LangChain
+- OpenAI API
+- Supabase (autentikointi ja tietojen tallennus)
+- Vercel AI SDK
+- Lunni API
+- pgvector (PostgreSQL-laajennus vektorihakuun)
+
+## Kehitys
+
+Käytettävissä olevat komennot:
+
+```bash
+npm run dev         # Kehityspalvelin
+npm run build       # Tuotantoversio
+npm run start       # Tuotantopalvelin
+npm run lint        # Koodin tarkistus
+npm run generate    # Drizzle skeeman generointi
+npm run migrate     # Tietokannan migraatio
+npm run push        # Drizzle skeeman vienti tietokantaan
+npm run pull        # Tietokannan skeeman tuonti
+npm run studio      # Drizzle Studio
+npm run format      # Koodin formatointi
+```
+
+## Ympäristömuuttujat
+
+```env
+# OpenAI
+OPENAI_API_KEY=****
+
+# Lunni API
+LUNNI_API=****
+LUNNI_SERVICES=https://apiv3.lunni.io/services
+LUNNI_UNITS=https://apiv3.lunni.io/devices
+NEXT_PUBLIC_LUNNI_API=****
+
+# JWT Authentication
+SECRET=****
+
+# Database Seeding (valinnainen)
+USER_PASSWORD=****
+USER_EMAIL=****
+ADMIN_PASSWORD=****
+ADMIN_EMAIL=****
+
+# Development
+NODE_ENV=development
+
+# Supabase
+DATABASE_URL=****
+SUPABASE_PRIVATE_KEY=****
+SUPABASE_URL=****
+```
+
+## API-reitit
+
+API-reitit löytyvät `api/`-kansiosta esim:
+
+- `api/supabase/route.ts` - Chatbot RAG-toiminnallisuus
+- `api/chatbot/route.ts` - Chatbot RAG-toiminnallisuus
+- `api/seed/route.ts` - Uusien documenttien vieminen tietokantaan ja niiden splittaus.
+
+## Middleware
+
+Sovelluksen suojaus ja API-reittien autentikointi on toteutettu middleware-tasolla (`middleware.ts`). Autentikoinnin voi poistaa käytöstä kommentoimalla tiedoston ulos esimerkiksi.
+
+## Tietokantarakenne
+
+Tietokantarakenne on määritelty Drizzle ORM:n avulla (`db/drizzle/schema.ts`). Sisältää seuraavat taulut:
+
+- users
+- sessions
+- chat_messages
+- chat_feedback
+- issue_feedback
+
+## Tietojen Tallennus
+
+Sovellus käyttää Supabase-tietokantaa seuraavien tietojen tallentamiseen:
+
+- Käyttäjien kirjautumistiedot
+- Chatbotin viestit
+- Vektori-embeddings huolto-ohjeille
+- Käyttäjä palaute
+
+Nämä tiedot tallennetaan käyttökokemuksen parantamiseksi, keskusteluhistorian säilyttämiseksi ja tehokkaan semanttisen haun mahdollistamiseksi.
+
 ## Edistyneet Tekoäly- ja Koneoppimismenetelmät
 
 Sovellus hyödyntää useita edistyneitä tekoäly- ja koneoppimismenetelmiä:
@@ -59,41 +245,3 @@ Sovellus hyödyntää useita edistyneitä tekoäly- ja koneoppimismenetelmiä:
 
 7. **Joustava tekoälyarkkitehtuuri**:
    - LangChain-pohjainen toteutus mahdollistaa eri komponenttien (kuten embeddings-mallin tai LLM:n) helpon vaihtamisen.
-
-Nämä tekniikat edustavat tekoälyn ja koneoppimisen viimeisimpiä edistysaskeleita tiedonhaussa ja luonnollisen kielen käsittelyssä, mahdollistaen älykkäämmän, kontekstitietoisemman ja tehokkaamman tiedonkäsittelyn.
-
-## Tietojen Tallennus
-
-Sovellus käyttää Supabase-tietokantaa seuraavien tietojen tallentamiseen:
-
-- Käyttäjien kirjautumistiedot
-- Chatbotin viestit
-- Vektori-embeddings huolto-ohjeille
-
-Nämä tiedot tallennetaan käyttökokemuksen parantamiseksi, keskusteluhistorian säilyttämiseksi ja tehokkaan semanttisen haun mahdollistamiseksi.
-
-## Kohderyhmä
-
-Tämä sovellus on suunniteltu Helsingin kaupungin kohdevastaavien (talonmiesten) käyttöön.
-
-## Asennus
-
-1. Kloonaa repositorio paikalliselle koneellesi.
-2. Asenna riippuvuudet suorittamalla `npm install`.
-3. Määritä `.env`-tiedosto API-avaimillasi.
-
-## Sovelluksen Käynnistäminen
-
-- Käynnistä kehityspalvelin komennolla `npm run dev`.
-- Rakenna sovellus tuotantoa varten komennolla `npm run build`.
-- Käynnistä tuotantopalvelin komennolla `npm start`.
-
-## Keskeiset teknologiat
-
-- Next.js
-- LangChain
-- OpenAI API
-- Supabase (autentikointi ja tietojen tallennus)
-- Vercel AI SDK
-- Lunni API
-- pgvector (PostgreSQL-laajennus vektorihakuun)

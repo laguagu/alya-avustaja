@@ -1,13 +1,12 @@
-import {
-  Message as VercelChatMessage,
-  StreamingTextResponse,
-  createStreamDataTransformer,
-  LangChainAdapter,
-} from "ai";
-import { ChatOpenAI } from "@langchain/openai";
-import { PromptTemplate } from "@langchain/core/prompts";
 import { BytesOutputParser } from "@langchain/core/output_parsers";
+import { PromptTemplate } from "@langchain/core/prompts";
 import { RunnableSequence } from "@langchain/core/runnables";
+import { ChatOpenAI } from "@langchain/openai";
+import {
+  createStreamDataTransformer,
+  StreamingTextResponse,
+  Message as VercelChatMessage,
+} from "ai";
 export const dynamic = "force-dynamic";
 
 /**
@@ -25,6 +24,7 @@ const TEMPLATE = `Answer the user's questions
   user: {question}
   assistant:`;
 
+// Old code for testing
 export async function POST(req: Request) {
   try {
     // Extract the `messages` from the body of the request

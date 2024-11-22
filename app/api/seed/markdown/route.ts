@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
-import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
-import { createClient } from "@supabase/supabase-js";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 import { OpenAIEmbeddings } from "@langchain/openai";
+import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
+import { createClient } from "@supabase/supabase-js";
 import fs from "fs/promises";
+import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 
 export const dynamic = "force-dynamic";
@@ -40,6 +40,9 @@ function combineShortChunks(chunks: string[], minLength: number): string[] {
 }
 
 export async function POST(req: NextRequest) {
+  // Samanlainen kuin seed/route.ts, mutta käytetään markdown-tiedostoa ja splitataan pienempiin osiin. Poista aikainen return NextResponse.json({ ok: true }, { status: 200 });
+  // ja lisää autentikointi ennen kuin käytät tätä tuotannossa.
+  return NextResponse.json({ ok: true }, { status: 200 });
   try {
     const filePath = path.join(
       process.cwd(),

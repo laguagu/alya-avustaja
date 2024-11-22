@@ -1,3 +1,30 @@
+/**
+ * Database Seed Route
+ *
+ * This API route is responsible for seeding the vector database with maintenance
+ * documentation for Piiroinen chairs. It processes the input documentation by:
+ * 1. Taking the raw text from piiroinen-huolto-ohjeet
+ * 2. Splitting it into smaller, manageable chunks
+ * 3. Creating embeddings for each chunk
+ * 4. Storing these embeddings in Supabase's vector store
+ *
+ * Prerequisites:
+ * - Supabase setup with pgvector extension
+ * - OpenAI API key for creating embeddings
+ * - Environment variables:
+ *   - SUPABASE_URL
+ *   - SUPABASE_PRIVATE_KEY
+ *   - OPENAI_API_KEY
+ *
+ * Security Note:
+ * This route should be protected in production to prevent unauthorized database seeding.
+ * Currently returns early with 200 status for safety.
+ *
+ * Vector Store Schema:
+ * - Table: piiroinen_chairs
+ * - Query: matching_documents
+ */
+
 import piiroinenHuoltoOhjeet from "@/data/piiroinen-huolto-ohjeet";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 import { OpenAIEmbeddings } from "@langchain/openai";
@@ -23,18 +50,8 @@ function preprocessText(text: string): string {
 }
 
 export async function POST(req: NextRequest) {
-  // const user = await getUser();
-
-  // if (!user || user.role !== "admin") {
-  //   return Response.json({ error: "Unauthorized" }, { status: 401 });
-  // }
-  //   function replaceMarkdownLinks(careInstructionsText: string) {
-  //     // This will replace markdown links with the format "Link Text (URL)"
-  //     return careInstructionsText.replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1 ($2)");
-  //   }
-  //   const replacedMarkdownText = replaceMarkdownLinks(careInstructionsText);
-
-  // const text = piiroinenHuoltoOhjeet;
+  // TODO: Tarkista että käyttäjä on esim admin ennen kuin suoritat tämän koodin tuotannossa. Siksi lisätty aikainen Return NextResponse.json({ ok: true }, { status: 200 });
+  return NextResponse.json({ ok: true }, { status: 200 });
   const text = piiroinenHuoltoOhjeet;
 
   try {
@@ -50,16 +67,6 @@ export async function POST(req: NextRequest) {
     });
 
     const splitDocuments = await splitter.createDocuments([text]);
-
-    // console.log("Split documents: ", splitDocuments);
-    // console.log("Number of split documents: ", splitDocuments.length);
-    // return NextResponse.json({ ok: true }, { status: 200 });
-
-    // Metadatan kanssa
-    // const splitDocuments = await splitter.createDocuments(
-    //   [text],
-    //   [{ source: "piiroinen_care_instructions" }]
-    // );
     console.log("Split documents: ", splitDocuments);
     console.log("Split documents length: ", splitDocuments.length);
     const vectorstore = await SupabaseVectorStore.fromDocuments(

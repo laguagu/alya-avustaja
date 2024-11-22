@@ -168,7 +168,7 @@ export async function POST(req: NextRequest) {
     // }) => void;
     const retriever = vectorstore.asRetriever({
       k: getKValue(currentMessageContent),
-      // callbacks: [
+      // callbacks: [ // Käytä, jos haluat lisätä lisätoimintoja haun jälkeen esim. tulostuksen haetuista dokumenteista
       //   {
       //     handleRetrieverEnd(documents: Document<Record<string, any>>[]) {
       //       console.log("Retrieved documents:", documents);
