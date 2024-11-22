@@ -253,4 +253,4 @@ Sovellus hyödyntää useita edistyneitä tekoäly- ja koneoppimismenetelmiä:
 
 ## Lisenssi
 
-MIT License - katso [LICENCE](LICENCE) tiedosto lisätietoja varten.
+License - katso [LICENCE](LICENCE) tiedosto lisätietoja varten.
