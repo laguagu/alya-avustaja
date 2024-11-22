@@ -85,6 +85,11 @@ SUPABASE_URL=https://[YOUR-PROJECT-REF].supabase.co
 ```bash
 npm run push
 ```
+TAI
+```bash
+npm run generate
+npm run migrate
+```
 
 2. Aja hakufunktio tietokantaan Supabasen 'SQL Editor':
 
