@@ -49,7 +49,7 @@ cp .env.example .env.local
 
 4. Täytä ympäristömuuttujat `.env.local` tiedostoon.
 
-## Supabase asetukset (Vain jos sinulla ei ole olemassa olevaa supabase tiliä luotuna älyä-avustajalle)
+## Supabase asetukset
 
 1. Luo uusi projekti [Supabase](https://supabase.com/):sta
 2. Hae projektin ympäristömuuttujat Supabase-hallintapaneelista:
