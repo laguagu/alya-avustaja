@@ -51,7 +51,7 @@ cp .env.example .env.local
 
 ## Supabase asetukset
 
-1. Kirjaudu [Supabase](https://supabase.com/) | Luo projekti
+1. Kirjaudu (tai luo tili) [Supabase](https://supabase.com/) 
 2. Hae projektin ympäristömuuttujat Supabase-hallintapaneelista:
 
 ![Supabase ympäristömuuttujat](./public/supabase.png)
@@ -68,7 +68,7 @@ SUPABASE_URL=https://[YOUR-PROJECT-REF].supabase.co
 - `SUPABASE_PRIVATE_KEY`: Löytyy kohdasta "API" -> "anon/public"
 - `SUPABASE_URL`: Löytyy kohdasta "API" -> "Project URL"
 
-## Tietokannan alustus (Vain jos sinulla ei ole olemassa olevaa supabase tiliä luotuna älyä-avustajalle)
+## Tietokannan alustus (Vain jos sinulla ei ole olemassa olevaa Supabase tietokantaa alustettuna älyä-avustajalle)
 
 1. Luo tietokantataulut:
 
