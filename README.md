@@ -68,7 +68,7 @@ SUPABASE_URL=https://[YOUR-PROJECT-REF].supabase.co
 - `SUPABASE_PRIVATE_KEY`: Löytyy kohdasta "API" -> "anon/public"
 - `SUPABASE_URL`: Löytyy kohdasta "API" -> "Project URL"
 
-4. - Käynnistä kehityspalvelin komennolla `npm run dev`.
+4. Käynnistä kehityspalvelin komennolla `npm run dev`.
 
 ## Tietokannan alustus (Vain jos sinulla ei ole olemassa olevaa Supabase tietokantaa alustettuna älyä-avustajalle)
 
