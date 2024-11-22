@@ -64,6 +64,10 @@ SUPABASE_PRIVATE_KEY=[YOUR-PRIVATE-KEY]
 SUPABASE_URL=https://[YOUR-PROJECT-REF].supabase.co
 ```
 
+- `DATABASE_URL`: Löytyy kohdasta "Database" -> "Connection string"
+- `SUPABASE_PRIVATE_KEY`: Löytyy kohdasta "API" -> "anon/public"
+- `SUPABASE_URL`: Löytyy kohdasta "API" -> "Project URL"
+
 ## Tietokannan alustus (Vain jos sinulla ei ole olemassa olevaa supabase tiliä luotuna älyä-avustajalle)
 
 1. Luo tietokantataulut:
