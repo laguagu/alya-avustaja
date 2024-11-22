@@ -51,7 +51,7 @@ cp .env.example .env.local
 
 ## Supabase asetukset
 
-1. Luo uusi projekti [Supabase](https://supabase.com/):sta
+1. Kirjaudu [Supabase](https://supabase.com/) | Luo projekti
 2. Hae projektin ympäristömuuttujat Supabase-hallintapaneelista:
 
 ![Supabase ympäristömuuttujat](./public/supabase.png)
