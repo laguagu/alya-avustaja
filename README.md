@@ -26,6 +26,14 @@ Tämä sovellus tarjoaa kattavan ratkaisun kaluston vikojen katseluun, raportoin
 
 Tämä sovellus on suunniteltu Helsingin kaupungin kohdevastaavien (talonmiesten) käyttöön.
 
+## Esitiedot
+
+Sovelluksen käyttöönottoa varten tarvitset:
+
+1. [OpenAI API](https://platform.openai.com/) avaimen
+2. [Lunni API](https://lunni.io/) avaimen
+3. [Supabase](https://supabase.com/) tilin - voit käyttää myös olemassa olevaa Älyä-avustajan tiliä, mutta tarvitset env muuttujat.
+
 ## Asennus
 
 1. Kloonaa repositorio:
