@@ -2,7 +2,7 @@
 import { Badge } from "@/components/ui/badge";
 import clsx from "clsx";
 import { Bot, Home, Package, TriangleAlert, Users } from "lucide-react";
-import { Link } from 'next-view-transitions';
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LogoutButton from "./logout-button";
 
