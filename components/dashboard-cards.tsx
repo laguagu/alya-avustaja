@@ -1,14 +1,13 @@
 "use client";
-import React from "react";
-import { motion } from "framer-motion";
 import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardFooter,
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
 } from "@/components/ui/card";
-import Link from "next/link";
-import { Package, ClipboardPlus, TriangleAlert, Users } from "lucide-react";
+import { motion } from "framer-motion";
+import { ClipboardPlus, Package, TriangleAlert, Users } from "lucide-react";
+import { Link } from 'next-view-transitions';
 import { Button } from "./ui/button";
 
 export default function DashboardCards() {

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/sheet";
 import clsx from "clsx";
 import { Home, Menu, Package, TriangleAlert, Users } from "lucide-react";
-import Link from "next/link";
+import { Link } from 'next-view-transitions';
 import { usePathname } from "next/navigation";
 import LogoutButton from "./logout-button";
 
