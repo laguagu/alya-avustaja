@@ -1,5 +1,13 @@
 "use client";
 
+import { cn } from "@/lib/utils";
+import {
+  AnimatePresence,
+  motion,
+  MotionConfig,
+  Transition,
+  Variant,
+} from "framer-motion";
 import React, {
   useCallback,
   useContext,
@@ -9,20 +17,12 @@ import React, {
   useRef,
   useState,
 } from "react";
-import {
-  motion,
-  AnimatePresence,
-  MotionConfig,
-  Transition,
-  Variant,
-} from "framer-motion";
 import { createPortal } from "react-dom";
-import { cn } from "@/lib/utils";
 // import useClickOutside from '@/hooks/useClickOutside'; // FIXME This is not needed in this file check https://motion-primitives.com/docs/dialog for updates hook was missing from the original file
 import { XIcon } from "lucide-react";
 
 export default function useClickOutside(
-  ref: React.RefObject<HTMLElement>,
+  ref: React.RefObject<HTMLDivElement | null>,
   callback: () => void,
 ) {
   useEffect(() => {
@@ -43,7 +43,7 @@ interface DialogContextType {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   uniqueId: string;
-  triggerRef: React.RefObject<HTMLDivElement>;
+  triggerRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const DialogContext = React.createContext<DialogContextType | null>(null);
@@ -396,13 +396,8 @@ function DialogClose({ children, className, variants }: DialogCloseProps) {
 }
 
 export {
-  Dialog,
-  DialogTrigger,
-  DialogContainer,
-  DialogContent,
-  DialogClose,
-  DialogTitle,
-  DialogSubtitle,
-  DialogDescription,
-  DialogImage,
+  Dialog, DialogClose, DialogContainer,
+  DialogContent, DialogDescription,
+  DialogImage, DialogSubtitle, DialogTitle, DialogTrigger
 };
+

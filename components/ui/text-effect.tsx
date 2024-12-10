@@ -1,6 +1,6 @@
 "use client";
 import { HTMLMotionProps, motion, Variants } from "framer-motion";
-import React from "react";
+import React, { JSX } from "react";
 
 type PresetType = "blur" | "shake" | "scale" | "fade" | "slide";
 
