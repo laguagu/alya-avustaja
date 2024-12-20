@@ -59,7 +59,7 @@ cp .env.example .env.local
 
 ## Supabase asetukset
 
-1. Kirjaudu (tai luo tili) [Supabase](https://supabase.com/) 
+1. Kirjaudu (tai luo tili) [Supabase](https://supabase.com/)
 2. Hae projektin ympäristömuuttujat Supabase-hallintapaneelista:
 
 ![Supabase ympäristömuuttujat](./public/supabase.png)
@@ -85,7 +85,9 @@ SUPABASE_URL=https://[YOUR-PROJECT-REF].supabase.co
 ```bash
 npm run push
 ```
+
 TAI
+
 ```bash
 npm run generate
 npm run migrate
@@ -125,6 +127,7 @@ END;
 $$;
 
 ```
+
 Paina supabase käyttöliittymässä `Run`
 
 match_huolto_ohjeet funktio löytyy myös `db/match_huolto_ohjeet_db_function.sql`

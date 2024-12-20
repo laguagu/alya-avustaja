@@ -396,8 +396,13 @@ function DialogClose({ children, className, variants }: DialogCloseProps) {
 }
 
 export {
-  Dialog, DialogClose, DialogContainer,
-  DialogContent, DialogDescription,
-  DialogImage, DialogSubtitle, DialogTitle, DialogTrigger
+  Dialog,
+  DialogClose,
+  DialogContainer,
+  DialogContent,
+  DialogDescription,
+  DialogImage,
+  DialogSubtitle,
+  DialogTitle,
+  DialogTrigger,
 };
-

@@ -14,7 +14,7 @@ import { z } from "zod";
 
 export const updateIssueAction = actionClient
   .schema(FormSchema, {
-    handleValidationErrorsShape: (ve) =>
+    handleValidationErrorsShape: async (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
   .action(
@@ -77,7 +77,7 @@ export const updateIssueAction = actionClient
 
 export const postNewIssueAction = actionClient
   .schema(NewIssueFormSchem, {
-    handleValidationErrorsShape: (ve) =>
+    handleValidationErrorsShape: async (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
   .action(async ({ parsedInput }) => {

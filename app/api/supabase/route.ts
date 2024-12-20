@@ -129,7 +129,7 @@ export async function POST(req: NextRequest) {
 
     // Alustaa OpenAI-mallin ja Supabase-asiakasohjelman.
     const model = new ChatOpenAI({
-      modelName: "gpt-4o-2024-08-06",
+      modelName: "gpt-4o-2024-11-20",
       temperature: 0.3,
       // verbose: true, // Tulostaa lisätietoja, jos true
       streaming: true,
