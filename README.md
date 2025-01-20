@@ -138,6 +138,35 @@ match_huolto_ohjeet funktio löytyy myös `db/match_huolto_ohjeet_db_function.sq
 npm run seed-db
 ```
 
+## Huolto-ohjeiden vieminen tietokantaan
+
+Sovellus käyttää RAG (Retrieval-Augmented Generation) -arkkitehtuuria, joka vaatii huolto-ohjeiden viemisen Supabase-tietokantaan vektorimuodossa. Tämä tehdään seuraavasti:
+
+1. Varmista, että `data/piiroinen-huolto-ohjeet.ts` tiedosto sisältää huolto-ohjeet oikeassa muodossa.
+
+2. Lähetä POST-pyyntö `/api/seed` endpointiin:
+
+```bash
+curl -X POST http://localhost:3000/api/seed
+```
+
+tai käytä Postman/Thunder Client sovellusta:
+
+- Metodi: POST
+- URL: http://localhost:3000/api/seed
+- Headers: Content-Type: application/json
+
+Tämä prosessi:
+
+- Lukee huolto-ohjeet tiedostosta
+- Jakaa tekstin sopiviin osiin LangChainin RecursiveCharacterTextSplitter:lla
+- Luo vektori-embeddings OpenAI:n avulla
+- Tallentaa dokumentit ja niiden embeddings Supabasen tietokantaan
+
+**TÄRKEÄ HUOMIO**: Tällä hetkellä dokumenttien lisääminen tietokantaan on poistettu käytöstä tuotantoympäristössä. API-reitti palauttaa vain onnistuneen vastauksen (status 200) suorittamatta varsinaista toimintoa.
+
+Toiminto vaatii ympäristömuuttujien (OPENAI_API_KEY, DATABASE_URL) tulee olla oikein asetettu.
+
 ## Sovelluksen Käynnistäminen
 
 - Käynnistä kehityspalvelin komennolla `npm run dev`.
