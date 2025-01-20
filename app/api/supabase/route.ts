@@ -155,7 +155,10 @@ export async function POST(req: NextRequest) {
       model,
       new StringOutputParser(),
     ]);
-
+    /*
+    Määrää k:n arvon dokumenttien haulle kysymyksen pituuden perusteella.
+    TODO: Tietokannassa on aika vähän dataa, joten k arvon voi nostaa vaikka 10:een.
+    */
     const getKValue = (question: string) => {
       if (question.length < 50) return 3;
       if (question.length <= 100) return 4;
