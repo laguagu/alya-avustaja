@@ -1,15 +1,13 @@
 "use server";
 
-import { generateObject, streamObject } from "ai";
-import { createStreamableValue } from "ai/rsc";
 import { openai } from "@ai-sdk/openai";
-import { z } from "zod";
-import { ReactNode } from "react";
-import { OpenAI } from "openai";
-import fs from "fs";
-import { promises as fsPromises } from "fs";
+import { streamObject } from "ai";
+import { createStreamableValue } from "ai/rsc";
+import fs, { promises as fsPromises } from "fs";
 import { nanoid } from "nanoid";
+import { OpenAI } from "openai";
 import path from "path";
+import { ReactNode } from "react";
 import { repairRequestSchema } from "../schemas";
 
 export interface Message {
@@ -23,7 +21,7 @@ export async function processAudioTranscription(transcription: string) {
 
   (async () => {
     const { partialObjectStream } = await streamObject({
-      model: openai("gpt-4o-2024-08-06"),
+      model: openai("gpt-4.1-2025-04-14"),
       system: `Olet tekoälyavustaja, joka auttaa täyttämään Piiroisen huonekalujen vikailmoituslomaketta äänitranskription perusteella. 
       Käytä annettuja kentän kuvauksia ohjenuorana täyttäessäsi lomaketta.
       Muista, että huolto-ohjeen tulee olla lyhyt ja ytimekäs, korkeintaan parin lauseen mittainen.`,

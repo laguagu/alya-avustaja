@@ -101,8 +101,8 @@ export async function generateAIinstruction({
 
   try {
     const model = new ChatOpenAI({
-      modelName: "gpt-4o-2024-11-20",
-      temperature: 0.1,
+      modelName: "gpt-4.1-2025-04-14",
+      temperature: 0.2,
       // verbose: true, // Tulostaa lisätietoja, jos true
       streaming: true,
     });
