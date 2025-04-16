@@ -131,6 +131,7 @@ export async function POST(req: NextRequest) {
     const model = new ChatOpenAI({
       modelName: "gpt-4.1-2025-04-14",
       temperature: 0.3,
+      maxTokens: -1,
       // verbose: true, // Tulostaa lisätietoja, jos true
       streaming: true,
     });
