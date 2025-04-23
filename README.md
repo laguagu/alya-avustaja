@@ -1,4 +1,4 @@
-# Kalustohuollon ja Vikailmoitusten Hallintasovellus - Älyäavustaja
+# Kalustohuollon ja Vikailmoitusten Hallintasovellus - KalusteBotti
 
 Tämä sovellus tarjoaa kattavan ratkaisun kaluston vikojen katseluun, raportointiin ja päivittämiseen. Se hyödyntää edistynyttä tekoälypohjaista chatbot-teknologiaa tarjotakseen huolto-ohjeita, helpottaen käyttäjien kaluston hallintaa ja korjaamista. Sovellus on rakennettu Next.js:llä ja se käyttää LangChain-kirjastoa, integroituen saumattomasti OpenAI:n malleihin keskustelevan tekoälyn vastausten generoimiseksi.
 
@@ -32,7 +32,7 @@ Sovelluksen käyttöönottoa varten tarvitset:
 
 1. [OpenAI API](https://platform.openai.com/) avaimen
 2. [Lunni API](https://lunni.io/) avaimen
-3. [Supabase](https://supabase.com/) tilin - voit käyttää myös olemassa olevaa Älyä-avustajan tiliä, mutta tarvitset env muuttujat.
+3. [Supabase](https://supabase.com/) tilin - voit käyttää myös olemassa olevaa KalusteBottin tiliä, mutta tarvitset env muuttujat.
 
 ## Asennus
 
@@ -78,7 +78,7 @@ SUPABASE_URL=https://[YOUR-PROJECT-REF].supabase.co
 
 4. Käynnistä kehityspalvelin komennolla `npm run dev`.
 
-## Tietokannan alustus (Vain jos sinulla ei ole olemassa olevaa Supabase tietokantaa alustettuna älyä-avustajalle)
+## Tietokannan alustus (Vain jos sinulla ei ole olemassa olevaa Supabase tietokantaa alustettuna KalusteBottille)
 
 1. Luo tietokantataulut:
 

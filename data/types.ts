@@ -330,7 +330,7 @@ export const issuesData: ServiceTask[] = [
     approved: null,
     customer_responsibility: null,
     description: null,
-    instruction: "Älyä-avustaja suosittelee huoltoa 2 vuoden välein.",
+    instruction: "KalusteBotti suosittelee huoltoa 2 vuoden välein.",
     summary: null,
     identifier: null,
     device_id: 3,
@@ -410,7 +410,7 @@ export const issuesData: ServiceTask[] = [
     customer_responsibility: null,
     description:
       "Tilattiin huolto korjattiin ja nyt voi istua taas hyvillä mielin.",
-    instruction: "Älyä-avustaja suosittelee huoltoa 2 vuoden välein.",
+    instruction: "KalusteBotti suosittelee huoltoa 2 vuoden välein.",
     summary: null,
     identifier: null,
     device_id: 3,

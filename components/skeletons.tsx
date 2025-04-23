@@ -52,7 +52,7 @@ export function ChatSkeletton() {
       <div className="p-4 w-full max-w-3xl mx-auto">
         <div className="flex items-center">
           <h1 className="text-md text-nowrap sm:text-2xl lg:text-3xl font-bold text-center flex-1">
-            Chatbot - Älyäavustaja
+            Chatbot - KalusteBotti
           </h1>
         </div>
       </div>

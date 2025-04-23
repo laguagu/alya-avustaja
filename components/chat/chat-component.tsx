@@ -96,7 +96,7 @@ export default function ChatComponent({
       <div className="p-4 w-full bg-secondary border-b border-gray-200 ">
         <div className="flex items-center justify-between ">
           <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
-            Älyäavustaja
+            KalusteBotti
           </h1>
           <Button
             onClick={clearChatHistory}
@@ -184,7 +184,7 @@ export default function ChatComponent({
       </section>
       <div className="p-2 bg-secondary border-t border-gray-200">
         <p className="text-center text-xs text-gray-500">
-          Älyäavustaja voi tehdä virheitä. Suosittelemme tarkastamaan tärkeät
+          KalusteBotti voi tehdä virheitä. Suosittelemme tarkastamaan tärkeät
           tiedot.
         </p>
       </div>

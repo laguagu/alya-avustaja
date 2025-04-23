@@ -32,7 +32,7 @@ export default function SimpleSidenav({ issues }: { issues: string }) {
       <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
         <Link href="/alya" className="flex items-center gap-2 font-semibold">
           <Bot className="h-6 w-6" />
-          <span className="">Älyä-avustaja</span>
+          <span className="">KalusteBotti</span>
         </Link>
       </div>
       <div className="flex-1">

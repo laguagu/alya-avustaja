@@ -120,7 +120,7 @@ export default function ChatBot({
     >
       <div className="p-4 w-full bg-secondary border-b border-gray-200">
         <h1 className="text-xl sm:text-2xl font-bold text-center text-gray-800">
-          Älyäavustaja
+          KalusteBotti
         </h1>
       </div>
       <div className="flex-grow flex flex-col overflow-hidden">
@@ -198,7 +198,7 @@ export default function ChatBot({
       </div>
       <div className="p-2 bg-gray-50">
         <p className="text-center text-xs text-gray-500">
-          Älyäavustaja voi tehdä virheitä. Suosittelemme tarkastamaan tärkeät
+          KalusteBotti voi tehdä virheitä. Suosittelemme tarkastamaan tärkeät
           tiedot.
         </p>
       </div>

@@ -13,7 +13,7 @@ export function BoxRevealHome() {
     <div className="flex flex-col justify-center items-start p-4 py-2 px-4 md:py-8 md:px-20 h-full max-w-[20rem] md:max-w-[32rem] overflow-hidden pt-8 mx-auto">
       <BoxReveal boxColor={"#b6cfff"} duration={0.5}>
         <p className="text-[2.5rem] md:text-[3.5rem] font-semibold">
-          Älyavustaja<span className="text-[#5046e6]">.</span>
+          KalusteBotti<span className="text-[#5046e6]">.</span>
         </p>
       </BoxReveal>
 

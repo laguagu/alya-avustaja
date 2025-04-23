@@ -10,7 +10,7 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: "Äyläavustaja",
+  title: "KalusteBotti",
   description: "Huolto- ja hoito-ohjeita tarjoava Tekoälysovellus",
 };
 
